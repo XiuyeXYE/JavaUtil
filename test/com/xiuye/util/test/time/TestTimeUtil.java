@@ -17,6 +17,8 @@ public class TestTimeUtil {
 		}
 		LogUtil.log(counter);
 		TimeUtil.outCostOnConsoleNs();
+		
+		
 	}
 	
 }
