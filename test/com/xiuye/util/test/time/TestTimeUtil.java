@@ -17,6 +17,14 @@ public class TestTimeUtil {
 		}
 		LogUtil.log(counter);
 		TimeUtil.outCostOnConsoleNs();
+		TimeUtil.start();
+		counter = 0;
+		for(var i=0;i<1000000000;i++) {
+			counter ++;
+			
+		}
+		LogUtil.log(counter);
+		TimeUtil.outCostOnConsoleMs();
 		
 		
 	}
