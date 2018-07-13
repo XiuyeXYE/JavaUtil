@@ -81,7 +81,7 @@ public class TimeUtil {
 		checkTime();
 		codeSectionMSG();
 		var cost = e - STIME;
-		LogUtil.log("This running time costs : " + String.format("%.6f", cost / 1000000000.0) + " s");
+		LogUtil.log("This running time costs : " + String.format("%.9f", cost / 1000000000.0) + " s");
 		executeAllCallback(cs);
 		SCALLER = MetaUtil.caller(3);
 		STIME = System.nanoTime();
