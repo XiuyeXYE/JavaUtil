@@ -28,9 +28,9 @@ public class TimeUtil {
 		var codeSectionMSG = "=====This Code Section=====\nFrom\n";
 		codeSectionMSG += "    Class Name : " + SCALLER.getClassName() + "\n    Method Name : "
 				+ SCALLER.getMethodName() + "\n    File Name : " + SCALLER.getFileName() + "\n    Enter Line : "
-				+ SCALLER.getLineNumber() + "\nTo\n" + "    Class Name : " + eCaller.getClassName()
+				+ (SCALLER.getLineNumber()+1) + "\nTo\n" + "    Class Name : " + eCaller.getClassName()
 				+ "\n    Method Name : " + eCaller.getMethodName() + "\n    File Name : " + eCaller.getFileName()
-				+ "\n    Exit Line : " + eCaller.getLineNumber();
+				+ "\n    Exit Line : " + (eCaller.getLineNumber()-1);
 		LogUtil.log(codeSectionMSG);
 	}
 
