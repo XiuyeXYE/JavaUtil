@@ -11,7 +11,7 @@ public class TestTimeUtil {
 	public void testCostTime() {
 		TimeUtil.start();
 		long counter = 0;
-		for (var i = 0; i < 1000000000; i++) {
+		for (int i = 0; i < 1000000000; i++) {
 			counter++;
 
 		}
@@ -19,7 +19,7 @@ public class TestTimeUtil {
 		TimeUtil.outCostOnConsoleNs();
 		TimeUtil.start();
 		counter = 0;
-		for (var i = 0; i < 1000000000; i++) {
+		for (int i = 0; i < 1000000000; i++) {
 			counter++;
 
 		}
@@ -32,7 +32,7 @@ public class TestTimeUtil {
 		TimeUtil.outCostOnConsoleMs();
 		TimeUtil.start();
 		counter = 0;
-		for (var i = 0; i < 1000000000; i++) {
+		for (int i = 0; i < 1000000000; i++) {
 			counter++;
 
 		}
@@ -51,7 +51,7 @@ public class TestTimeUtil {
 	@Test
 	public void testStackTrace() {
 		StackTraceElement[] stes = Thread.currentThread().getStackTrace();
-		var counter = 0;
+		int counter = 0;
 		for (StackTraceElement ste : stes) {
 
 			LogUtil.log(counter + "." + "StackTraceElement : " + ste);
@@ -59,9 +59,6 @@ public class TestTimeUtil {
 			LogUtil.log(counter + "." + "LineNumber : " + ste.getLineNumber());
 			LogUtil.log(counter + "." + "ClassName : " + ste.getClassName());
 			LogUtil.log(counter + "." + "MethodName : " + ste.getMethodName());
-			LogUtil.log(counter + "." + "ClassLoaderName : " + ste.getClassLoaderName());
-			LogUtil.log(counter + "." + "ModuleName : " + ste.getModuleName());
-			LogUtil.log(counter + "." + "ModuleVersion : " + ste.getModuleVersion());
 			counter++;
 		}
 	}
