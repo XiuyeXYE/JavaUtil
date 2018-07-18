@@ -15,7 +15,7 @@ public class TravelTreeNode {
 
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-		TreeNode<String> root = new TreeNode<>();
+		TreeNode<String> root = new TreeNode<>();//树的根节点
 		root.setValue("A");
 		root.setStatus("open");
 		List<TreeNode<String>> nodes = new ArrayList<>();
