@@ -25,7 +25,7 @@ public class TimeUtil {
 	
 	private static void codeSectionMSG() {
 		Caller eCaller = MetaUtil.caller(4);
-		String codeSectionMSG = "=====This Code Section=====\nFrom\n";
+		String codeSectionMSG = "\r\n=====This Code Section=====\nFrom\n";
 		codeSectionMSG += "    Class Name : " + SCALLER.getClassName() + "\n    Method Name : "
 				+ SCALLER.getMethodName() + "\n    File Name : " + SCALLER.getFileName() + "\n    Enter Line : "
 				+ (SCALLER.getLineNumber()+1) + "\nTo\n" + "    Class Name : " + eCaller.getClassName()
