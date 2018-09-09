@@ -43,9 +43,37 @@ public class TimeUtil {
 		return STIME = System.nanoTime();
 	}
 
-	public static long cost() {
+	public static long costNSFromStart() {
 		checkTime();
 		return System.nanoTime() - STIME;
+	}
+	
+	public static double costFromStart(String format) {
+		checkTime();
+		long time = System.nanoTime() - STIME;
+		double d = time;
+		switch (format) {
+		case "ms":
+			d = d/1000000.0;
+			break;
+//		case "ns":
+//			
+//			break;
+		case "s":
+			d = d/1000000000.0;
+			break;
+		case "m":
+		case "min":
+			d /=1000000000.0*60; 
+			break;
+		case "h":
+			d /=1000000000.0*60*60; 
+			break;
+		case "d":
+			d /=1000000000.0*60*60*24; 
+			break;
+		}
+		return d;
 	}
 
 	public static void reset() {
@@ -63,6 +91,16 @@ public class TimeUtil {
 		STIME = System.nanoTime();//place it here precision
 		return cost;
 	}
+	public static long outCostOnConsoleNsFromStart(Callback... cs) {
+		var e = System.nanoTime();//place it here precision
+		checkTime();
+		codeSectionMSG();
+		var cost = e - STIME;
+		LogUtil.log("This running time costs : " + cost + " ns");
+		executeAllCallback(cs);
+		SCALLER = MetaUtil.caller(3);
+		return cost;
+	}
 
 	public static long outCostOnConsoleMs(Callback... cs) {
 		var e = System.nanoTime();
@@ -75,6 +113,16 @@ public class TimeUtil {
 		STIME = System.nanoTime();
 		return cost;
 	}
+	public static long outCostOnConsoleMsFromStart(Callback... cs) {
+		var e = System.nanoTime();
+		checkTime();
+		codeSectionMSG();
+		var cost = e - STIME;
+		LogUtil.log("This running time costs : " + String.format("%.6f", cost / 1000000.0) + " ms");
+		executeAllCallback(cs);
+		SCALLER = MetaUtil.caller(3);
+		return cost;
+	}
 
 	public static long outCostOnConsoleS(Callback... cs) {
 		var e = System.nanoTime();
@@ -85,6 +133,16 @@ public class TimeUtil {
 		executeAllCallback(cs);
 		SCALLER = MetaUtil.caller(3);
 		STIME = System.nanoTime();
+		return cost;
+	}
+	public static long outCostOnConsoleSFromStart(Callback... cs) {
+		var e = System.nanoTime();
+		checkTime();
+		codeSectionMSG();
+		var cost = e - STIME;
+		LogUtil.log("This running time costs : " + String.format("%.9f", cost / 1000000000.0) + " s");
+		executeAllCallback(cs);
+		SCALLER = MetaUtil.caller(3);
 		return cost;
 	}
 
