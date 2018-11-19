@@ -2,9 +2,9 @@ package com.xiuye.util.time;
 
 import java.util.Objects;
 
+import com.xiuye.util.log.LogUtil;
 import com.xiuye.util.cls.MetaUtil;
 import com.xiuye.util.cls.MetaUtil.Caller;
-import com.xiuye.util.log.LogUtil;
 
 public class TimeUtil {
 	private static long STIME = -1;
