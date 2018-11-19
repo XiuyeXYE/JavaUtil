@@ -5,6 +5,7 @@ public class LogUtil {
 	public static <T> void println(T... t) {
 		log(t);
 	}
+	@SafeVarargs
 	public static <T> void log(T... t) {
 
 		for (T s : t) {
