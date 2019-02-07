@@ -24,8 +24,8 @@ public class TimeUtil {
 	}
 	
 	private static void codeSectionMSG() {
-		var eCaller = MetaUtil.caller(4);
-		var codeSectionMSG = "=====This Code Section=====\nFrom\n";
+		Caller eCaller = MetaUtil.caller(4);
+		String codeSectionMSG = "\r\n=====This Code Section=====\nFrom\n";
 		codeSectionMSG += "    Class Name : " + SCALLER.getClassName() + "\n    Method Name : "
 				+ SCALLER.getMethodName() + "\n    File Name : " + SCALLER.getFileName() + "\n    Enter Line : "
 				+ (SCALLER.getLineNumber()+1) + "\nTo\n" + "    Class Name : " + eCaller.getClassName()
@@ -53,10 +53,10 @@ public class TimeUtil {
 	}
 
 	public static long outCostOnConsoleNs(Callback... cs) {
-		var e = System.nanoTime();//place it here precision
+		long e = System.nanoTime();//place it here precision
 		checkTime();
 		codeSectionMSG();
-		var cost = e - STIME;
+		long cost = e - STIME;
 		LogUtil.log("This running time costs : " + cost + " ns");
 		executeAllCallback(cs);
 		SCALLER = MetaUtil.caller(3);
@@ -65,10 +65,10 @@ public class TimeUtil {
 	}
 
 	public static long outCostOnConsoleMs(Callback... cs) {
-		var e = System.nanoTime();
+		long e = System.nanoTime();
 		checkTime();
 		codeSectionMSG();
-		var cost = e - STIME;
+		long cost = e - STIME;
 		LogUtil.log("This running time costs : " + String.format("%.6f", cost / 1000000.0) + " ms");
 		executeAllCallback(cs);
 		SCALLER = MetaUtil.caller(3);
@@ -77,10 +77,10 @@ public class TimeUtil {
 	}
 
 	public static long outCostOnConsoleS(Callback... cs) {
-		var e = System.nanoTime();
+		long e = System.nanoTime();
 		checkTime();
 		codeSectionMSG();
-		var cost = e - STIME;
+		long cost = e - STIME;
 		LogUtil.log("This running time costs : " + String.format("%.9f", cost / 1000000000.0) + " s");
 		executeAllCallback(cs);
 		SCALLER = MetaUtil.caller(3);

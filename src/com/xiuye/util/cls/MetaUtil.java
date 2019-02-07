@@ -7,13 +7,10 @@ public class MetaUtil {
 		Caller c = null;
 		if(ss.length > functionLayer) {
 			c = new Caller();
-			c.setClassLoaderName(ss[functionLayer].getClassLoaderName());
 			c.setClassName(ss[functionLayer].getClassName());
-			c.setModuleName(ss[functionLayer].getModuleName());
 			c.setFileName(ss[functionLayer].getFileName());
 			c.setLineNumber(ss[functionLayer].getLineNumber());
 			c.setMethodName(ss[functionLayer].getMethodName());
-			c.setModuleVersion(ss[functionLayer].getModuleVersion());
 		}
 		return c;
 	}
