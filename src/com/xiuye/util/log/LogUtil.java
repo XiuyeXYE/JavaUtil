@@ -8,10 +8,15 @@ public class LogUtil {
 	@SafeVarargs
 	public static <T> void log(T... t) {
 
-		for (T s : t) {
-			System.out.print(s + " ");
+		for (int i=0;i<t.length-1;i++) {
+			System.out.print(t[i] + " ");
 		}
-		System.out.println();
+		if(t.length>0) {
+			System.out.println(t[t.length-1]);
+		}
+		else {
+			System.out.println();
+		}
 	}
 
 	
