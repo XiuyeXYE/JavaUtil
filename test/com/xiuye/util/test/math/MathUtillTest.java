@@ -23,6 +23,14 @@ public class MathUtillTest {
 		LogUtil.log(MathUtil.isPrime(9));
 		LogUtil.log(MathUtil.isPrime(5));
 		LogUtil.log(MathUtil.isPrime(95));
+		LogUtil.log(MathUtil.sqrt(2));
+		LogUtil.log(MathUtil.sqrt(3));
+		LogUtil.log(MathUtil.sqrt(4));
+		LogUtil.log(MathUtil.sqrt(5));
+		LogUtil.log(MathUtil.sqrt(9));
+		LogUtil.log(MathUtil.sqrt(100));
+		LogUtil.log(MathUtil.sqrt(101));
+		LogUtil.log(MathUtil.rightTriangleHypotenuse(3, 4));
 		
 		
 		
