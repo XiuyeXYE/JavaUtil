@@ -5,11 +5,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.junit.Test;
+
 import com.xiuye.util.cls.TypeUtil;
 import com.xiuye.util.log.LogUtil;
 
+
 public class TypeUtilTest {
 
+	private static class C{
+		static {
+			LogUtil.log("static");
+		}
+		private C(){
+			LogUtil.log("C::construct");
+		}
+	}
+	
+	@Test
+	public void testNew() {
+		TypeUtil.newInstance(C::new);
+		TypeUtil.newInstance(C::new);
+	}
+	
 	public static void main(String[] args) {
 		TypeUtil.newInstance(A::new);
 		TypeUtil.newInstance(A::new, "ABC");
