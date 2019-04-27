@@ -34,21 +34,25 @@ public class LogUtil {
 
 		if (t.length == 0)
 			System.out.println();
-
-		for (int i = 0; i < t.length - 1; i++) {
-			System.out.print(t[i] + " ");
+		else {
+			for (int i = 0; i < t.length - 1; i++) {
+				System.out.print(t[i] + " ");
+			}
+			System.out.println(t[t.length - 1]);
 		}
-		System.out.println(t[t.length - 1]);
+		
 	}
 
 	@SafeVarargs
 	public static <T> void print(T... ts) {
-		if (ts.length == 0)
+		if (ts.length > 0) {
 			System.out.print(ts[0]);
-		for (int i = 0; i < ts.length - 1; i++) {
-			System.out.print(ts[i] + " ");
+			for (int i = 0; i < ts.length - 1; i++) {
+				System.out.print(ts[i] + " ");
+			}
+			System.out.print(ts[ts.length - 1]);
 		}
-		System.out.print(ts[ts.length - 1]);
+		
 	}
 
 }
