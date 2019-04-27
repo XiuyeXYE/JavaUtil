@@ -2,6 +2,7 @@ package com.xiuye.util.log;
 
 public class LogUtil {
 
+	@SafeVarargs
 	public static <T> void println(T... t) {
 		log(t);
 	}
@@ -31,20 +32,23 @@ public class LogUtil {
 	@SafeVarargs
 	public static <T> void log(T... t) {
 
+		if (t.length == 0)
+			System.out.println();
+
 		for (int i = 0; i < t.length - 1; i++) {
 			System.out.print(t[i] + " ");
 		}
-		if (t.length > 0) {
-			System.out.println(t[t.length - 1]);
-		} else {
-			System.out.println();
-		}
+		System.out.println(t[t.length - 1]);
 	}
 
+	@SafeVarargs
 	public static <T> void print(T... ts) {
-		for (T t : ts) {
-			System.out.print(t + " ");
+		if (ts.length == 0)
+			System.out.print(ts[0]);
+		for (int i = 0; i < ts.length - 1; i++) {
+			System.out.print(ts[i] + " ");
 		}
+		System.out.print(ts[ts.length - 1]);
 	}
 
 }
