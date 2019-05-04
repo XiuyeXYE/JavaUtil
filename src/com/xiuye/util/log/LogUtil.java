@@ -46,7 +46,6 @@ public class LogUtil {
 	@SafeVarargs
 	public static <T> void print(T... ts) {
 		if (ts.length > 0) {
-			System.out.print(ts[0]);
 			for (int i = 0; i < ts.length - 1; i++) {
 				System.out.print(ts[i] + " ");
 			}
