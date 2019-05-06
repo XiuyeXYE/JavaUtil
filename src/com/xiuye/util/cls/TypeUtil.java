@@ -9,6 +9,7 @@ import java.util.Set;
 
 public class TypeUtil {
 
+	//适合应用类型不适合，基本类型
 	@SuppressWarnings("unchecked")
 	public static <R extends T, T> R dynamic_cast(T e) {
 		return (R) e;
