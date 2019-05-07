@@ -42,6 +42,20 @@ public class LogUtil {
 		}
 		
 	}
+	
+	@SafeVarargs
+	public static <T> void err(T... t) {
+		
+		if (t.length == 0)
+			System.err.println();
+		else {
+			for (int i = 0; i < t.length - 1; i++) {
+				System.err.print(t[i] + " ");
+			}
+			System.err.println(t[t.length - 1]);
+		}
+		
+	}
 
 	@SafeVarargs
 	public static <T> void print(T... ts) {
@@ -53,5 +67,7 @@ public class LogUtil {
 		}
 		
 	}
+	
+	
 
 }
