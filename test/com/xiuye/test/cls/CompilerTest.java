@@ -27,6 +27,7 @@ public class CompilerTest {
 		codes.put("com.xiuye.A", "package com.xiuye;" + "import com.xiuye.util.log.LogUtil;" + "public class A{"
 				+ "public A(){" + "LogUtil.log(\"OK,A created!\");" + "}" + "}");
 		LogUtil.log(XYCompiler.compileCode(codes));
+		LogUtil.log(XYCompiler.compileCode(Arrays.asList("-d",".","-verbose"),codes));
 //		LogUtil.log(Paths.get(".").toRealPath());
 		// 使用类加载器加载
 		ClassLoader cl = TypeUtil.createClassLoader();
