@@ -1,4 +1,4 @@
-package com.xiuye.cls;
+package com.xiuye.compiler;
 
 import java.net.URI;
 
