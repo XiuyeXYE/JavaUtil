@@ -151,6 +151,18 @@ public class TypeUtil {
 //		LogUtil.logarray(urls);
 		return createClassLoader(urls);
 	}
+	
+	public static ClassLoader createClassLoader(List<String> paths) throws MalformedURLException {
+		
+		URL []urls = new URL[paths.size()];
+		
+		for(int i=0;i<urls.length;i++) {
+			urls[i] = Paths.get(paths.get(i)).toUri().toURL();
+		}
+		
+		return createClassLoader(urls);
+		
+	}
 
 //	public static Class<?> loadClass(ClassLoader cl, String name) throws ClassNotFoundException {
 //		return cl.loadClass(name);

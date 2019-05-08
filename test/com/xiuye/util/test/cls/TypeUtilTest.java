@@ -106,4 +106,35 @@ public class TypeUtilTest {
 			LogUtil.log("A(T...t)");
 		}
 	}
+	
+	@Test
+	public void testNewArray() {
+		//new 一维数组
+		int [] i = TypeUtil.newInstance(int[]::new,10);
+		LogUtil.log(i.length);
+		LogUtil.logArray(i);
+		//new 一维数组
+		String []ss = TypeUtil.newInstance(String[]::new,10);
+		LogUtil.log(ss.length);
+		LogUtil.logArray(ss,":");
+		//new 二维数组 => new String[10][];
+		// new String[][]
+		String [][]s1 = TypeUtil.newInstance(String[][]::new,10);
+		//new 一维数组 =>  new String[8]
+		s1[0] = TypeUtil.newInstance(String[]::new,8);
+		LogUtil.log(s1);
+		LogUtil.logArray(s1);
+		LogUtil.print(s1);
+		LogUtil.println();
+		LogUtil.println();
+		// <=> the above
+		String [][]s2 = new String[10][];
+		LogUtil.log(s2);
+		LogUtil.logArray(s2,",");
+//		String[]s =new String[0];
+		LogUtil.print(1,2,3);
+		LogUtil.print(1);
+		LogUtil.print(2);
+		LogUtil.print(3);
+	}
 }

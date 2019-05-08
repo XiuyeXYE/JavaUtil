@@ -15,9 +15,9 @@ public class MathUtillTest {
 		LogUtil.log(MathUtil.average(a1));
 		LogUtil.log(MathUtil.average(a2));
 		MathUtil.reverse(a1);
-		LogUtil.logarray(a1);
+		LogUtil.logArray(a1);
 		MathUtil.reverse(a2);
-		LogUtil.logarray(a2);
+		LogUtil.logArray(a2);
 		LogUtil.log(MathUtil.abs(-1));
 		LogUtil.log(MathUtil.abs(-1.1));
 		LogUtil.log(MathUtil.isPrime(9));
