@@ -118,7 +118,7 @@ public class TypeUtilTest {
 		LogUtil.log(ss.length);
 		LogUtil.logArray(ss,":");
 		//new 二维数组 => new String[10][];
-		// new String[][]
+		// new String[][](10/*第一个参数*/)
 		String [][]s1 = TypeUtil.newInstance(String[][]::new,10);
 		//new 一维数组 =>  new String[8]
 		s1[0] = TypeUtil.newInstance(String[]::new,8);
