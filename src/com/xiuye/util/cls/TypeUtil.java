@@ -1,5 +1,8 @@
 package com.xiuye.util.cls;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -7,8 +10,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.xiuye.compiler.XYClassLoader;
+
 public class TypeUtil {
 
+	// 适合应用类型不适合，基本类型
 	@SuppressWarnings("unchecked")
 	public static <R extends T, T> R dynamic_cast(T e) {
 		return (R) e;
@@ -108,17 +114,57 @@ public class TypeUtil {
 //		return c.construct(t);
 //	}
 
-	public static<K,V> Map<K,V> createMap() {
+	public static <K, V> Map<K, V> createMap() {
 		return newInstance(HashMap::new);
 	}
-	
-	public static<T> List<T> createList() {
+
+	public static <T> List<T> createList() {
 		return newInstance(ArrayList::new);
 	}
-	
-	public static<T> Set<T> createSet() {
+
+	public static <T> Set<T> createSet() {
 		return newInstance(HashSet::new);
 	}
 
 	
+	public static ClassLoader createClassLoader(URL[] urls) {
+		return new XYClassLoader(urls);
+	}
+
+	/**
+	 * current class path: .
+	 * 
+	 * @return
+	 * @throws MalformedURLException
+	 */
+	public static ClassLoader createClassLoader() throws MalformedURLException {
+		return createClassLoader(".");
+	}
+
+	public static ClassLoader createClassLoader(String... paths) throws MalformedURLException {
+		List<URL> urlsList = createList();
+		for (String p : paths) {
+			URL u = Paths.get(p).toUri().toURL();
+			urlsList.add(u);
+		}
+		URL[] urls = urlsList.toArray(new URL[urlsList.size()]);
+//		LogUtil.logarray(urls);
+		return createClassLoader(urls);
+	}
+	
+	public static ClassLoader createClassLoader(List<String> paths) throws MalformedURLException {
+		
+		URL []urls = new URL[paths.size()];
+		
+		for(int i=0;i<urls.length;i++) {
+			urls[i] = Paths.get(paths.get(i)).toUri().toURL();
+		}
+		
+		return createClassLoader(urls);
+		
+	}
+
+//	public static Class<?> loadClass(ClassLoader cl, String name) throws ClassNotFoundException {
+//		return cl.loadClass(name);
+//	}
 }
