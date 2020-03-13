@@ -52,7 +52,7 @@ public class TimeUtil {
 		STIME = -1;
 	}
 
-	public static long outByNs(Callback... cs) {
+	public static long outByNS(Callback... cs) {
 		long e = System.nanoTime();//place it here precision
 		checkTime();
 		codeSectionMSG();
