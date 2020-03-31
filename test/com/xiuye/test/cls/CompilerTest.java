@@ -23,7 +23,7 @@ public class CompilerTest {
 	@Test
 	public void testComileCode()
 			throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-		Map<String, String> codes = TypeUtil.createMap();
+		Map<String, String> codes = TypeUtil.map();
 		codes.put("com.xiuye.A", "package com.xiuye;" + "import com.xiuye.util.log.LogUtil;" + "public class A{"
 				+ "public A(){" + "LogUtil.log(\"OK,A created!\");" + "}" + "}");
 		LogUtil.log(XYCompiler.compileCode(codes));
