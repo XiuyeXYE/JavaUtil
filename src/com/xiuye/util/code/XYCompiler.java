@@ -1,4 +1,4 @@
-package com.xiuye.compiler.util;
+package com.xiuye.util.code;
 
 import java.io.IOException;
 import java.util.List;
@@ -10,7 +10,6 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
-import com.xiuye.compiler.JavaSourceCode;
 import com.xiuye.util.cls.XType;
 
 /**

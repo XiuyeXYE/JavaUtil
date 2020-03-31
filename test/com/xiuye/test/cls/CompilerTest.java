@@ -7,8 +7,8 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import com.xiuye.compiler.util.XYCompiler;
 import com.xiuye.util.cls.XType;
+import com.xiuye.util.code.XYCompiler;
 import com.xiuye.util.log.XLog;
 
 public class CompilerTest {
