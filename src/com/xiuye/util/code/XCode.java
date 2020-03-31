@@ -13,11 +13,15 @@ public class XCode {
 	 * @param runnable
 	 * @return run nanoseconds
 	 */
-	public static long run(Runnable runnable) {
+	public static synchronized long run(Runnable runnable) {
 		if (Objects.nonNull(runnable)) {
-			XTime.start();
-			runnable.run();
-			return XTime.cost();
+			synchronized (XTime.class) {
+				XTime.start();
+				runnable.run();
+				return XTime.cost();
+				
+			}
+
 		}
 		return -1;
 	}
@@ -28,11 +32,13 @@ public class XCode {
 	 * @param runnable
 	 * @param cs
 	 */
-	public static long runNS(Runnable runnable, Callback... cs) {
+	public static synchronized long runNS(Runnable runnable, Callback... cs) {
 		if (Objects.nonNull(runnable)) {
-			XTime.start();
-			runnable.run();
-			return XTime.outByNS(cs);
+			synchronized (XTime.class) {
+				XTime.start();
+				runnable.run();				
+				return XTime.outByNS(cs);
+			}
 		}
 		return -1;
 	}
@@ -43,11 +49,13 @@ public class XCode {
 	 * @param runnable
 	 * @param cs
 	 */
-	public static long runMS(Runnable runnable, Callback... cs) {
+	public static synchronized long runMS(Runnable runnable, Callback... cs) {
 		if (Objects.nonNull(runnable)) {
-			XTime.start();
-			runnable.run();
-			return XTime.outByMS(cs);
+			synchronized (XTime.class) {
+				XTime.start();
+				runnable.run();
+				return XTime.outByMS(cs);
+			}
 		}
 		return -1;
 	}
@@ -58,11 +66,13 @@ public class XCode {
 	 * @param runnable
 	 * @param cs
 	 */
-	public static long runS(Runnable runnable, Callback... cs) {
+	public static synchronized long runS(Runnable runnable, Callback... cs) {
 		if (Objects.nonNull(runnable)) {
-			XTime.start();
-			runnable.run();
-			return XTime.outByS(cs);
+			synchronized (XTime.class) {
+				XTime.start();
+				runnable.run();
+				return XTime.outByS(cs);
+			}
 		}
 		return -1;
 	}
@@ -71,39 +81,37 @@ public class XCode {
 	// but we can write threadsafe code!
 	/**
 	 * async running code
-	 * 		@param runnable
-	 * 		@param cs
+	 * 
+	 * @param runnable
+	 * @param cs
 	 */
-	public static void runAsyncMS(Runnable runnable,Callback... cs) {
+	public static void runAsyncMS(Runnable runnable, Callback... cs) {
 		new Thread(() -> {
-			synchronized (XTime.class) {
-				runMS(runnable, cs);
-			}
+			runMS(runnable, cs);
 		}).start();
 	}
+
 	/**
 	 * async running code
-	 * 		@param runnable
-	 * 		@param cs
+	 * 
+	 * @param runnable
+	 * @param cs
 	 */
-	public static void runAsyncNS(Runnable runnable,Callback... cs) {
+	public static void runAsyncNS(Runnable runnable, Callback... cs) {
 		new Thread(() -> {
-			synchronized (XTime.class) {
-				runNS(runnable, cs);
-			}
+			runNS(runnable, cs);
 		}).start();
 	}
-	
+
 	/**
 	 * async running code
-	 * 		@param runnable
-	 * 		@param cs
+	 * 
+	 * @param runnable
+	 * @param cs
 	 */
-	public static void runAsyncS(Runnable runnable,Callback... cs) {
+	public static void runAsyncS(Runnable runnable, Callback... cs) {
 		new Thread(() -> {
-			synchronized (XTime.class) {
-				runS(runnable, cs);
-			}
+			runS(runnable, cs);
 		}).start();
 	}
 
