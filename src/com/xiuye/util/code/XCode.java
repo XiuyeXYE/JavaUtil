@@ -67,8 +67,44 @@ public class XCode {
 		return -1;
 	}
 
-	public static void runAsync(Runnable runnable) {
-		new Thread(runnable).start();
+	// error XTime itself doesn't support that async-ly run code!
+	// but we can write threadsafe code!
+	/**
+	 * async running code
+	 * 		@param runnable
+	 * 		@param cs
+	 */
+	public static void runAsyncMS(Runnable runnable,Callback... cs) {
+		new Thread(() -> {
+			synchronized (XTime.class) {
+				runMS(runnable, cs);
+			}
+		}).start();
+	}
+	/**
+	 * async running code
+	 * 		@param runnable
+	 * 		@param cs
+	 */
+	public static void runAsyncNS(Runnable runnable,Callback... cs) {
+		new Thread(() -> {
+			synchronized (XTime.class) {
+				runNS(runnable, cs);
+			}
+		}).start();
+	}
+	
+	/**
+	 * async running code
+	 * 		@param runnable
+	 * 		@param cs
+	 */
+	public static void runAsyncS(Runnable runnable,Callback... cs) {
+		new Thread(() -> {
+			synchronized (XTime.class) {
+				runS(runnable, cs);
+			}
+		}).start();
 	}
 
 }
