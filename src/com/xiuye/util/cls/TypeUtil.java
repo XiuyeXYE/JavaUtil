@@ -14,7 +14,7 @@ import com.xiuye.compiler.XYClassLoader;
 
 public class TypeUtil {
 
-	// 适合应用类型不适合，基本类型
+	// 适合应用类型 ,不适合 基本类型
 	@SuppressWarnings("unchecked")
 	public static <R extends T, T> R dynamic_cast(T e) {
 		return (R) e;
@@ -114,19 +114,50 @@ public class TypeUtil {
 //		return c.construct(t);
 //	}
 
-	public static <K, V> Map<K, V> createMap() {
+	/**
+	 * hashmap
+	 * 		@param <K>
+	 * 		@param <V>
+	 * 		@return
+	 */
+	public static <K, V> Map<K, V> map() {
 		return newInstance(HashMap::new);
 	}
 
-	public static <T> List<T> createList() {
+	/**
+	 * arraylist
+	 * 		@param <T>
+	 * 		@return
+	 */
+	public static <T> List<T> list() {
 		return newInstance(ArrayList::new);
 	}
 
-	public static <T> Set<T> createSet() {
+	/**
+	 * hashset
+	 * 		@param <T>
+	 * 		@return
+	 */
+	public static <T> Set<T> set() {
 		return newInstance(HashSet::new);
 	}
 
-	
+	public static <T> List<T> toList(T[] a) {
+		List<T> L = list();
+		for (T e : a) {
+			L.add(e);
+		}
+		return L;
+	}
+
+	public static List<Integer> toList(int[] a) {
+		List<Integer> L = list();
+		for (int e : a) {
+			L.add(e);
+		}
+		return L;
+	}
+
 	public static ClassLoader createClassLoader(URL[] urls) {
 		return new XYClassLoader(urls);
 	}
@@ -142,7 +173,7 @@ public class TypeUtil {
 	}
 
 	public static ClassLoader createClassLoader(String... paths) throws MalformedURLException {
-		List<URL> urlsList = createList();
+		List<URL> urlsList = list();
 		for (String p : paths) {
 			URL u = Paths.get(p).toUri().toURL();
 			urlsList.add(u);
@@ -151,17 +182,17 @@ public class TypeUtil {
 //		LogUtil.logarray(urls);
 		return createClassLoader(urls);
 	}
-	
+
 	public static ClassLoader createClassLoader(List<String> paths) throws MalformedURLException {
-		
-		URL []urls = new URL[paths.size()];
-		
-		for(int i=0;i<urls.length;i++) {
+
+		URL[] urls = new URL[paths.size()];
+
+		for (int i = 0; i < urls.length; i++) {
 			urls[i] = Paths.get(paths.get(i)).toUri().toURL();
 		}
-		
+
 		return createClassLoader(urls);
-		
+
 	}
 
 //	public static Class<?> loadClass(ClassLoader cl, String name) throws ClassNotFoundException {

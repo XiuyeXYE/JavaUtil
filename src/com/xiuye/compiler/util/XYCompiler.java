@@ -38,7 +38,7 @@ public class XYCompiler {
 	 * @return
 	 */
 	public static boolean compileFile(String binPath, List<String> files) {
-		List<String> options = TypeUtil.createList();
+		List<String> options = TypeUtil.list();
 		options.add("-d");
 		options.add(binPath);
 		return compileFile(options, files);
@@ -77,7 +77,7 @@ public class XYCompiler {
 	}
 
 	public static boolean compileCode(String binPath, Map<String, String> codes) {
-		List<String> options = TypeUtil.createList();
+		List<String> options = TypeUtil.list();
 		options.add("-d");
 		options.add(binPath);
 		return compileCode(options, codes);
@@ -95,7 +95,7 @@ public class XYCompiler {
 //		DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
 		try (StandardJavaFileManager sjfm = jc.getStandardFileManager(null, null, null)) {
 
-			List<JavaSourceCode> compilationUnits = TypeUtil.createList();
+			List<JavaSourceCode> compilationUnits = TypeUtil.list();
 			for (Entry<String, String> code : codes.entrySet()) {
 				compilationUnits.add(new JavaSourceCode(code.getKey(), code.getValue()));
 			}
