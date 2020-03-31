@@ -10,17 +10,17 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Scanner;
 
-import com.xiuye.util.log.LogUtil;
+import com.xiuye.util.log.XLog;
 
 public class EncryptJava2Unicode {
 
 	public static void main(String args[]) throws IOException {
 		Scanner in = new Scanner(System.in);
-		LogUtil.log("请输入已存在的文件名：");
+		XLog.log("请输入已存在的文件名：");
 		String fileName = in.nextLine();
 		File f = new File("./" + fileName);
 		if (!f.exists()) {
-			LogUtil.log("文件：" + fileName + "不存在！");
+			XLog.log("文件：" + fileName + "不存在！");
 			System.exit(0);
 		}
 		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
@@ -46,9 +46,9 @@ public class EncryptJava2Unicode {
 			bw.write(str, 0, str.length());
 			bw.flush();
 //			System.out.print("\\u" + unicodeTemp);
-			LogUtil.print("\\u" + unicodeTemp);
+			XLog.print("\\u" + unicodeTemp);
 		}
-		LogUtil.println();
+		XLog.println();
 		br.close();
 		bw.close();
 		in.close();

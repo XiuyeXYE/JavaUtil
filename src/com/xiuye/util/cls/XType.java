@@ -10,15 +10,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.xiuye.compiler.XYClassLoader;
+import com.xiuye.util.code.XYClassLoader;
 
-public class TypeUtil {
+public class XType {
 
-	// 适合应用类型 ,不适合 基本类型
+	// 适合引用类型 ,不适合 基本类型
 	@SuppressWarnings("unchecked")
-	public static <R extends T, T> R dynamic_cast(T e) {
+	public static <R extends T, T> R cast(T e) {
 		return (R) e;
 	}
+
+	/**
+	 * boolean byte char short int long float double
+	 */
+	
+	
 
 	public interface DefaultConstructor<R> {
 		R construct();
@@ -116,9 +122,10 @@ public class TypeUtil {
 
 	/**
 	 * hashmap
-	 * 		@param <K>
-	 * 		@param <V>
-	 * 		@return
+	 * 
+	 * @param <K>
+	 * @param <V>
+	 * @return
 	 */
 	public static <K, V> Map<K, V> map() {
 		return newInstance(HashMap::new);
@@ -126,8 +133,9 @@ public class TypeUtil {
 
 	/**
 	 * arraylist
-	 * 		@param <T>
-	 * 		@return
+	 * 
+	 * @param <T>
+	 * @return
 	 */
 	public static <T> List<T> list() {
 		return newInstance(ArrayList::new);
@@ -135,8 +143,9 @@ public class TypeUtil {
 
 	/**
 	 * hashset
-	 * 		@param <T>
-	 * 		@return
+	 * 
+	 * @param <T>
+	 * @return
 	 */
 	public static <T> Set<T> set() {
 		return newInstance(HashSet::new);
