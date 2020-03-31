@@ -3,7 +3,7 @@ package com.xiuye.compiler;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-import com.xiuye.util.cls.TypeUtil;
+import com.xiuye.util.cls.XType;
 
 public class XYClassLoader extends URLClassLoader {
 
@@ -12,7 +12,7 @@ public class XYClassLoader extends URLClassLoader {
 	}
 
 	public <T> Class<T> load(String name) throws ClassNotFoundException{
-		return TypeUtil.dynamic_cast(this.loadClass(name));
+		return XType.cast(this.loadClass(name));
 	}
 
 }

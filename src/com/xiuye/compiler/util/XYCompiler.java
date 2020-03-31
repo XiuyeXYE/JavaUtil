@@ -11,7 +11,7 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
 import com.xiuye.compiler.JavaSourceCode;
-import com.xiuye.util.cls.TypeUtil;
+import com.xiuye.util.cls.XType;
 
 /**
  * java code compiler
@@ -38,7 +38,7 @@ public class XYCompiler {
 	 * @return
 	 */
 	public static boolean compileFile(String binPath, List<String> files) {
-		List<String> options = TypeUtil.list();
+		List<String> options = XType.list();
 		options.add("-d");
 		options.add(binPath);
 		return compileFile(options, files);
@@ -77,7 +77,7 @@ public class XYCompiler {
 	}
 
 	public static boolean compileCode(String binPath, Map<String, String> codes) {
-		List<String> options = TypeUtil.list();
+		List<String> options = XType.list();
 		options.add("-d");
 		options.add(binPath);
 		return compileCode(options, codes);
@@ -95,7 +95,7 @@ public class XYCompiler {
 //		DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
 		try (StandardJavaFileManager sjfm = jc.getStandardFileManager(null, null, null)) {
 
-			List<JavaSourceCode> compilationUnits = TypeUtil.list();
+			List<JavaSourceCode> compilationUnits = XType.list();
 			for (Entry<String, String> code : codes.entrySet()) {
 				compilationUnits.add(new JavaSourceCode(code.getKey(), code.getValue()));
 			}

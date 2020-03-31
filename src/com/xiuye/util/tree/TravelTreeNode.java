@@ -6,8 +6,8 @@ import java.util.Objects;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.xiuye.util.log.LogUtil;
-import com.xiuye.util.time.TimeUtil;
+import com.xiuye.util.log.XLog;
+import com.xiuye.util.time.XTime;
 
 public class TravelTreeNode {
 
@@ -34,35 +34,35 @@ public class TravelTreeNode {
 			nodes.add(node);
 		}
 		root.setNodes(nodes);
-		LogUtil.log(root);
-		LogUtil.log(gson.toJson(root));
+		XLog.log(root);
+		XLog.log(gson.toJson(root));
 		
-		LogUtil.log("遍历(应该是先序):");
-		TimeUtil.start();
+		XLog.log("遍历(应该是先序):");
+		XTime.start();
 		travel(root);
-		TimeUtil.outByMS();
+		XTime.outByMS();
 
 		//查询节点
-		LogUtil.log();
-		LogUtil.log("仅仅查出含有msg的节点,如果有上层节点就包含上层节点,但不包含其节点的子节点:");
+		XLog.log();
+		XLog.log("仅仅查出含有msg的节点,如果有上层节点就包含上层节点,但不包含其节点的子节点:");
 		TreeNode<String> out = new TreeNode<>();
 		getSearchNode("9", root, out);
-		TimeUtil.outByMS();
-		LogUtil.log(gson.toJson(out));
+		XTime.outByMS();
+		XLog.log(gson.toJson(out));
 		
 		//查询节点 2
-		LogUtil.log();
-		LogUtil.log("保留下一级所有子节点,但子节点不open:");
+		XLog.log();
+		XLog.log("保留下一级所有子节点,但子节点不open:");
 		out = new TreeNode<>();
 		getSearchNodeIncludeChildren("9", root, out);
-		TimeUtil.outByMS();
-		LogUtil.log(gson.toJson(out));
+		XTime.outByMS();
+		XLog.log(gson.toJson(out));
 	}
 
 	//遍历
 	public static void travel(TreeNode<String> root) {
 
-		LogUtil.print(root.getValue());
+		XLog.print(root.getValue());
 		List<TreeNode<String>> nodes = root.getNodes();
 		if (nodes != null)
 			for (int i = 0; i < nodes.size(); i++) {

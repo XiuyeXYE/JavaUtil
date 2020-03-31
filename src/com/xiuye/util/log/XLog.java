@@ -2,7 +2,7 @@ package com.xiuye.util.log;
 
 import java.util.Objects;
 
-public class LogUtil {
+public class XLog {
 
 	@SafeVarargs
 	public static <T> void println(T... t) {
