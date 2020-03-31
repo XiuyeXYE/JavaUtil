@@ -40,14 +40,14 @@ public class TravelTreeNode {
 		LogUtil.log("遍历(应该是先序):");
 		TimeUtil.start();
 		travel(root);
-		TimeUtil.outCostOnConsoleMs();
+		TimeUtil.outByMS();
 
 		//查询节点
 		LogUtil.log();
 		LogUtil.log("仅仅查出含有msg的节点,如果有上层节点就包含上层节点,但不包含其节点的子节点:");
 		TreeNode<String> out = new TreeNode<>();
 		getSearchNode("9", root, out);
-		TimeUtil.outCostOnConsoleMs();
+		TimeUtil.outByMS();
 		LogUtil.log(gson.toJson(out));
 		
 		//查询节点 2
@@ -55,7 +55,7 @@ public class TravelTreeNode {
 		LogUtil.log("保留下一级所有子节点,但子节点不open:");
 		out = new TreeNode<>();
 		getSearchNodeIncludeChildren("9", root, out);
-		TimeUtil.outCostOnConsoleMs();
+		TimeUtil.outByMS();
 		LogUtil.log(gson.toJson(out));
 	}
 

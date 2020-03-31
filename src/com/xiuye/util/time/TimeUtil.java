@@ -52,7 +52,7 @@ public class TimeUtil {
 		STIME = -1;
 	}
 
-	public static long outCostOnConsoleNs(Callback... cs) {
+	public static long outByNS(Callback... cs) {
 		long e = System.nanoTime();//place it here precision
 		checkTime();
 		codeSectionMSG();
@@ -64,7 +64,7 @@ public class TimeUtil {
 		return cost;
 	}
 
-	public static long outCostOnConsoleMs(Callback... cs) {
+	public static long outByMS(Callback... cs) {
 		long e = System.nanoTime();
 		checkTime();
 		codeSectionMSG();
@@ -76,7 +76,7 @@ public class TimeUtil {
 		return cost;
 	}
 
-	public static long outCostOnConsoleS(Callback... cs) {
+	public static long outByS(Callback... cs) {
 		long e = System.nanoTime();
 		checkTime();
 		codeSectionMSG();
