@@ -6,6 +6,14 @@
 	<artifactId>xyjava</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<description>Utilities for java</description>
+
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+
+
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<testSourceDirectory>test</testSourceDirectory>
@@ -32,4 +40,26 @@
 			<version>4.12</version>
 		</dependency>
 	</dependencies>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<scm>
+		<tag>jdk8</tag>
+		<url>git@github.com:XiuyeXYE/JavaUtil.git</url>
+		<connection>scm:git:git@github.com:XiuyeXYE/JavaUtil.git</connection>
+		<developerConnection>scm:git:git@github.com:XiuyeXYE/JavaUtil.git</developerConnection>
+	</scm>
+	<developers>
+		<developer>
+			<name>xiuye</name>
+			<email>xiuye_engineer@outlook.com</email>
+			<organization>ABCXIUYE</organization>
+		</developer>
+	</developers>
+
 </project>
