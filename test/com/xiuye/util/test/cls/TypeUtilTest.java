@@ -154,4 +154,26 @@ public class TypeUtilTest {
 //				);
 	}
 	
+	public static <T,R> R cast(T t) {
+		return (R) t;
+	}
+	
+	@Test
+	public void testCast() {
+		int i = 100;
+		long j = i;
+		XLog.log(j);
+//		int k = cast(j);//error
+//		XLog.log(i);
+	}
+//	public static <R> R newi() {
+//		return XType.newInstance(R::new);
+//	}
+	@Test
+	public void newCases() {
+		
+		
+		
+	}
+	
 }

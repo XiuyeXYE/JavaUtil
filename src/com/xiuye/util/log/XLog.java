@@ -8,6 +8,11 @@ public class XLog {
 	public static <T> void println(T... t) {
 		log(t);
 	}
+	
+	@SafeVarargs
+	public static <T> void lg(T... t) {
+		log(t);
+	}
 
 	public static <T> void logArray(T[] arr) {
 

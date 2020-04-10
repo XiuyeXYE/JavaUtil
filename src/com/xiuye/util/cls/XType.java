@@ -15,16 +15,20 @@ import com.xiuye.util.code.XYClassLoader;
 public class XType {
 
 	// 适合引用类型 ,不适合 基本类型
+	/**
+	 * cast T to R In general,T is ancestor class , R is subclass
+	 * 
+	 * @param <R  extends T>
+	 * @param <T>
+	 * @param e   instantiated object
+	 * @return reference of subclass
+	 */
 	@SuppressWarnings("unchecked")
 	public static <R extends T, T> R cast(T e) {
 		return (R) e;
 	}
 
-	/**
-	 * boolean byte char short int long float double
-	 */
-	
-	
+	// boolean byte char short int long float double
 
 	public interface DefaultConstructor<R> {
 		R construct();
@@ -60,6 +64,14 @@ public class XType {
 
 	public interface ConstructorWithEightParams<R, T1, T2, T3, T4, T5, T6, T7, T8> {
 		R construct(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8);
+	}
+
+	public interface ConstructorWithNineParams<R, T1, T2, T3, T4, T5, T6, T7, T8, T9> {
+		R construct(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9);
+	}
+
+	public interface ConstructorWithTenParams<R, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> {
+		R construct(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10);
 	}
 
 	public interface ConstructorWithParams<R, T> {
@@ -110,6 +122,18 @@ public class XType {
 		return c.construct(t1, t2, t3, t4, t5, t6, t7, t8);
 	}
 
+	public static <R, T1, T2, T3, T4, T5, T6, T7, T8, T9> R newInstance(
+			ConstructorWithNineParams<R, T1, T2, T3, T4, T5, T6, T7, T8, T9> c, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5,
+			T6 t6, T7 t7, T8 t8, T9 t9) {
+		return c.construct(t1, t2, t3, t4, t5, t6, t7, t8, t9);
+	}
+
+	public static <R, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> R newInstance(
+			ConstructorWithTenParams<R, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> c, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5,
+			T6 t6, T7 t7, T8 t8, T9 t9, T10 t10) {
+		return c.construct(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10);
+	}
+
 	// Now , T[] <=> T...t
 	@SafeVarargs
 	public static <R, T> R newInstance(ConstructorWithParams<R, T> c, T... t) {
@@ -119,9 +143,10 @@ public class XType {
 //	public static<R,T> R newInstance(ConstructorWithParams<R,T> c,Object...t) {
 //		return c.construct(t);
 //	}
-
+	
+	
 	/**
-	 * hashmap
+	 * HashMap
 	 * 
 	 * @param <K>
 	 * @param <V>
@@ -132,7 +157,7 @@ public class XType {
 	}
 
 	/**
-	 * arraylist
+	 * ArrayList
 	 * 
 	 * @param <T>
 	 * @return
@@ -142,7 +167,7 @@ public class XType {
 	}
 
 	/**
-	 * hashset
+	 * HashSet
 	 * 
 	 * @param <T>
 	 * @return
@@ -151,6 +176,13 @@ public class XType {
 		return newInstance(HashSet::new);
 	}
 
+	/**
+	 * to ArrayList
+	 * 
+	 * @param <T>
+	 * @param a
+	 * @return
+	 */
 	public static <T> List<T> toList(T[] a) {
 		List<T> L = list();
 		for (T e : a) {
@@ -159,6 +191,11 @@ public class XType {
 		return L;
 	}
 
+	/**
+	 * to ArrayList
+	 * 		@param a
+	 * 		@return
+	 */
 	public static List<Integer> toList(int[] a) {
 		List<Integer> L = list();
 		for (int e : a) {
@@ -167,6 +204,11 @@ public class XType {
 		return L;
 	}
 
+	/**
+	 * create ClassLoader with paths
+	 * 		@param urls
+	 * 		@return
+	 */
 	public static ClassLoader createClassLoader(URL[] urls) {
 		return new XYClassLoader(urls);
 	}
@@ -181,6 +223,12 @@ public class XType {
 		return createClassLoader(".");
 	}
 
+	/**
+	 * create ClassLoader with paths
+	 * 		@param paths
+	 * 		@return
+	 * 		@throws MalformedURLException
+	 */
 	public static ClassLoader createClassLoader(String... paths) throws MalformedURLException {
 		List<URL> urlsList = list();
 		for (String p : paths) {
@@ -192,6 +240,12 @@ public class XType {
 		return createClassLoader(urls);
 	}
 
+	/**
+	 * create ClassLoader with paths
+	 * 		@param paths
+	 * 		@return
+	 * 		@throws MalformedURLException
+	 */
 	public static ClassLoader createClassLoader(List<String> paths) throws MalformedURLException {
 
 		URL[] urls = new URL[paths.size()];
