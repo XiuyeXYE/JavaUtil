@@ -177,7 +177,7 @@ public class XCode {
 	}
 
 	/**
-	 * covert java unicode code to source code
+	 * covert unicode code to java source code
 	 * 
 	 * @param outputFilePath
 	 * @throws IOException
