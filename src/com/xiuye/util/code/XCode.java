@@ -8,6 +8,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
 
 import com.xiuye.util.log.XLog;
@@ -137,13 +140,10 @@ public class XCode {
 	 * @throws IOException
 	 */
 	public static void java2Unicode(String fileName, String outputFilePath) throws IOException {
-//		Scanner in = new Scanner(System.in);
-//		XLog.log("请输入已存在的文件名：");
-//		String fileName = in.nextLine();
 		File f = new File(fileName);
 		if (!f.exists()) {
 			XLog.log("文件：" + fileName + "不存在！");
-			System.exit(0);
+			return;
 		}
 		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
 		BufferedWriter bw = new BufferedWriter(
@@ -169,6 +169,52 @@ public class XCode {
 			bw.flush();
 //			System.out.print("\\u" + unicodeTemp);
 			XLog.print("\\u" + unicodeTemp);
+		}
+		XLog.println();
+		br.close();
+		bw.close();
+
+	}
+
+	/**
+	 * covert java unicode code to source code
+	 * 
+	 * @param outputFilePath
+	 * @throws IOException
+	 */
+	public static void unicode2Java(String fileName, String outputFilePath) throws IOException {
+		File f = new File(fileName);
+		if (!f.exists()) {
+			XLog.log("文件：" + fileName + "不存在！");
+			return;
+		}
+		Path outPath = Paths.get(outputFilePath);
+		if (!Files.exists(outPath)) {
+			Files.createDirectory(outPath);
+		}
+		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
+		BufferedWriter bw = new BufferedWriter(
+				new OutputStreamWriter(new FileOutputStream(outputFilePath + File.separator + fileName)));
+		int ch = -1;
+		while ((ch = br.read()) != -1) {
+			if (ch == '\\') {
+				ch = br.read();
+				if (ch == 'u') {
+					String s = "";
+					for (int i = 0; i < 4; i++) {
+						ch = br.read();
+						s += (char) ch;
+					}
+					bw.write(Integer.parseInt(s, 16));
+					XLog.print(s);
+				} else {
+					bw.write(ch);
+					XLog.print(ch);
+				}
+			} else {
+				bw.write(ch);
+				XLog.print(ch);
+			}
 		}
 		XLog.println();
 		br.close();
