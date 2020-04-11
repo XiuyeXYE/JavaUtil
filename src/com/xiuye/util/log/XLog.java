@@ -374,6 +374,12 @@ public class XLog {
 		return OUTPUT;
 	}
 
+	/**
+	 * set output stream
+	 * 
+	 * @param out
+	 * @return
+	 */
 	public static PrintStream setOut(PrintStream out) {
 		PrintStream oldOut = System.out;
 		System.setOut(out);
@@ -381,7 +387,7 @@ public class XLog {
 	}
 
 	/**
-	 * set err output!
+	 * set err output stream!
 	 * 
 	 * @param err
 	 * @return
