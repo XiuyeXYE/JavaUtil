@@ -4,13 +4,11 @@ import java.net.MalformedURLException;
 
 import org.junit.Test;
 
-import com.xiuye.util.cls.XType;
-import com.xiuye.util.log.XLog;
-
 public class ClassLoaderTest {
 
 	@Test
-	public void testLoadClass() throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+	public void testLoadClass()
+			throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 //		ClassLoader cl = XType.createClassLoader(".","E:\\code\\Utils");
 //		Class<?> cls = cl.loadClass("A");
 //		XLog.log(cls);
@@ -19,7 +17,5 @@ public class ClassLoaderTest {
 //		XLog.log(cls);
 //		XLog.log(cls.newInstance());
 	}
-	
-	
-	
+
 }

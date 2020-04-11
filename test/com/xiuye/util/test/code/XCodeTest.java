@@ -9,22 +9,22 @@ public class XCodeTest {
 
 	@Test
 	public void test() throws InterruptedException {
-		XCode.runAsyncNS(()->{
+		XCode.runAsyncNS(() -> {
 			XLog.log("Something");
-		}, ()->{
+		}, () -> {
 			XLog.log("after running code!");
 		});
-		XCode.runAsyncMS(()->{
+		XCode.runAsyncMS(() -> {
 			XLog.log("Something");
-		}, ()->{
+		}, () -> {
 			XLog.log("after running code!");
 		});
-		XCode.runAsyncS(()->{
+		XCode.runAsyncS(() -> {
 			XLog.log("Something");
-		}, ()->{
+		}, () -> {
 			XLog.log("after running code!");
 		});
 		Thread.sleep(3000);
 	}
-	
+
 }

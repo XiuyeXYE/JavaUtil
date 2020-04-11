@@ -1,15 +1,8 @@
 package com.xiuye.test.cls;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
 import org.junit.Test;
-
-import com.xiuye.util.cls.XType;
-import com.xiuye.util.code.XYCompiler;
-import com.xiuye.util.log.XLog;
 
 public class CompilerTest {
 
