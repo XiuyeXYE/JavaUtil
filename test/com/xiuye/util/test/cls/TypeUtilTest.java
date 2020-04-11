@@ -180,7 +180,6 @@ public class TypeUtilTest {
 //	}
 	@Test
 	public void newCases() {
-
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.xiuye.util.log;
 
+import java.io.PrintStream;
 import java.util.Objects;
 
 /**
@@ -350,6 +351,65 @@ public class XLog {
 		println();
 	}
 
+	private static boolean OUTPUT = true;
+
+	/**
+	 * set output true/false
+	 * 
+	 * @param output
+	 * @return old output value
+	 */
+	public static boolean setOutput(boolean output) {
+		boolean oldOutput = OUTPUT;
+		OUTPUT = output;
+		return oldOutput;
+	}
+
+	/**
+	 * get output value
+	 * 
+	 * @return true/false
+	 */
+	public static boolean isOutput() {
+		return OUTPUT;
+	}
+
+	public static PrintStream setOut(PrintStream out) {
+		PrintStream oldOut = System.out;
+		System.setOut(out);
+		return oldOut;
+	}
+
+	/**
+	 * set err output!
+	 * 
+	 * @param err
+	 * @return
+	 */
+	public static PrintStream setErr(PrintStream err) {
+		PrintStream oldErr = System.err;
+		System.setErr(err);
+		return oldErr;
+	}
+
+	/**
+	 * get output stream
+	 * 
+	 * @return
+	 */
+	public static PrintStream getOut() {
+		return System.out;
+	}
+
+	/**
+	 * get err output stream
+	 * 
+	 * @return
+	 */
+	public static PrintStream getErr() {
+		return System.err;
+	}
+
 	/**
 	 * output many params
 	 * 
@@ -358,7 +418,8 @@ public class XLog {
 	 */
 	@SafeVarargs
 	public static <T> void log(T... t) {
-
+		if (!OUTPUT)
+			return;
 		if (t.length == 0)
 			System.out.println();
 		else {
@@ -378,7 +439,8 @@ public class XLog {
 	 */
 	@SafeVarargs
 	public static <T> void err(T... t) {
-
+		if (!OUTPUT)
+			return;
 		if (t.length == 0)
 			System.err.println();
 		else {
@@ -398,6 +460,8 @@ public class XLog {
 	 */
 	@SafeVarargs
 	public static <T> void print(T... ts) {
+		if (!OUTPUT)
+			return;
 		if (ts.length > 0) {
 			for (int i = 0; i < ts.length - 1; i++) {
 				System.out.print(ts[i] + " ");
