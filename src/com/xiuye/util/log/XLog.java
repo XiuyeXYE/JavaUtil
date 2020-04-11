@@ -2,18 +2,43 @@ package com.xiuye.util.log;
 
 import java.util.Objects;
 
+/**
+ * System.out extension
+ * 
+ * @author xiuye
+ *
+ */
 public class XLog {
 
+	/**
+	 * output many params
+	 * 
+	 * @param <T>
+	 * @param t   any many params for output
+	 */
 	@SafeVarargs
 	public static <T> void println(T... t) {
 		log(t);
 	}
-	
+
+	/**
+	 * output many params
+	 * 
+	 * @param <T>
+	 * @param t
+	 * @see log
+	 */
 	@SafeVarargs
 	public static <T> void lg(T... t) {
 		log(t);
 	}
 
+	/**
+	 * output level 1 array!
+	 * 
+	 * @param <T>
+	 * @param arr
+	 */
 	public static <T> void logArray(T[] arr) {
 
 		for (T t : arr) {
@@ -22,6 +47,13 @@ public class XLog {
 		println();
 	}
 
+	/**
+	 * output level 1 array with separator
+	 * 
+	 * @param <T>
+	 * @param arr
+	 * @param separator
+	 */
 	public static <T> void logArray(T[] arr, String separator) {
 
 		if (Objects.nonNull(arr)) {
@@ -38,6 +70,12 @@ public class XLog {
 		println();
 	}
 
+	/**
+	 * output level 1 array with separator
+	 * 
+	 * @param arr
+	 * @param separator
+	 */
 	public static void logArray(double[] arr, String separator) {
 
 		if (Objects.nonNull(arr)) {
@@ -54,6 +92,11 @@ public class XLog {
 		println();
 	}
 
+	/**
+	 * output level 1 array with separator
+	 * 
+	 * @param arr
+	 */
 	public static void logArray(double[] arr) {
 
 		for (double t : arr) {
@@ -62,6 +105,12 @@ public class XLog {
 		println();
 	}
 
+	/**
+	 * output level 1 array with separator
+	 * 
+	 * @param arr
+	 * @param separator
+	 */
 	public static void logArray(int[] arr, String separator) {
 
 		if (Objects.nonNull(arr)) {
@@ -78,6 +127,11 @@ public class XLog {
 		println();
 	}
 
+	/**
+	 * output level 1 array
+	 * 
+	 * @param arr
+	 */
 	public static void logArray(int[] arr) {
 
 		for (int t : arr) {
@@ -86,6 +140,12 @@ public class XLog {
 		println();
 	}
 
+	/**
+	 * output level 1 array with separator
+	 * 
+	 * @param arr
+	 * @param separator
+	 */
 	public static void logArray(long[] arr, String separator) {
 
 		if (Objects.nonNull(arr)) {
@@ -102,6 +162,11 @@ public class XLog {
 		println();
 	}
 
+	/**
+	 * output level 1 array
+	 * 
+	 * @param arr
+	 */
 	public static void logArray(long[] arr) {
 
 		for (long t : arr) {
@@ -110,6 +175,12 @@ public class XLog {
 		println();
 	}
 
+	/**
+	 * output level 1 array with separator
+	 * 
+	 * @param arr
+	 * @param separator
+	 */
 	public static void logArray(short[] arr, String separator) {
 
 		if (Objects.nonNull(arr)) {
@@ -126,6 +197,11 @@ public class XLog {
 		println();
 	}
 
+	/**
+	 * output level 1 array
+	 * 
+	 * @param arr
+	 */
 	public static void logArray(short[] arr) {
 
 		for (short t : arr) {
@@ -134,6 +210,12 @@ public class XLog {
 		println();
 	}
 
+	/**
+	 * output level 1 array
+	 * 
+	 * @param arr
+	 * @param separator
+	 */
 	public static void logArray(char[] arr, String separator) {
 
 		if (Objects.nonNull(arr)) {
@@ -150,6 +232,11 @@ public class XLog {
 		println();
 	}
 
+	/**
+	 * output level 1 array
+	 * 
+	 * @param arr
+	 */
 	public static void logArray(char[] arr) {
 
 		for (char t : arr) {
@@ -158,6 +245,12 @@ public class XLog {
 		println();
 	}
 
+	/**
+	 * output level 1 array with separator
+	 * 
+	 * @param arr
+	 * @param separator
+	 */
 	public static void logArray(byte[] arr, String separator) {
 
 		if (Objects.nonNull(arr)) {
@@ -174,6 +267,11 @@ public class XLog {
 		println();
 	}
 
+	/**
+	 * output level 1 array
+	 * 
+	 * @param arr
+	 */
 	public static void logArray(byte[] arr) {
 
 		for (byte t : arr) {
@@ -182,6 +280,12 @@ public class XLog {
 		println();
 	}
 
+	/**
+	 * output level 1 array with separator
+	 * 
+	 * @param arr
+	 * @param separator
+	 */
 	public static void logArray(boolean[] arr, String separator) {
 
 		if (Objects.nonNull(arr)) {
@@ -198,6 +302,11 @@ public class XLog {
 		println();
 	}
 
+	/**
+	 * output level 1 array
+	 * 
+	 * @param arr
+	 */
 	public static void logArray(boolean[] arr) {
 
 		for (boolean t : arr) {
@@ -206,6 +315,12 @@ public class XLog {
 		println();
 	}
 
+	/**
+	 * output level 1 array with separator
+	 * 
+	 * @param arr
+	 * @param separator
+	 */
 	public static void logArray(float[] arr, String separator) {
 
 		if (Objects.nonNull(arr)) {
@@ -222,6 +337,11 @@ public class XLog {
 		println();
 	}
 
+	/**
+	 * output level 1 array
+	 * 
+	 * @param arr
+	 */
 	public static void logArray(float[] arr) {
 
 		for (float t : arr) {
@@ -230,6 +350,12 @@ public class XLog {
 		println();
 	}
 
+	/**
+	 * output many params
+	 * 
+	 * @param <T>
+	 * @param t
+	 */
 	@SafeVarargs
 	public static <T> void log(T... t) {
 
@@ -244,6 +370,12 @@ public class XLog {
 
 	}
 
+	/**
+	 * output many params
+	 * 
+	 * @param <T>
+	 * @param t
+	 */
 	@SafeVarargs
 	public static <T> void err(T... t) {
 
@@ -258,6 +390,12 @@ public class XLog {
 
 	}
 
+	/**
+	 * output many params
+	 * 
+	 * @param <T>
+	 * @param ts
+	 */
 	@SafeVarargs
 	public static <T> void print(T... ts) {
 		if (ts.length > 0) {

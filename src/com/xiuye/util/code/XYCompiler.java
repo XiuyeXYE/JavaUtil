@@ -14,13 +14,14 @@ import com.xiuye.util.cls.XType;
 
 /**
  * java code compiler
- * @author admin
+ * 
+ * @author xiuye
  *
  */
 public class XYCompiler {
 
 	/**
-	 * output class file to current path
+	 * compile java source code on current path . output class file to current path
 	 * 
 	 * @param files
 	 * @return
@@ -30,7 +31,7 @@ public class XYCompiler {
 	}
 
 	/**
-	 * assign output path
+	 * compile java source code assign output path
 	 * 
 	 * @param binPath
 	 * @param files
@@ -43,6 +44,13 @@ public class XYCompiler {
 		return compileFile(options, files);
 	}
 
+	/**
+	 * compile java source code
+	 * 
+	 * @param options   compile arguments
+	 * @param filenames
+	 * @return
+	 */
 	public static boolean compileFile(List<String> options, List<String> filenames) {
 
 		JavaCompiler jc = ToolProvider.getSystemJavaCompiler();
@@ -60,13 +68,19 @@ public class XYCompiler {
 		return false;
 	}
 
+	/**
+	 * compile java source code for java file
+	 * 
+	 * @param arguments
+	 * @return
+	 */
 	public static boolean compileFile(String... arguments) {
 		JavaCompiler jc = ToolProvider.getSystemJavaCompiler();
 		return jc.run(null, null, null, arguments) == 0;
 	}
 
 	/**
-	 * compile source code
+	 * compile source code for string java code
 	 * 
 	 * @param codes
 	 * @return
@@ -75,6 +89,13 @@ public class XYCompiler {
 		return compileCode(".", codes);
 	}
 
+	/**
+	 * compile java source string code
+	 * 
+	 * @param binPath
+	 * @param codes
+	 * @return
+	 */
 	public static boolean compileCode(String binPath, Map<String, String> codes) {
 		List<String> options = XType.list();
 		options.add("-d");
@@ -83,9 +104,10 @@ public class XYCompiler {
 	}
 
 	/**
-	 * codes => package:code string
+	 * compile java source code codes[Map structure] : package(String) =>
+	 * code(string)
 	 * 
-	 * @param options
+	 * @param options compile arguments
 	 * @param codes
 	 * @return
 	 */

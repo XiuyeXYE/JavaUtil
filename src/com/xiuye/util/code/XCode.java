@@ -5,6 +5,12 @@ import java.util.Objects;
 import com.xiuye.util.time.XTime;
 import com.xiuye.util.time.XTime.Callback;
 
+/**
+ * Run code time
+ * 
+ * @author xiuye
+ *
+ */
 public class XCode {
 
 	/**
@@ -19,7 +25,7 @@ public class XCode {
 				XTime.start();
 				runnable.run();
 				return XTime.cost();
-				
+
 			}
 
 		}
@@ -36,7 +42,7 @@ public class XCode {
 		if (Objects.nonNull(runnable)) {
 			synchronized (XTime.class) {
 				XTime.start();
-				runnable.run();				
+				runnable.run();
 				return XTime.outByNS(cs);
 			}
 		}

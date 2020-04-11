@@ -6,6 +6,12 @@ import com.xiuye.util.cls.XMeta;
 import com.xiuye.util.cls.XMeta.Caller;
 import com.xiuye.util.log.XLog;
 
+/**
+ * time operator
+ * 
+ * @author xiuye
+ *
+ */
 public class XTime {
 
 	private static long STIME = -1;
@@ -13,20 +19,30 @@ public class XTime {
 	private static Caller SCALLER = null;
 
 	private static final int LEVEL = 3;
-	
 
+	/**
+	 * check start time and start caller existence
+	 */
 	private static void checkTime() {
 		if (STIME == -1 || Objects.isNull(SCALLER)) {
 			throw new RuntimeException("Not call start() function firstly!");
 		}
 	}
 
+	/**
+	 * execute callbacks
+	 * 
+	 * @param cs
+	 */
 	private static void executeAllCallback(Callback... cs) {
 		for (Callback c : cs) {
 			c.run();
 		}
 	}
 
+	/**
+	 * System.out running code section
+	 */
 	private static void codeSectionMSG() {
 		Caller eCaller = XMeta.caller(LEVEL + 1);
 		String codeSectionMSG = "\r\n=====This Code Section=====\nFrom\n";
@@ -38,24 +54,49 @@ public class XTime {
 		XLog.log(codeSectionMSG);
 	}
 
+	/**
+	 * callback
+	 * 
+	 * @author xiuye
+	 *
+	 */
 	public interface Callback {
 		void run();
 	}
 
+	/**
+	 * start and init first time and caller
+	 * 
+	 * @return nanoseconds
+	 */
 	public static long start() {
 		SCALLER = XMeta.caller(LEVEL);
 		return STIME = System.nanoTime();
 	}
 
+	/**
+	 * from start to now cost time
+	 * 
+	 * @return
+	 */
 	public static long cost() {
 		checkTime();
 		return System.nanoTime() - STIME;
 	}
 
+	/**
+	 * set start time not inited!
+	 */
 	public static void reset() {
 		STIME = -1;
 	}
 
+	/**
+	 * output runing code section info nanoseconds
+	 * 
+	 * @param cs
+	 * @return
+	 */
 	public static long outByNS(Callback... cs) {
 		long e = System.nanoTime();// place it here precision
 		checkTime();
@@ -68,6 +109,12 @@ public class XTime {
 		return cost;
 	}
 
+	/**
+	 * output runing code section info milliseconds
+	 * 
+	 * @param cs
+	 * @return
+	 */
 	public static long outByMS(Callback... cs) {
 		long e = System.nanoTime();
 		checkTime();
@@ -80,6 +127,12 @@ public class XTime {
 		return cost;
 	}
 
+	/**
+	 * output runing code section info seconds
+	 * 
+	 * @param cs
+	 * @return
+	 */
 	public static long outByS(Callback... cs) {
 		long e = System.nanoTime();
 		checkTime();
