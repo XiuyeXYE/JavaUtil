@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Objects;
-import java.util.Scanner;
 
 import com.xiuye.util.log.XLog;
 import com.xiuye.util.time.XTime;
@@ -137,10 +136,10 @@ public class XCode {
 	 * @param outputFilePath
 	 * @throws IOException
 	 */
-	public static void java2Unicode(String outputFilePath) throws IOException {
-		Scanner in = new Scanner(System.in);
-		XLog.log("请输入已存在的文件名：");
-		String fileName = in.nextLine();
+	public static void java2Unicode(String fileName, String outputFilePath) throws IOException {
+//		Scanner in = new Scanner(System.in);
+//		XLog.log("请输入已存在的文件名：");
+//		String fileName = in.nextLine();
 		File f = new File(fileName);
 		if (!f.exists()) {
 			XLog.log("文件：" + fileName + "不存在！");
@@ -174,7 +173,7 @@ public class XCode {
 		XLog.println();
 		br.close();
 		bw.close();
-		in.close();
+
 	}
 
 }
