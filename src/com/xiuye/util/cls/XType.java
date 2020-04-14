@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import com.xiuye.util.code.XYClassLoader;
@@ -552,7 +553,7 @@ public class XType {
 	 * @param urls
 	 * @return
 	 */
-	public static ClassLoader createClassLoader(URL[] urls) {
+	public static XYClassLoader createClassLoader(URL[] urls) {
 		return new XYClassLoader(urls);
 	}
 
@@ -562,7 +563,7 @@ public class XType {
 	 * @return
 	 * @throws MalformedURLException
 	 */
-	public static ClassLoader createClassLoader() throws MalformedURLException {
+	public static XYClassLoader createClassLoader() throws MalformedURLException {
 		return createClassLoader(".");
 	}
 
@@ -573,7 +574,7 @@ public class XType {
 	 * @return
 	 * @throws MalformedURLException
 	 */
-	public static ClassLoader createClassLoader(String... paths) throws MalformedURLException {
+	public static XYClassLoader createClassLoader(String... paths) throws MalformedURLException {
 		List<URL> urlsList = list();
 		for (String p : paths) {
 			URL u = Paths.get(p).toUri().toURL();
@@ -591,7 +592,7 @@ public class XType {
 	 * @return
 	 * @throws MalformedURLException
 	 */
-	public static ClassLoader createClassLoader(List<String> paths) throws MalformedURLException {
+	public static XYClassLoader createClassLoader(List<String> paths) throws MalformedURLException {
 
 		URL[] urls = new URL[paths.size()];
 
@@ -600,6 +601,20 @@ public class XType {
 		}
 
 		return createClassLoader(urls);
+
+	}
+
+	/**
+	 * if first-value is null,return second value
+	 * else return first value
+	 * 		@param s1
+	 * 		@param s2
+	 * 		@return
+	 */
+	public static String nvl(String s1, String s2) {
+		if (Objects.isNull(s1))
+			return s2;
+		return s1;
 
 	}
 
