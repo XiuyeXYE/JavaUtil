@@ -1,7 +1,6 @@
 package com.xiuye.util.code.gen;
 
 import java.util.List;
-import java.util.Objects;
 
 import com.xiuye.util.cls.XType;
 
