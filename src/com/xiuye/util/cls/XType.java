@@ -631,7 +631,7 @@ public class XType {
 	 * 		@param t
 	 * 		@return
 	 */
-	public static <T> T syncWrap(T t) {
+	public static <T> T sync(T t) {
 		if(t instanceof Map) {
 			return cast(Collections.synchronizedMap(cast(t)));
 		}

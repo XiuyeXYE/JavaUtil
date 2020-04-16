@@ -185,9 +185,9 @@ public class TypeUtilTest {
 	
 	@Test
 	public void testSyncCollections() {
-		XLog.lg(XType.syncWrap(XType.set()));
-		XLog.lg(XType.syncWrap(XType.list()));
-		XLog.lg(XType.syncWrap(XType.map()));
+		XLog.lg(XType.sync(XType.set()));
+		XLog.lg(XType.sync(XType.list()));
+		XLog.lg(XType.sync(XType.map()));
 	}
 
 }
