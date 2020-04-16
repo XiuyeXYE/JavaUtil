@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -621,4 +622,26 @@ public class XType {
 //	public static Class<?> loadClass(ClassLoader cl, String name) throws ClassNotFoundException {
 //		return cl.loadClass(name);
 //	}
+	
+	/**
+	 * synchronizedMap
+	 * synchronizedSet
+	 * synchronizedList
+	 * 		@param <T>
+	 * 		@param t
+	 * 		@return
+	 */
+	public static <T> T syncWrap(T t) {
+		if(t instanceof Map) {
+			return cast(Collections.synchronizedMap(cast(t)));
+		}
+		if(t instanceof List) {
+			return cast(Collections.synchronizedList(cast(t)));
+		}
+		if(t instanceof Set) {
+			return cast(Collections.synchronizedSet(cast(t)));
+		}
+		return t;
+	}
+	
 }
