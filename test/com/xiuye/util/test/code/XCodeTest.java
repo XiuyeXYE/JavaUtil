@@ -8,8 +8,8 @@ import java.util.Map;
 import org.junit.Test;
 
 import com.xiuye.util.cls.XType;
+import com.xiuye.util.cls.XYClassLoader;
 import com.xiuye.util.code.XCode;
-import com.xiuye.util.code.XYClassLoader;
 import com.xiuye.util.code.XYCompiler;
 import com.xiuye.util.code.gen.ClassInfo;
 import com.xiuye.util.code.gen.FieldInfo;
@@ -70,7 +70,7 @@ public class XCodeTest {
 				"package com.xiuye;" + "import com.xiuye.util.test.code.XCodeTest.BI;"
 						+ "import com.xiuye.util.log.XLog;" + " public class BIImpl implements BI{" + "public void b(){"
 						+ "XLog.lg(\"BIImpl::b()\");" + "}" + "}");
-		codes2.put("com.xiuye.util.test.code..CIImpl",
+		codes2.put("com.xiuye.util.test.code.CIImpl",
 				"package com.xiuye.util.test.code;" + "import com.xiuye.util.test.code.XCodeTest.CI;"
 						+ "import com.xiuye.util.log.XLog;" + " public class CIImpl implements CI{" + "public void c(){"
 						+ "XLog.lg(\"CIImpl::c()\");" + "}" + "}");
