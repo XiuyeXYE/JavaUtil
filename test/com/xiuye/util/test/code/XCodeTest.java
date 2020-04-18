@@ -98,7 +98,7 @@ public class XCodeTest {
 		info.setPackageName("com.xiuye.util.test.code");
 		info.addImportPackage("com.xiuye.util.log.XLog");
 		info.setAccess(ClassInfo.ACCESS_PUBLIC);
-		info.addModifier("final");
+		info.addModifier(ClassInfo.FINAL_MODIFIER);
 		info.setType(ClassInfo.TYPE_CLASS);
 		info.setName("Demo1");
 
