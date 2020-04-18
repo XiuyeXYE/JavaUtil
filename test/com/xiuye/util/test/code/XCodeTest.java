@@ -150,5 +150,23 @@ public class XCodeTest {
 		
 		m.invoke(o, 1,2,3);
 	}
-
+	
+	@Test
+	public void testProxyInterface() throws ClassNotFoundException {
+		Class<ABC> clazz = XType.cast(Class.forName("com.xiuye.util.test.code.ABC"));
+		Method [] ms = clazz.getDeclaredMethods();
+		for(Method m : ms) {
+			XLog.lg(m);
+			XLog.lg(m.getModifiers());
+			XLog.lg(m.getReturnType());
+			XLog.lg(m.getGenericReturnType());
+			XLog.lg(m.getName());
+			XLog.lg(m.getParameters());
+			XLog.lg(m.getParameterTypes());
+			XLog.lg(m.getGenericParameterTypes());
+			XLog.lg(m.getParameterCount());
+		}
+		
+		
+	}
 }
