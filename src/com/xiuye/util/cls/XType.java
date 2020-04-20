@@ -1,5 +1,9 @@
 package com.xiuye.util.cls;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Paths;
@@ -13,6 +17,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.xiuye.util.code.XYClassLoader;
+import com.xiuye.util.log.XLog;
 
 /**
  * Type operator
@@ -606,11 +611,11 @@ public class XType {
 	}
 
 	/**
-	 * if first-value is null,return second value
-	 * else return first value
-	 * 		@param s1
-	 * 		@param s2
-	 * 		@return
+	 * if first-value is null,return second value else return first value
+	 * 
+	 * @param s1
+	 * @param s2
+	 * @return
 	 */
 	public static String nvl(String s1, String s2) {
 		if (Objects.isNull(s1))
@@ -622,26 +627,33 @@ public class XType {
 //	public static Class<?> loadClass(ClassLoader cl, String name) throws ClassNotFoundException {
 //		return cl.loadClass(name);
 //	}
-	
+
 	/**
-	 * synchronizedMap
-	 * synchronizedSet
-	 * synchronizedList
-	 * 		@param <T>
-	 * 		@param t
-	 * 		@return
+	 * synchronizedMap synchronizedSet synchronizedList
+	 * 
+	 * @param <T>
+	 * @param t
+	 * @return
 	 */
 	public static <T> T sync(T t) {
-		if(t instanceof Map) {
+		if (t instanceof Map) {
 			return cast(Collections.synchronizedMap(cast(t)));
 		}
-		if(t instanceof List) {
+		if (t instanceof List) {
 			return cast(Collections.synchronizedList(cast(t)));
 		}
-		if(t instanceof Set) {
+		if (t instanceof Set) {
 			return cast(Collections.synchronizedSet(cast(t)));
 		}
 		return t;
 	}
-	
+
+	/**
+	 * the following code does not come true!
+	 */
+//	public static <R> R alloc() {		
+//		return newInstance(R::new);
+//	}
+
+
 }
