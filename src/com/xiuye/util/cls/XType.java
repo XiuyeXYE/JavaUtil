@@ -16,8 +16,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import com.xiuye.util.code.XYClassLoader;
-import com.xiuye.util.log.XLog;
+import com.xiuye.util.cls.XYClassLoader;
 
 /**
  * Type operator

@@ -8,8 +8,8 @@ import java.util.Map;
 import org.junit.Test;
 
 import com.xiuye.util.cls.XType;
+import com.xiuye.util.cls.XYClassLoader;
 import com.xiuye.util.code.XCode;
-import com.xiuye.util.code.XYClassLoader;
 import com.xiuye.util.code.XYCompiler;
 import com.xiuye.util.code.gen.ClassInfo;
 import com.xiuye.util.code.gen.FieldInfo;
@@ -70,7 +70,7 @@ public class XCodeTest {
 				"package com.xiuye;" + "import com.xiuye.util.test.code.XCodeTest.BI;"
 						+ "import com.xiuye.util.log.XLog;" + " public class BIImpl implements BI{" + "public void b(){"
 						+ "XLog.lg(\"BIImpl::b()\");" + "}" + "}");
-		codes2.put("com.xiuye.util.test.code..CIImpl",
+		codes2.put("com.xiuye.util.test.code.CIImpl",
 				"package com.xiuye.util.test.code;" + "import com.xiuye.util.test.code.XCodeTest.CI;"
 						+ "import com.xiuye.util.log.XLog;" + " public class CIImpl implements CI{" + "public void c(){"
 						+ "XLog.lg(\"CIImpl::c()\");" + "}" + "}");
@@ -98,7 +98,7 @@ public class XCodeTest {
 		info.setPackageName("com.xiuye.util.test.code");
 		info.addImportPackage("com.xiuye.util.log.XLog");
 		info.setAccess(ClassInfo.ACCESS_PUBLIC);
-		info.addModifier("final");
+		info.addModifier(ClassInfo.FINAL_MODIFIER);
 		info.setType(ClassInfo.TYPE_CLASS);
 		info.setName("Demo1");
 
@@ -150,5 +150,23 @@ public class XCodeTest {
 		
 		m.invoke(o, 1,2,3);
 	}
-
+	
+	@Test
+	public void testProxyInterface() throws ClassNotFoundException {
+		Class<ABC> clazz = XType.cast(Class.forName("com.xiuye.util.test.code.ABC"));
+		Method [] ms = clazz.getDeclaredMethods();
+		for(Method m : ms) {
+			XLog.lg(m);
+			XLog.lg(m.getModifiers());
+			XLog.lg(m.getReturnType());
+			XLog.lg(m.getGenericReturnType());
+			XLog.lg(m.getName());
+			XLog.lg(m.getParameters());
+			XLog.lg(m.getParameterTypes());
+			XLog.lg(m.getGenericParameterTypes());
+			XLog.lg(m.getParameterCount());
+		}
+		
+		
+	}
 }
