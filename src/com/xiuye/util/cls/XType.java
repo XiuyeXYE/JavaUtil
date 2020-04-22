@@ -560,6 +560,10 @@ public class XType {
 		return func.apply(list());
 	}
 	
+	public static <T> Set<T> toSet(Function<Set<T>,Set<T>> func){
+		return func.apply(set());
+	}
+	
 	/**
 	 * create ClassLoader with paths
 	 * 
@@ -677,5 +681,8 @@ public class XType {
 //		return newInstance(R::new);
 //	}
 
+	
+	
+	
 
 }
