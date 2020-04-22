@@ -1,9 +1,5 @@
 package com.xiuye.util.cls;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Paths;
@@ -15,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
 
 import com.xiuye.util.cls.XYClassLoader;
 
@@ -553,6 +550,17 @@ public class XType {
 	}
 
 	/**
+	 * handle new ArrayList
+	 * 		@param <R>
+	 * 		@param <T>
+	 * 		@param func
+	 * 		@return
+	 */
+	public static<T> List<T> toList(Function<List<T>,List<T>> func){
+		return func.apply(list());
+	}
+	
+	/**
 	 * create ClassLoader with paths
 	 * 
 	 * @param urls
@@ -610,7 +618,8 @@ public class XType {
 	}
 
 	/**
-	 * if first-value is null,return second value else return first value
+	 * if first-value is null,
+	 * return second value else return first value
 	 * 
 	 * @param s1
 	 * @param s2
@@ -628,7 +637,9 @@ public class XType {
 //	}
 
 	/**
-	 * synchronizedMap synchronizedSet synchronizedList
+	 * synchronizedMap 
+	 * synchronizedSet 
+	 * synchronizedList
 	 * 
 	 * @param <T>
 	 * @param t
@@ -646,6 +657,18 @@ public class XType {
 		}
 		return t;
 	}
+
+	/**
+	 * handle new HashMap
+	 * 		@param <K>
+	 * 		@param <V>
+	 * 		@param func
+	 * 		@return
+	 */
+	public static<K,V> Map<K,V> toMap(Function<Map<K,V>,Map<K,V>> func) {
+		return func.apply(map());
+	}
+
 
 	/**
 	 * the following code does not come true!
