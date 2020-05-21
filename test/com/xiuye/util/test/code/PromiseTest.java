@@ -40,7 +40,7 @@ public class PromiseTest {
 			XLog.lg(e);
 		}).except(() -> {
 			throw new RuntimeException("Nothing");
-		}).then(()->{}).except(e -> {
+		})./* then(()->{}). */except(e -> {
 			XLog.lg(e);
 			return 100;
 		}).except(d -> {
