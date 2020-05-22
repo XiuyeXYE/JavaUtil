@@ -34,10 +34,11 @@ public class XCode {
 	public static synchronized long run(Runnable runnable) {
 		if (Objects.nonNull(runnable)) {
 			synchronized (XTime.class) {
+				int old = XTime.setLevel(XTime.getLevel()+1);
 				XTime.start();
 				runnable.run();
+				XTime.setLevel(old);
 				return XTime.cost();
-
 			}
 
 		}
@@ -53,8 +54,10 @@ public class XCode {
 	public static synchronized long runNS(Runnable runnable, Callback... cs) {
 		if (Objects.nonNull(runnable)) {
 			synchronized (XTime.class) {
+				int old = XTime.setLevel(XTime.getLevel()+1);
 				XTime.start();
 				runnable.run();
+				XTime.setLevel(old);
 				return XTime.outByNS(cs);
 			}
 		}
@@ -70,8 +73,10 @@ public class XCode {
 	public static synchronized long runMS(Runnable runnable, Callback... cs) {
 		if (Objects.nonNull(runnable)) {
 			synchronized (XTime.class) {
+				int old = XTime.setLevel(XTime.getLevel()+1);
 				XTime.start();
 				runnable.run();
+				XTime.setLevel(old);
 				return XTime.outByMS(cs);
 			}
 		}
@@ -87,8 +92,10 @@ public class XCode {
 	public static synchronized long runS(Runnable runnable, Callback... cs) {
 		if (Objects.nonNull(runnable)) {
 			synchronized (XTime.class) {
+				int old = XTime.setLevel(XTime.getLevel()+1);
 				XTime.start();
 				runnable.run();
+				XTime.setLevel(old);
 				return XTime.outByS(cs);
 			}
 		}

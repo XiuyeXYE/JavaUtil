@@ -18,7 +18,22 @@ public class XTime {
 
 	private static Caller SCALLER = null;
 
-	private static final int LEVEL = 3;
+	private static int LEVEL = 3;
+	
+	/**
+	 * input new level and return old
+	 * @param level
+	 * @return
+	 */
+	public static int setLevel(int level) {
+		int lvl = LEVEL;
+		LEVEL = level;
+		return lvl;
+	}
+	
+	public static int getLevel() {
+		return LEVEL;
+	}
 
 	/**
 	 * check start time and start caller existence
