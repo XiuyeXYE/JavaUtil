@@ -11,9 +11,7 @@ public class PromiseTest {
 	public void test() {
 		//default true
 //		Promise.implyErrorHandler(false);
-		new Promise<>(() -> {
-			return 99999;
-		}).then(d -> {
+		new Promise<>(99999).then(d -> {
 			XLog.lg(d);
 			XLog.lg("void call(I in)");
 
@@ -48,8 +46,43 @@ public class PromiseTest {
 		}).except(() -> {
 
 		}).except(() -> {
-
+			
 		});
+	}
+	
+	@Test
+	public void testIfElse() {
+		
+		Promise.resolve().begin().ef(false).thenDo(d->{
+			XLog.lg("if",d);
+		}).eeseEf(false).thenDo(d->{
+			XLog.lg("else if",d);
+		}).eese(d->{
+			XLog.lg("else",d);
+		}).end();
+		Object a = null;
+		Object b = new Object();
+		Promise.resolve().begin().ef(a).thenDo(d->{
+			XLog.lg("if",d);
+		}).eeseEf(b).thenDo(d->{
+			XLog.lg("else if",d);
+		}).eese(d->{
+			XLog.lg("else",d);
+		}).end();
+		
+		Promise.resolve().begin().ef(false).thenDo(d->{
+			XLog.lg("if",d);
+		}).eeseEf(false).thenDo(d->{
+			XLog.lg("else if",d);
+		}).eeseEf(true).thenDo(d->{
+			XLog.lg("else if",d);
+		}).eese(d->{
+			XLog.lg("else",d);
+		}).ef(false).thenDo(d->{
+		}).thenDo(d->{
+		}
+		).end();
+		
 	}
 
 }
