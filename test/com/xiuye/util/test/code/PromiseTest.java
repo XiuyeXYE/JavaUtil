@@ -53,35 +53,36 @@ public class PromiseTest {
 	@Test
 	public void testIfElse() {
 		
-		Promise.resolve().begin().ef(false).thenDo(d->{
-			XLog.lg("if",d);
-		}).eeseEf(false).thenDo(d->{
-			XLog.lg("else if",d);
-		}).eese(d->{
-			XLog.lg("else",d);
-		}).end();
-		Object a = null;
-		Object b = new Object();
-		Promise.resolve().begin().ef(a).thenDo(d->{
-			XLog.lg("if",d);
-		}).eeseEf(b).thenDo(d->{
-			XLog.lg("else if",d);
-		}).eese(d->{
-			XLog.lg("else",d);
-		}).end();
+		Promise.resolve()
+		.begin()
+		.ef(false)
+		.thenDo(()->{
+			XLog.lg("123");
+		})
+		.eeseEf(true)
+		.thenDo(()->{
+			XLog.lg("thenDo");
+			return 123;
+		})
+		.eeseEf(true)
+		.thenDo(()->{
+			XLog.lg("thenDo2");
+			return "ABC";
+		})
+		.eese(()->{
+			XLog.lg("ABC");
+		})
+		.ef(true)
+		.thenDo(()->{
+			XLog.lg("2 thenDo");
+		})
+		.eese(()->{
+			XLog.lg("EESE");
+		})
+		.end().then(d->{			
+			XLog.lg(d);
+		});
 		
-		Promise.resolve().begin().ef(false).thenDo(d->{
-			XLog.lg("if",d);
-		}).eeseEf(false).thenDo(d->{
-			XLog.lg("else if",d);
-		}).eeseEf(true).thenDo(d->{
-			XLog.lg("else if",d);
-		}).eese(d->{
-			XLog.lg("else",d);
-		}).ef(false).thenDo(d->{
-		}).thenDo(d->{
-		}
-		).end();
 		
 	}
 
