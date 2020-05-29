@@ -62,12 +62,10 @@ public class PromiseTest {
 		.eeseEf(true)
 		.thenDo(()->{
 			XLog.lg("thenDo");
-			return 123;
 		})
 		.eeseEf(true)
 		.thenDo(()->{
 			XLog.lg("thenDo2");
-			return "ABC";
 		})
 		.eese(()->{
 			XLog.lg("ABC");
@@ -83,7 +81,29 @@ public class PromiseTest {
 			XLog.lg(d);
 		});
 		
+		XLog.lg(trueflag()|falseflag());
+		XLog.lg(trueflag()||falseflag());
 		
+	}
+	
+	private boolean trueflag() {
+		XLog.lg("trueflag run");
+		return true;
+	}
+	private boolean falseflag() {
+		XLog.lg("falseflag run");
+		return false;
+	}
+	
+	@Test
+	public void testMatchAs() {
+		Promise.of().begin().match(123).as(99).thenDo(()->{
+			XLog.lg("matched 1");
+		}).as(100).as(11).thenDo(()->{
+			XLog.lg("matched 2");
+		}).defaut(()->{
+			XLog.lg("default");
+		}).end();
 	}
 
 }

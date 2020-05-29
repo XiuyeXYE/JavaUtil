@@ -2,7 +2,6 @@ package com.xiuye.weapon.dark;
 
 import com.xiuye.util.cls.XType;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -26,7 +25,7 @@ import java.util.List;
  * 更是传递给下一个的入参，其作用带有next属性
  * 12.只满足就近匹配，前一个的Promise的计算结果是后一个
  * Promise的传入值！十分重要。
- *
+ * 13.添加分支结构！
  * @param <RESULT> 结果类型
  */
 public class Promise<RESULT> {
@@ -765,7 +764,7 @@ public class Promise<RESULT> {
         return new Promise<>(r);
     }
 
-    private static <R> Promise<R> resolve(R r, Throwable error) {
+    private static <R,E extends Throwable> Promise<R> resolve(R r, E error) {
         return new Promise<>(r, error);
     }
 
@@ -821,6 +820,18 @@ public class Promise<RESULT> {
         return new Promise<>(e);
     }
 
+    public static <R> Promise<R> of(){
+    	return resolve();
+    }
+    
+    public static <R> Promise<R> of(R t){
+    	return resolve(t);
+    }
+    
+    public static <R,E extends Throwable> Promise<R> of(R r,E error){
+    	return resolve(r, error);
+    }
+    
 
     // ================= programming ================
 
@@ -828,36 +839,40 @@ public class Promise<RESULT> {
     private static final String ELSE_IF = "else if";
     private static final String ELSE = "else";
     private static final String THEN = "then";
+    private static final String MATCH = "match";
+    private static final String AS = "as";
+    private static final String DEFAULT = "default";
 
 
-    private class TwoTuple<T> {
+    private class TwoTuple {
         public String token;
-        public T value;
+        public Object value;
         
 
         private TwoTuple() {
         	
         }
         
-        private TwoTuple(String token, T t) {
+        private TwoTuple(String token, Object t) {
             this.token = token;
             this.value = t;
         }
     }
     
-    private List<TwoTuple<Object>> tokens;
-    private TwoTuple<Object> result_token;
+    private List<TwoTuple> tokens;
+    private TwoTuple result_token;
+    private int token_index = 0;
 
-    private Promise(List<TwoTuple<Object>> tokens) {
+    private Promise(List<TwoTuple> tokens) {
         this.tokens = tokens;
     }
 
-//    private Promise(List<TwoTuple<Object>> tokens, Throwable error) {
+//    private Promise(List<TwoTuple> tokens, Throwable error) {
 //        this.tokens = tokens;
 //        this.error = error;
 //    }
 
-    private <R> Promise<R> programPromise(List<TwoTuple<Object>> tokens) {
+    private <R> Promise<R> programPromise(List<TwoTuple> tokens) {
         if (tokens == null) {
             throw new RuntimeException("please use begin() to start using promise in ef/eeseEf/else/thenDo !");
         }
@@ -873,97 +888,121 @@ public class Promise<RESULT> {
      * S -> if .then .T
      * T -> else if .then .T | else |ε
      * . 分隔词组
-     * S -> match . F
-     * F -> as . A . then . F | ε
-     * A -> as . A | ε
      * 
      * @param t
      * @param <I>
      * @return
      */
     public <I> Promise<RESULT> ef(I t) {
-        tokens.add(new TwoTuple<>(IF, t));
+        addToken(IF, t);
 //        return programPromise(tokens);
         return this;
     }
 
     public <I> Promise<RESULT> eeseEf(I t) {
-        tokens.add(new TwoTuple<>(ELSE_IF, t));
+        addToken(ELSE_IF, t);
 //        return programPromise(tokens);
         return this;
     }
-
-
-    public <R> Promise<RESULT> thenDo(ReturnCallbackNoParam<R> callback) {
-        tokens.add(new TwoTuple<>(THEN, callback));
-//        return programPromise(tokens);
-        return this;
+    
+    /**
+     *
+     * S -> match . F
+     * F -> as . A . then . F | defaut | ε
+     * A -> as . A | ε
+     * 
+     * @param <I>
+     * @param in
+     * @return
+     */
+    public <I> Promise<RESULT> match(I in){
+    	addToken(MATCH, in);
+    	return this;
     }
+    
+    public <I> Promise<RESULT> as(I in){
+    	addToken(AS, in);
+    	return this;
+    }
+    
+    public Promise<RESULT> defaut(VoidCallbackNoParam callback){
+    	addToken(DEFAULT, callback);
+    	return this;
+    }
+    
+   
+
+
+//    public <R> Promise<RESULT> thenDo(ReturnCallbackNoParam<R> callback) {
+//        addToken(THEN, callback));
+////        return programPromise(tokens);
+//        return this;
+//    }
 
 //    public <R> Promise<RESULT> thenDo(ReturnCallbackWithParam<R, RESULT> callback) {
-//        tokens.add(new TwoTuple<>(THEN, callback));
+//        addToken(THEN, callback));
 ////        return programPromise(tokens);
 //        return this;
 //    }
 
 //    public Promise<RESULT> thenDo(VoidCallbackWithParam<RESULT> callback) {
-//        tokens.add(new TwoTuple<>(THEN, callback));
+//        addToken(THEN, callback));
 ////        return programPromise(tokens);
 //        return this;
 //    }
 
     public Promise<RESULT> thenDo(VoidCallbackNoParam callback) {
-        tokens.add(new TwoTuple<>(THEN, callback));
+        addToken(THEN, callback);
 //        return programPromise(tokens);
         return this;
     }
 
 
-    public <R> Promise<RESULT> eese(ReturnCallbackNoParam<R> callback) {
-        tokens.add(new TwoTuple<>(ELSE, callback));
-//        return programPromise(tokens);
-        return this;
-    }
+//    public <R> Promise<RESULT> eese(ReturnCallbackNoParam<R> callback) {
+//        addToken(ELSE, callback));
+////        return programPromise(tokens);
+//        return this;
+//    }
 
 //    public <R> Promise<RESULT> eese(ReturnCallbackWithParam<R, RESULT> callback) {
-//        tokens.add(new TwoTuple<>(ELSE, callback));
+//        addToken(ELSE, callback));
 ////        return programPromise(tokens);
 //        return this;
 //    }
 
 //    public Promise<RESULT> eese(VoidCallbackWithParam<RESULT> callback) {
-//        tokens.add(new TwoTuple<>(ELSE, callback));
+//        addToken(ELSE, callback));
 ////        return programPromise(tokens);
 //        return this;
 //    }
 
     public Promise<RESULT> eese(VoidCallbackNoParam callback) {
-        tokens.add(new TwoTuple<>(ELSE, callback));
+        addToken(ELSE, callback);
 //        return programPromise(tokens);
         return this;
     }
 
-    private <R> R whatCallback(TwoTuple<Object> token) {
-    	
-        R r = null;
-        if (token.value instanceof VoidCallbackNoParam) {
-            VoidCallbackNoParam callback = XType.cast(token.value);
-            callback.vcv();
-        } 
+    private void callTokenCallback() {
+    	if(result_token != null) {
+    		if (result_token.value instanceof VoidCallbackNoParam) {
+                VoidCallbackNoParam callback = XType.cast(result_token.value);
+                callback.vcv();
+            } 
+    	}
+        
 //        else if (token.value instanceof ReturnCallbackWithParam) {
 //            ReturnCallbackWithParam<R, RESULT> callback = XType.cast(token.value);
 //            r = callback.rci(XType.cast(value));
 //        } 
-        else if (token.value instanceof ReturnCallbackNoParam) {
-            ReturnCallbackNoParam<R> callback = XType.cast(token.value);
-            r = callback.rcv();
-        } 
+//        else if (token.value instanceof ReturnCallbackNoParam) {
+//            ReturnCallbackNoParam<R> callback = XType.cast(token.value);
+//            r = callback.rcv();
+//        } 
 //        else if (token.value instanceof VoidCallbackWithParam) {
 //            VoidCallbackWithParam<RESULT> callback = XType.cast(token.value);
 //            callback.vci(XType.cast(value));
 //        }
 
-        return r;
     }
     
     private void nextTokenError(String token) {
@@ -982,81 +1021,207 @@ public class Promise<RESULT> {
     	return result.toString();
     }
     
+    private boolean hasNextToken() {
+    	return token_index < tokens.size();
+    }
+    
+    private TwoTuple getNextToken() {
+    	return getToken(token_index++);
+    }
+    
+    private void tokenIndexDecrement() {
+    	token_index--;
+    }
+    
+    private void tokenIndexIncrement() {
+    	token_index++;
+    }
+    
+    private TwoTuple currentToken() {
+    	return getToken(token_index);
+    }
+    
+    private TwoTuple getToken(int index) {
+    	return tokens.get(index);
+    }
+    
+    private void addToken(String token,Object value) {
+    	tokens.add(new TwoTuple(token, value));
+    }
+    
     //自顶向下分析
     //主要是选择分支结构的
-    private void S_token(Iterator<TwoTuple<Object>> it) {
-    	if(it.hasNext()) {
+    private void S_token() {
+    	if(hasNextToken()) {
     		//S -> if then T
-			TwoTuple<Object> if_token = it.next();
-			if (IF.equals(if_token.token) && it.hasNext()) {
-				TwoTuple<Object> then_token = it.next();
-				if (THEN.equals(then_token.token)) {
+			TwoTuple start_token = getNextToken();
+			if (IF.equals(start_token.token)) {
+				TwoTuple then_token;
+				if (hasNextToken()
+						&& THEN.equals((then_token = getNextToken()).token)) {
 					// 将要执行的token装入到 result_token中！
-					if (result_token == null && parseBoolean(if_token.value)) {
+					if (result_token == null && parseBoolean(start_token.value)) {
 						result_token = then_token;
 					}
-					// T -> else if then T | else | E
-					T_token(it);
+					// T -> else if then T | else | ε
+					T_token();
 				}
 				else {
 					nextTokenError(or(THEN));
 				}
+				
     		}
-    		else {
-    			nextTokenError(or(IF,THEN));
-    		}
-    		
+			/**
+			 * 
+			 * S -> match . F
+			 * F -> as . A . then . F | defaut | ε
+			 * A -> as . A | ε
+			 */
+			else if (MATCH.equals(start_token.token)) {/* syntax check */
+
+				F_token(start_token.value);
+
+			} else {
+				nextTokenError(or(IF, MATCH));
+			}
+
     	}
 //    	else{
 //    		receiveIt();
 //    		acceptIt();
 //    	}
     }
-    
-    private void T_token(Iterator<TwoTuple<Object>> it) {
-    	if(it.hasNext()) {
-    		TwoTuple<Object> t_token = it.next();
-    		if(ELSE_IF.equals(t_token.token)&&it.hasNext()) {
-    			TwoTuple<Object> then_token = it.next();
-				if(THEN.equals(then_token.token)){
-					if(result_token == null  && parseBoolean(t_token.value)) {						
+
+    /**
+     * F handler
+     * F -> as . A . then . F | defaut | ε
+     * @param matchValue
+     */
+	private void F_token(Object matchValue) {
+		
+		if(hasNextToken()) {
+			
+			TwoTuple f_token = getNextToken();
+			
+			if(AS.equals(f_token.token)) {
+				boolean asOK = matchValue != null
+						&& matchValue.equals(f_token.value) 
+						|| A_token(matchValue);// left recursion
+				
+				TwoTuple then_token;
+				if (hasNextToken() && THEN.equals((then_token = getNextToken()).token)/* syntax check */) {
+					//正式 匹配的有 then 然后执行!
+					if (result_token == null && asOK) {
 						result_token = then_token;
 					}
-					//T -> else if then T | else | E
-					//recursion
-					T_token(it);
+//					//超前判断，没有元素了就返回！递归的终止条件
+//					if(!hasNextToken()) {
+//						return;
+//					}
+					F_token(matchValue);
 				}
 				else {
 					nextTokenError(or(THEN));
 				}
-    		}else if(ELSE.equals(t_token.token)) {
-    			if(result_token == null) {
-    				result_token = t_token;
-    			}
+				
+				
+			}else if(DEFAULT.equals(f_token.token)) {
+				if (result_token == null) {
+					result_token = f_token;
+				}
+			}
+			else {
+				nextTokenError(or(AS,DEFAULT));
+			}
+			
+		}
+		
+		
+
+	}
+
+	//右递归
+	/**
+	 * as handler
+	 * A -> as . A | ε
+	 * @param matchValue
+	 * @return
+	 */
+	private boolean A_token(Object matchValue) {
+		boolean matched = false;
+		if(hasNextToken()) {
+			TwoTuple as_token = getNextToken();
+			if(AS.equals(as_token.token)) {
+				if(result_token == null //说明还没有匹配的有!
+						&& !matched //本次 as 的匹配 已经匹配过的话 matched = true!
+									//,可以加快速度(小优化)
+						&& matchValue != null
+//						&& as_token.value != null
+						//只要 matchValue 存在就可以 调用equals 了
+						//并且 都为 null 的时候 ，直接返回false （暗含）
+						&& matchValue.equals(as_token.value)
+						) {
+					matched = true;
+				}
+				matched = matched || A_token(matchValue);
+			}
+			else {
+				//多取一次未处理的话，应该回溯一个
+				//也是递归终止条件
+				tokenIndexDecrement();
+			}
+			
+		}
+		
+		return matched;
+	}
+
+	/**
+	 * T -> else if then T | else | ε 
+	 */
+	private void T_token() {
+		if (hasNextToken()) {
+			TwoTuple t_token = getNextToken();
+			if (ELSE_IF.equals(t_token.token)) {
+				TwoTuple then_token;
+				if (hasNextToken() && THEN.equals((then_token = getNextToken()).token)) {
+
+					if (result_token == null && parseBoolean(t_token.value)) {
+						result_token = then_token;
+					}
+					// T -> else if then T | else | E
+					// recursion
+					T_token();
+				} else {
+					nextTokenError(or(THEN));
+				}
+			} else if (ELSE.equals(t_token.token)) {
+				if (result_token == null) {
+					result_token = t_token;
+				}
 //    			S_token(it);
-    		}
-    		else {
-    			nextTokenError(or(ELSE_IF,ELSE,THEN)); 
-    		}
-    		
-    	}  	
+			} else {
+				nextTokenError(or(ELSE_IF, ELSE));
+			}
+
+		}  	
     	
     			
 		
 	}
 
 	//不支持 if else 嵌套！
-    private <R> R analyzeTokensAndExec() {
+    private void analyzeTokensAndExec() {
     	//分析语法结构
     	//然后执行！
     	
-    	S_token(tokens.iterator());
-    	return whatCallback(result_token);
+    	S_token();
+    	callTokenCallback();
     	
 //        R r = null;
 //        if (tokens != null) {
 //            if (!tokens.isEmpty()) {
-//                TwoTuple<Object> tuple = tokens.get(0);
+//                TwoTuple tuple = tokens.get(0);
 //                //check first parameter,must start with if / match
 //                if (!IF.equals(tuple.token)) {
 //                    throw new RuntimeException("please use structure begin().ef().thenDo().elseEf().thenDo().else().end()！");
@@ -1067,7 +1232,7 @@ public class Promise<RESULT> {
 //                        if (i + 1 >= tokens.size()) {
 //                            throw new RuntimeException("not match if.elseif.else or if.else;after ef()/eeseEf() it's thenDo(),like ef().thenDo().elseEf().thenDo()");
 //                        }
-//                        TwoTuple<Object> nextToken = tokens.get(i + 1);
+//                        TwoTuple nextToken = tokens.get(i + 1);
 //                        if (THEN.equals(nextToken.token)) {
 //                            if (parseBoolean(tuple.value)) {
 //                                r = whatCallback(nextToken, tuple.value);
@@ -1084,10 +1249,10 @@ public class Promise<RESULT> {
 
     public <R> Promise<R> end() {
 
-        R r = analyzeTokensAndExec();
+        analyzeTokensAndExec();
 //        clear tokens!
         tokens = null;
-        return resolve(r);
+        return resolve();
     }
 
 
