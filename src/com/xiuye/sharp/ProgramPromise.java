@@ -1,4 +1,4 @@
-package com.xiuye.weapon.dark;
+package com.xiuye.sharp;
 
 import com.xiuye.util.cls.XType;
 

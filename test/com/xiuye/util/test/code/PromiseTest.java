@@ -2,8 +2,8 @@ package com.xiuye.util.test.code;
 
 import org.junit.Test;
 
+import com.xiuye.sharp.Promise;
 import com.xiuye.util.log.XLog;
-import com.xiuye.weapon.dark.Promise;
 
 public class PromiseTest {
 
