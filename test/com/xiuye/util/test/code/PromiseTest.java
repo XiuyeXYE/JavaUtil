@@ -99,8 +99,14 @@ public class PromiseTest {
 	public void testMatchAs() {
 		Promise.of().begin().match(123).as(99).thenDo(()->{
 			XLog.lg("matched 1");
-		}).as(100).as(11).thenDo(()->{
+		}).as(100).as(123).thenDo(()->{
 			XLog.lg("matched 2");
+		}).defaut(()->{
+			XLog.lg("default");
+		}).end();
+		
+		Promise.of().begin().match(56789).as(56789).as(11).thenDo(()->{
+			XLog.lg("56789");
 		}).defaut(()->{
 			XLog.lg("default");
 		}).end();
