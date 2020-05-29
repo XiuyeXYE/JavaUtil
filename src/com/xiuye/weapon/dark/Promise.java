@@ -514,8 +514,6 @@ public class Promise<RESULT> {
         return resolve(!parseBoolean(catchExec(() -> callback.vcv())), error);
     }
 
-    
-
 
 //    private <R> Promise<R> thenInherit(Promise<R> pro){
 //        if(pro.error == null && error != null){
@@ -545,7 +543,7 @@ public class Promise<RESULT> {
 //                ? new Promise<>(errorHandler(() -> callback.rcv()), error)
 //                : new Promise<>(result, error);
 //        return new Promise<>(errorHandler(() -> callback.rcv()), error);
-        return resolve(errorExist()?errorHandler(() -> callback.rcv()):result,error);
+        return resolve(errorExist() ? errorHandler(() -> callback.rcv()) : result, error);
     }
 
     // input and return 都有；传入进去后，再次有error的话就传给下一个新的
@@ -562,7 +560,7 @@ public class Promise<RESULT> {
 //                ? new Promise<>(errorHandler(() -> callback.rci(error)), error)
 //                : new Promise<>(result, error);
 //        return new Promise<>(errorHandler(() -> callback.rci(error)), error);
-          return resolve(errorExist()?errorHandler(() -> callback.rci(error)):result,error); 
+        return resolve(errorExist() ? errorHandler(() -> callback.rci(error)) : result, error);
     }
 
     /**
@@ -577,7 +575,7 @@ public class Promise<RESULT> {
 //                ? new Promise<>(errorHandler(() -> callback.vci(error)), error)
 //                : new Promise<>(result, error);
 //        return new Promise<>(errorHandler(() -> callback.vci(error)), error);
-          return resolve(errorExist()?errorHandler(() -> callback.vci(error)):result,error);
+        return resolve(errorExist() ? errorHandler(() -> callback.vci(error)) : result, error);
     }
 
     /**
@@ -593,7 +591,7 @@ public class Promise<RESULT> {
 //                : resolve(result, error);
               
 //        return new Promise<>(errorHandler(() -> callback.vcv()), error);
-    	return resolve(errorExist()?errorHandler(() -> callback.vcv()):result,error);
+        return resolve(errorExist() ? errorHandler(() -> callback.vcv()) : result, error);
     }
 
 //    public Promise<RESULT> exceptInherit(Promise<RESULT> pro){
@@ -763,7 +761,7 @@ public class Promise<RESULT> {
         return new Promise<>(r);
     }
 
-    private static <R,E extends Throwable> Promise<R> resolve(R r, E error) {
+    private static <R, E extends Throwable> Promise<R> resolve(R r, E error) {
         return new Promise<>(r, error);
     }
 
@@ -819,23 +817,26 @@ public class Promise<RESULT> {
         return new Promise<>(e);
     }
 
-    public static <R> Promise<R> of(){
-    	return resolve();
+    public static <R> Promise<R> of() {
+        return resolve();
     }
-    
-    public static <R> Promise<R> of(R t){
-    	return resolve(t);
-    }
-    
-    public static <R,E extends Throwable> Promise<R> of(R r,E error){
-    	return resolve(r, error);
-    }
-    
 
-    public <R> ProgramPromise<R> begin() {
-      return new ProgramPromise<R>(XType.list());
+    public static <R> Promise<R> of(R t) {
+        return resolve(t);
     }
-   
+
+    public static <R, E extends Throwable> Promise<R> of(R r, E error) {
+        return resolve(r, error);
+    }
+
+
+    public ProgramPromise<RESULT> begin() {
+        return new ProgramPromise<>(result, error);
+    }
+
+    public static <R> ProgramPromise<R> beginS() {
+        return new ProgramPromise<>();
+    }
 
 
 }
