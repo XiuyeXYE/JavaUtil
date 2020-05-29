@@ -56,23 +56,23 @@ public class PromiseTest {
 		Promise.resolve()
 		.begin()
 		.ef(false)
-		.thenDo(()->{
+		.then(()->{
 			XLog.lg("123");
 		})
 		.eeseEf(true)
-		.thenDo(()->{
-			XLog.lg("thenDo");
+		.then(()->{
+			XLog.lg("then");
 		})
 		.eeseEf(true)
-		.thenDo(()->{
-			XLog.lg("thenDo2");
+		.then(()->{
+			XLog.lg("then2");
 		})
 		.eese(()->{
 			XLog.lg("ABC");
 		})
 		.ef(true)
-		.thenDo(()->{
-			XLog.lg("2 thenDo");
+		.then(()->{
+			XLog.lg("2 then");
 		})
 		.eese(()->{
 			XLog.lg("EESE");
@@ -97,19 +97,25 @@ public class PromiseTest {
 	
 	@Test
 	public void testMatchAs() {
-		Promise.of().begin().match(123).as(99).thenDo(()->{
+		Promise.of().begin().match(123).as(99).then(()->{
 			XLog.lg("matched 1");
-		}).as(100).as(123).thenDo(()->{
+		}).as(100).as(123).then(()->{
 			XLog.lg("matched 2");
 		}).defaut(()->{
 			XLog.lg("default");
 		}).end();
 		
-		Promise.of().begin().match(56789).as(56789).as(11).thenDo(()->{
+		Promise.of().begin().match(11).as(56789).as(11).then(()->{
 			XLog.lg("56789");
 		}).defaut(()->{
 			XLog.lg("default");
-		}).end();
+		}).then(()->{}).end().then(()->{
+			XLog.lg("then");
+		});
+		XLog.lg(null instanceof String);
+		String s = null;
+		XLog.lg(s instanceof String);
+		
 	}
 
 }

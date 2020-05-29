@@ -100,7 +100,7 @@ public class ProgramPromise<RESULT> {
    
 
 
-    public ProgramPromise<RESULT> thenDo(VoidCallbackNoParam callback) {
+    public ProgramPromise<RESULT> then(VoidCallbackNoParam callback) {
         addToken(THEN, callback);
 //        return programPromise(tokens);
         return this;
