@@ -117,5 +117,36 @@ public class PromiseTest {
 		XLog.lg(s instanceof String);
 		
 	}
-
+	
+	@Test
+	public void testAllSwitchStatement() {
+		
+		Promise.beginS().ef(false).then(()->{
+			XLog.lg(false);
+		}).eeseEf(true).then(()->{
+			XLog.lg(127,true);
+		}).eese(()->{
+			XLog.lg("else");
+		}).ef(true).then(()->{
+			XLog.lg(131,true);
+		}).eese(()->{
+			XLog.lg("eese");
+		}).match(5).as(7).then(()->{
+			XLog.lg(7);
+		})
+		.as(5).then(()->{
+			XLog.lg(137,5);
+		})
+		.defaut(()->{
+			XLog.lg(999);
+		})
+		.ef(true).then(()->{
+			XLog.lg(139,true);
+		})
+		.end();
+		
+		Promise.beginS().match(123).as(123).as(99).then(()->{
+			XLog.lg(149,123);
+		}).end();
+	}
 }

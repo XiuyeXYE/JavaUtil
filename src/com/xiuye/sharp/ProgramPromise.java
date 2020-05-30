@@ -37,6 +37,7 @@ public class ProgramPromise<RESULT> {
     private int token_index = 0;
     private RESULT result;
     private Throwable error;
+    
 
     protected ProgramPromise() {
         this.tokens = XType.list();
@@ -44,8 +45,8 @@ public class ProgramPromise<RESULT> {
 
     protected ProgramPromise(RESULT r, Throwable error) {
         this();
-        result = r;
-        error = error;
+        this.result = r;
+        this.error = error;
 
     }
 
@@ -124,6 +125,8 @@ public class ProgramPromise<RESULT> {
                 VoidCallbackNoParam callback = XType.cast(result_token.value);
                 callback.vcv();
             }
+            //clear the previous executed token!!! 
+            result_token = null;
         }
 
     }
@@ -191,10 +194,32 @@ public class ProgramPromise<RESULT> {
 
     //自顶向下分析
     //主要是选择分支结构的
+    /**
+     * 
+     * S -> S | ε
+     * 
+     * 
+     * S -> if then T | ε
+     * T -> else if then T | else | ε
+     * 
+     * 
+     * 
+     * S -> match . F | ε
+     * F -> as . A . then . B | default
+     * B -> F | ε
+     * A -> as . A | ε
+     * 
+     */
     private void S_token() {
-        if (hasNextToken()) {
+        if (hasNextToken()) {//递归的终止条件!
             //S -> if then T
             TwoTuple start_token = getNextToken();
+            /**
+             * S -> if then T | ε
+             * T -> else if then T | else | ε
+             * if then must be all in one
+             * 
+             */
             if (IF.equals(start_token.token)) {
                 TwoTuple then_token;
                 if (hasNextToken()
@@ -211,9 +236,10 @@ public class ProgramPromise<RESULT> {
 
             }
             /**
-             *
-             * S -> match . F
-             * F -> as . A . then . F | defaut | ε
+             *	 完整性的要求
+             * S -> match . F | ε
+             * F -> as . A . then . B | default
+             * B -> F | ε // match as then or match default !!!
              * A -> as . A | ε
              */
             else if (MATCH.equals(start_token.token)) {/* syntax check */
@@ -223,63 +249,74 @@ public class ProgramPromise<RESULT> {
             } else {
                 nextTokenError(or(IF, MATCH));
             }
-
+            
+            callTokenCallback();
+            
+            //check and execute next program fragment!
+            S_token();
+            
         }
-//    	else{
-//    		receiveIt();
-//    		acceptIt();
-//    	}
     }
 
     /**
      * F handler
-     * F -> as . A . then . F | defaut | ε
-     *
+     * after match it should be as or default!!! 
+     * F -> as . A . then . B | default
+     * B -> F | ε //保证了 match as then 或 match default 的完整性!
+     * A -> as . A | ε
      * @param matchValue
      */
     private void F_token(Object matchValue) {
 
-        if (hasNextToken()) {
+		if (hasNextToken()) {
 
-            TwoTuple f_token = getNextToken();
+			TwoTuple f_token = getNextToken();
 
-            if (AS.equals(f_token.token)) {
-                boolean asOK = matchValue != null
-                        && matchValue.equals(f_token.value)
-                        | A_token(matchValue);// left recursion
+			if (AS.equals(f_token.token)) {
+				boolean asOK = matchValue != null 
+						&& 
+						matchValue.equals(f_token.value) 
+						| 
+						A_token(matchValue);// left
+				TwoTuple then_token;
+				if (hasNextToken() && THEN.equals((then_token = getNextToken()).token)/* syntax check */) {
+					// 正式 匹配的有 then 然后执行!
+					if (result_token == null && asOK) {
+						result_token = then_token;
+					}
+					B_token(matchValue);
+				} else {
+					nextTokenError(or(THEN));
+				}
+			} else if (DEFAULT.equals(f_token.token)) {
+				if (result_token == null) {
+					result_token = f_token;
+				}
+			} else {
+				nextTokenError(or(AS, DEFAULT));
+			}
 
-                TwoTuple then_token;
-                if (hasNextToken() && THEN.equals((then_token = getNextToken()).token)/* syntax check */) {
-                    //正式 匹配的有 then 然后执行!
-                    if (result_token == null && asOK) {
-                        result_token = then_token;
-                    }
-//					//超前判断，没有元素了就返回！递归的终止条件
-//					if(!hasNextToken()) {
-//						return;
-//					}
-                    F_token(matchValue);
-                } else {
-                    nextTokenError(or(THEN));
-                }
-
-
-            } else if (DEFAULT.equals(f_token.token)) {
-                if (result_token == null) {
-                    result_token = f_token;
-                }
-            } else {
-                nextTokenError(or(AS, DEFAULT));
-            }
-
-        }
-
+		} else {
+			nextTokenError(or(AS, DEFAULT));
+		}
 
     }
 
-    //右递归
-
     /**
+     * match as then 必须是一个整体!
+     * B -> F | ε
+     * A -> as . A | ε
+     * @param matchValue
+     */
+    private void B_token(Object matchValue) {
+    	if (hasNextToken()) {
+    		F_token(matchValue);
+        }
+    	//ε <=> 没有代码可执行，没有下一步可执行!
+    }
+    
+    //右递归
+	/**
      * as handler
      * A -> as . A | ε
      *
@@ -338,14 +375,15 @@ public class ProgramPromise<RESULT> {
                     result_token = t_token;
                 }
 //    			S_token(it);
+                
             } else {
                 nextTokenError(or(ELSE_IF, ELSE));
             }
 
         }
 
-
     }
+    
 
     //不支持 if else 嵌套！
     private void analyzeTokensAndExec() {
@@ -353,7 +391,7 @@ public class ProgramPromise<RESULT> {
         //然后执行！
 
         S_token();
-        callTokenCallback();
+       
 
     }
 
