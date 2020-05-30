@@ -148,5 +148,57 @@ public class PromiseTest {
 		Promise.beginS().match(123).as(123).as(99).then(()->{
 			XLog.lg(149,123);
 		}).end();
+		
+		Promise.beginS().match(99)
+		.as(123).then(()->{
+			XLog.lg(153,123);
+		})
+		.as(99).as(100).then(()->{
+			XLog.lg(157,123);
+		})
+		.ef(true).then(()->{XLog.lg(159,true);})
+		.ef(true).then(()->{XLog.lg(160,true);})
+		.match(true).defaut(()->{XLog.lg(161,true);})
+		.match("ABC").as("ABC").then(()->{
+			XLog.lg("ABC");
+		})
+		.match(1).as(1).as(2)
+		.then(()->{
+			XLog.lg(1);
+		})
+		.ef(false)
+		.then(()->{
+			XLog.lg(false);
+		})
+		.eeseEf(true)
+		.then(()->{
+			XLog.lg(true);
+		})
+		.ef(false)
+		.then(()->{
+			XLog.lg(false);
+		})
+		.eese(()->{
+			XLog.lg("else");
+		})
+		.ef(false)
+		.then(()->{
+			XLog.lg("doing");
+		})
+//		.ef(false)
+		.match(11)
+		.as(88)
+		.as(11)
+		.then(()->{
+			XLog.lg(193);
+		})
+		.as(11)
+		.then(()->{
+			XLog.lg(197);
+		})
+		.defaut(()->{
+			XLog.lg("default");
+		})
+		.end();
 	}
 }
