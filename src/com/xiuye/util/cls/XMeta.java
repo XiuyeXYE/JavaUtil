@@ -14,7 +14,11 @@ public class XMeta {
 	 * @return
 	 */
 	public static Caller caller(int functionLayer) {
-		StackTraceElement[] ss = Thread.currentThread().getStackTrace();
+		return caller(Thread.currentThread(), functionLayer);
+	}
+	
+	public static Caller caller(Thread parent,int functionLayer) {
+		StackTraceElement[] ss = parent.getStackTrace();
 		Caller c = null;
 		if (ss.length > functionLayer) {
 			c = new Caller();

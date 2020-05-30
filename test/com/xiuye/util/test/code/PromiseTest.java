@@ -209,4 +209,18 @@ public class PromiseTest {
 		})
 		.end();
 	}
+	
+	@Test
+	public void testThread() throws InterruptedException {
+		Promise.threadS(()->{
+			XLog.ln("thread S");
+		}).then(t->{
+			t.start();
+		}).thread(d->{
+			XLog.ln(d);
+		}).then(d->{
+			d.start();
+		});
+		Thread.sleep(3000);
+	}
 }

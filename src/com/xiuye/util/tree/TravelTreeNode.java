@@ -38,16 +38,17 @@ public class TravelTreeNode {
 		XLog.log(gson.toJson(root));
 
 		XLog.log("遍历(应该是先序):");
-		XTime.start();
+		XTime xtime = new XTime();
+		xtime.start();
 		travel(root);
-		XTime.outByMS();
+		xtime.outByMS();
 
 		// 查询节点
 		XLog.log();
 		XLog.log("仅仅查出含有msg的节点,如果有上层节点就包含上层节点,但不包含其节点的子节点:");
 		TreeNode<String> out = new TreeNode<>();
 		getSearchNode("9", root, out);
-		XTime.outByMS();
+		xtime.outByMS();
 		XLog.log(gson.toJson(out));
 
 		// 查询节点 2
@@ -55,7 +56,7 @@ public class TravelTreeNode {
 		XLog.log("保留下一级所有子节点,但子节点不open:");
 		out = new TreeNode<>();
 		getSearchNodeIncludeChildren("9", root, out);
-		XTime.outByMS();
+		xtime.outByMS();
 		XLog.log(gson.toJson(out));
 	}
 

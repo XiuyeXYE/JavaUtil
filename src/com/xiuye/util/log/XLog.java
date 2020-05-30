@@ -14,12 +14,13 @@ import com.xiuye.util.cls.XMeta.Caller;
  */
 public class XLog {
 
-	private static int level = 3;
+	private static int level = 4;
 	
 	public static <T> void ln(T... t) {
-		level = 4;
+		int old = level;
+		level = 5;
 		line(t);
-		level = 3;
+		level = old;
 	}
 	
 	public static <T> void line(T... t) {

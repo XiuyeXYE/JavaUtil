@@ -1,6 +1,7 @@
 package com.xiuye.sharp;
 
 import com.xiuye.util.cls.XType;
+import com.xiuye.util.log.XLog;
 
 
 /**
@@ -838,5 +839,25 @@ public class Promise<RESULT> {
         return new ProgramPromise<>();
     }
 
+    public static Promise<Thread> threadS(Runnable run){
+    	return of(new Thread(run));
+    }
+    
+    public Promise<Thread> thread(VoidCallbackNoParam callback){
+    	return threadS(()->{
+    		callback.vcv();
+    	});
+    }
+    
+    public Promise<Thread> thread(VoidCallbackWithParam<RESULT> callback){
+    	return thread(()->{
+    		callback.vci(result);
+    	});
+    }
+    
 
+    
+    
+   
+    
 }

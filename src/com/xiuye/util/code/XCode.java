@@ -12,6 +12,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import com.xiuye.util.log.XLog;
 import com.xiuye.util.time.XTime;
@@ -32,14 +34,50 @@ public class XCode {
 	 * @return run nanoseconds
 	 */
 	public static synchronized long run(Runnable runnable) {
+		return run(5,runnable);
+	}
+	
+	/**
+	 * run code and return nanoseconds
+	 * 
+	 * @param runnable
+	 * @param cs
+	 */
+	public static synchronized long runNS(Runnable runnable, Callback... cs) {
+		return runNS(5,runnable);
+	}
+	
+	/**
+	 * run code and return milliseconds
+	 * 
+	 * @param runnable
+	 * @param cs
+	 */
+	public static synchronized long runMS(Runnable runnable, Callback... cs) {
+		return runMS(5,runnable);
+	}
+	
+	/**
+	 * run code and return seconds
+	 * 
+	 * @param runnable
+	 * @param cs
+	 */
+	public static synchronized long runS(Runnable runnable, Callback... cs) {
+		return runS(5,runnable);
+	}
+	/**
+	 * run code and return time of code running
+	 * 
+	 * @param runnable
+	 * @return run nanoseconds
+	 */
+	public static synchronized long run(int level,Runnable runnable) {
 		if (Objects.nonNull(runnable)) {
-			synchronized (XTime.class) {
-				int old = XTime.setLevel(XTime.getLevel()+1);
-				XTime.start();
-				runnable.run();
-				XTime.setLevel(old);
-				return XTime.cost();
-			}
+			XTime xtime = new XTime(level);
+			xtime.start();
+			runnable.run();
+			return xtime.cost();
 
 		}
 		return -1;
@@ -51,15 +89,12 @@ public class XCode {
 	 * @param runnable
 	 * @param cs
 	 */
-	public static synchronized long runNS(Runnable runnable, Callback... cs) {
+	public static synchronized long runNS(int level,Runnable runnable, Callback... cs) {
 		if (Objects.nonNull(runnable)) {
-			synchronized (XTime.class) {
-				int old = XTime.setLevel(XTime.getLevel()+1);
-				XTime.start();
-				runnable.run();
-				XTime.setLevel(old);
-				return XTime.outByNS(cs);
-			}
+			XTime xtime = new XTime(level);
+			xtime.start();
+			runnable.run();
+			return xtime.outByNS(cs);
 		}
 		return -1;
 	}
@@ -70,15 +105,12 @@ public class XCode {
 	 * @param runnable
 	 * @param cs
 	 */
-	public static synchronized long runMS(Runnable runnable, Callback... cs) {
+	public static synchronized long runMS(int level,Runnable runnable, Callback... cs) {
 		if (Objects.nonNull(runnable)) {
-			synchronized (XTime.class) {
-				int old = XTime.setLevel(XTime.getLevel()+1);
-				XTime.start();
-				runnable.run();
-				XTime.setLevel(old);
-				return XTime.outByMS(cs);
-			}
+			XTime xtime = new XTime(level);
+			xtime.start();
+			runnable.run();
+			return xtime.outByMS(cs);
 		}
 		return -1;
 	}
@@ -89,56 +121,27 @@ public class XCode {
 	 * @param runnable
 	 * @param cs
 	 */
-	public static synchronized long runS(Runnable runnable, Callback... cs) {
+	public static synchronized long runS(int level,Runnable runnable, Callback... cs) {
 		if (Objects.nonNull(runnable)) {
-			synchronized (XTime.class) {
-				int old = XTime.setLevel(XTime.getLevel()+1);
-				XTime.start();
-				runnable.run();
-				XTime.setLevel(old);
-				return XTime.outByS(cs);
-			}
+			XTime xtime = new XTime(level);
+			xtime.start();
+			runnable.run();
+			return xtime.outByS(cs);
 		}
 		return -1;
 	}
 
-	// error XTime itself doesn't support that async-ly run code!
-	// but we can write threadsafe code!
-	/**
-	 * async running code
-	 * 
-	 * @param runnable
-	 * @param cs
-	 */
-	public static void runAsyncMS(Runnable runnable, Callback... cs) {
-		new Thread(() -> {
-			runMS(runnable, cs);
-		}).start();
+//	private static ExecutorService pool ;
+//	static {
+//		pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()*2);
+//	}
+	public static Thread runAsync(Runnable runnable) {
+		Thread t = new Thread(runnable);
+		t.start();
+		return t;
+//		pool.execute(runnable);
 	}
-
-	/**
-	 * async running code
-	 * 
-	 * @param runnable
-	 * @param cs
-	 */
-	public static void runAsyncNS(Runnable runnable, Callback... cs) {
-		new Thread(() -> {
-			runNS(runnable, cs);
-		}).start();
-	}
-
-	/**
-	 * async running code
-	 * 
-	 * @param runnable
-	 * @param cs
-	 */
-	public static void runAsyncS(Runnable runnable, Callback... cs) {
-		new Thread(() -> {
-			runS(runnable, cs);
-		}).start();
-	}
+	
 
 	/**
 	 * covert java source code to unicode code

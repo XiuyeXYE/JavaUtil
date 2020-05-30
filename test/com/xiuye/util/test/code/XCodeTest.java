@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.util.Map;
+import java.util.UUID;
 
 import org.junit.Test;
 
@@ -20,22 +21,36 @@ public class XCodeTest {
 
 	@Test
 	public void test() throws InterruptedException {
-		XCode.runAsyncNS(() -> {
-			XLog.log("Something");
-		}, () -> {
-			XLog.log("after running code!");
+		XCode.runS(()->{
+			XLog.ln("ABC");
+			XLog.ln("ABC");
+			XLog.ln("ABC");
+			XLog.ln("ABC");
+			XLog.ln("ABC");
 		});
-		XCode.runAsyncMS(() -> {
-			XLog.log("Something");
-		}, () -> {
-			XLog.log("after running code!");
+		XCode.runMS(()->{
+			XLog.ln("ABC");
+			XLog.line("ABC");
+			XLog.ln("ABC");
+			XLog.line("ABC");
+			XLog.ln("ABC");
 		});
-		XCode.runAsyncS(() -> {
-			XLog.log("Something");
-		}, () -> {
-			XLog.log("after running code!");
+		XCode.runNS(()->{
+			XLog.ln("ABC");
+			XLog.line("ABC");
+			XLog.ln("ABC");
+			XLog.line("ABC");
+			XLog.ln("ABC");
 		});
-		Thread.sleep(3000);
+		XCode.run(()->{
+			XLog.ln("ABC");
+			XLog.line("ABC");
+			XLog.ln("ABC");
+			XLog.line("ABC");
+			XLog.ln("ABC");
+		});
+		XLog.line("DEF");
+		XLog.ln("DEF");
 	}
 
 	@Test
@@ -166,6 +181,23 @@ public class XCodeTest {
 			XLog.lg(m.getGenericParameterTypes());
 			XLog.lg(m.getParameterCount());
 		}
+		
+		
+	}
+	@Test
+	public void testHowManyThreadsOK() throws InterruptedException {
+		for(int i=0;i<10000;i++) {
+			int j = i;
+			XCode.runAsync(()->{
+				XLog.ln(UUID.randomUUID().toString(),j);
+//				for(;;);
+			});
+			
+		}
+		
+//		while(true);
+		
+		Thread.sleep(3000);
 		
 		
 	}
