@@ -199,6 +199,14 @@ public class PromiseTest {
 		.defaut(()->{
 			XLog.lg("default");
 		})
+		.ef(true)
+		.then(()->{
+			XLog.line(true);
+		})
+		.ef(true)
+		.then(()->{
+			XLog.ln(true);
+		})
 		.end();
 	}
 }

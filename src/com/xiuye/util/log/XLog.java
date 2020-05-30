@@ -3,6 +3,9 @@ package com.xiuye.util.log;
 import java.io.PrintStream;
 import java.util.Objects;
 
+import com.xiuye.util.cls.XMeta;
+import com.xiuye.util.cls.XMeta.Caller;
+
 /**
  * System.out extension
  * 
@@ -11,6 +14,30 @@ import java.util.Objects;
  */
 public class XLog {
 
+	private static int level = 3;
+	
+	public static <T> void ln(T... t) {
+		level = 4;
+		line(t);
+		level = 3;
+	}
+	
+	public static <T> void line(T... t) {
+		Caller caller = XMeta.caller(level);
+		String fileline = "\t[ line:" + caller.getLineNumber() + " | " + caller.getClassName() + " | "
+				+ caller.getFileName() + " ]";
+		Object[] os = new Object[t.length + 1];
+//		os[0] = fileline;
+//		log(t.length, os.length);
+		for (int i = 00; i < t.length; i++) {
+//			log(i);
+			os[i] = t[i];
+		}
+		os[t.length] = fileline;
+		log(os);
+	}
+	
+	
 	/**
 	 * output many params
 	 * 
@@ -476,5 +503,7 @@ public class XLog {
 		}
 
 	}
+	
+	
 
 }
