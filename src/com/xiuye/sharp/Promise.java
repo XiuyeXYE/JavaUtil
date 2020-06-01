@@ -775,26 +775,26 @@ public class Promise<RESULT> {
 
     public Promise<Thread> thread(VoidCallbackNoParam callback) {
         return threadS(() -> {
-            callback.vcv();
+        	catchExec(()->callback.vcv());
         });
     }
 
     public Promise<Thread> thread(VoidCallbackWithParam<RESULT> callback) {
         return thread(() -> {
-            callback.vci(result);
+        	catchExec(()->callback.vci(result));
         });
     }
 
     public Promise<String> toFormatterJson() {
-        return of(JsonUtil.instance(JsonUtil.FORMAT_GSON).toJson(result));
+        return of(catchExec(()->JsonUtil.instance(JsonUtil.FORMAT_GSON).toJson(result)));
     }
 
     public Promise<String> toJson() {
-        return of(JsonUtil.instance().toJson(result));
+        return of(catchExec(()->JsonUtil.instance().toJson(result)));
     }
     
     public <R> Promise<R> toObject(Class<R> clazz) {
-    	return of(JsonUtil.instance().fromJson(result!=null?result.toString():null,clazz));
+    	return of(catchExec(()->JsonUtil.instance().fromJson(result!=null?result.toString():null,clazz)));
     }
 
     public static Promise<Gson> formatterJsonKitS(){
@@ -806,11 +806,11 @@ public class Promise<RESULT> {
     }
     
     public Promise<Gson> formatterJsonKit(){
-    	return of(JsonUtil.instance(JsonUtil.FORMAT_GSON));
+    	return of(catchExec(()->JsonUtil.instance(JsonUtil.FORMAT_GSON)));
     }
     
     public Promise<Gson> jsonKit(){
-    	return of(JsonUtil.instance());
+    	return of(catchExec(()->JsonUtil.instance()));
     }
     
     @SafeVarargs
@@ -839,7 +839,7 @@ public class Promise<RESULT> {
         XLog.attach(1);
         XLog.ln(in);
         XLog.dettach(1);
-        return of(in);
+        return of(in);     
     }
 
     public Promise<RESULT> log() {

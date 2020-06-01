@@ -1,5 +1,11 @@
 package com.xiuye.util.test.code;
 
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 import org.junit.Test;
 
 import com.xiuye.sharp.Promise;
@@ -225,7 +231,7 @@ public class PromiseTest {
 	}
 	
 	@Test
-	public void testLogOut() {
+	public void testLogOut() throws InterruptedException, ExecutionException, TimeoutException {
 		Promise.logS(123,666,"ABC");
 		Promise.lgS(123,666,"ABC");
 		Promise.lnS(123,666,"ABC");
@@ -247,6 +253,49 @@ public class PromiseTest {
 			}
 			return null;
 		}).toObject(String[].class).line().and(true).or(true).line().ln();
+		
+		Promise.of(new A("ABC","DEF")).toFormatterJson().line().toObject(Map.class).line()
+		.toFormatterJson().line().toObject(A.class).line()
+		.toObject(Map.class).except(e->{
+			e.printStackTrace();
+		}).line();
+		
+//		FutureTask<String> futureTask = new FutureTask<>(()->{
+//			return "ABC";
+//		});
+//		XLog.ln(futureTask.get(1, TimeUnit.SECONDS));
+// 		Thread.sleep(3000);
+	}
+	
+	private static class A{
+		String a;
+		String b;
+		
+		
+		
+		public A(String a, String b) {
+			super();
+			this.a = a;
+			this.b = b;
+		}
+		public String getA() {
+			return a;
+		}
+		public void setA(String a) {
+			this.a = a;
+		}
+		public String getB() {
+			return b;
+		}
+		public void setB(String b) {
+			this.b = b;
+		}
+		@Override
+		public String toString() {
+			return "A [a=" + a + ", b=" + b + "]";
+		}
+		
+		
 		
 	}
 	
