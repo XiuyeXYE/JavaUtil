@@ -39,7 +39,7 @@ public class ProgramPromise<RESULT> {
     //error同
     private RESULT result;
     private Throwable error;
-    
+
 
     protected ProgramPromise() {
         this.tokens = XType.list();
@@ -189,17 +189,17 @@ public class ProgramPromise<RESULT> {
         }
     }
 
-	private void lookAheadSearchedWillRun(Runnable run, String... ts) {
-		if (hasNextToken()) {
-			TwoTuple next = currentToken();
-			for (String t : ts) {
-				if (t.equals(next.token)) {
-					run.run();
-					break;
-				}
-			}
-		}
-	}
+    private void lookAheadSearchedWillRun(Runnable run, String... ts) {
+        if (hasNextToken()) {
+            TwoTuple next = currentToken();
+            for (String t : ts) {
+                if (t.equals(next.token)) {
+                    run.run();
+                    break;
+                }
+            }
+        }
+    }
 
     public interface VoidCallbackNoParam {
         void vcv();
@@ -207,35 +207,34 @@ public class ProgramPromise<RESULT> {
 
     //自顶向下分析
     //主要是选择分支结构的
+
     /**
-     * 
      * S -> S | ε
-     * 
-     * 
+     * <p>
+     * <p>
      * S -> if then T | ε
      * T -> else if then T | else | ε
-     * 
-     * 
-     * 
+     * <p>
+     * <p>
+     * <p>
      * S -> match . F | ε
      * F -> as . A . then . B | default
      * B -> F | ε
      * A -> as . A | ε
-     * 	
-     * 	为了实现错误检查 和 句型的完整性检查，在实现过程中 
-     * 	对以上的产生式 ，微调了下，
-     * 	实现仍是自上而下 的
-     * 	
-     * 	分支语句 每次只有 一个 执行!
-     * 
-     * 	现在这个实现的结构非常的复杂 
-     * 	哎 ，我都看不懂了，嘿嘿
-     * 	
-     * 	先check 并且拿到 为true 的第一个执行的分支
-     * 	check 结构没问题后，最后执行 这个 分支 得到结果!
-     * 	这里面涉及到超前搜索，主要为了保证执行结构的完整性
-     * 	ε <=> 直接执行结束，结束递归 等等!	
-     * 
+     * <p>
+     * 为了实现错误检查 和 句型的完整性检查，在实现过程中
+     * 对以上的产生式 ，微调了下，
+     * 实现仍是自上而下 的
+     * <p>
+     * 分支语句 每次只有 一个 执行!
+     * <p>
+     * 现在这个实现的结构非常的复杂
+     * 哎 ，我都看不懂了，嘿嘿
+     * <p>
+     * 先check 并且拿到 为true 的第一个执行的分支
+     * check 结构没问题后，最后执行 这个 分支 得到结果!
+     * 这里面涉及到超前搜索，主要为了保证执行结构的完整性
+     * ε <=> 直接执行结束，结束递归 等等!
      */
     private void S_token() {
         if (hasNextToken()) {//递归的终止条件!
@@ -245,7 +244,7 @@ public class ProgramPromise<RESULT> {
              * S -> if then T | ε
              * T -> else if then T | else | ε
              * if then must be all in one
-             * 
+             *
              * 	完整性 if then / if then else if then
              * 	/if then else
              */
@@ -285,62 +284,63 @@ public class ProgramPromise<RESULT> {
             } else {
                 nextTokenError(or(IF, MATCH));
             }
-            
+
             callTokenCallback();
-            
+
             //check and execute next program fragment!
             S_token();
-            
+
         }
     }
 
     /**
      * F handler
-     * after match it should be as or default!!! 
+     * after match it should be as or default!!!
      * F -> as . A . then . B | default
      * B -> F | ε //保证了 match as then 或 match default 的完整性!
      * A -> as . A | ε
+     *
      * @param matchValue
      */
     private void F_token(Object matchValue) {
 
-		if (hasNextToken()) {
+        if (hasNextToken()) {
 
-			TwoTuple f_token = getNextToken();
+            TwoTuple f_token = getNextToken();
 
-			if (AS.equals(f_token.token)) {
-				boolean asOK = matchValue != null 
-						&& 
-						matchValue.equals(f_token.value) 
-						| 
-						A_token(matchValue);// left
-				TwoTuple then_token;
-				if (hasNextToken() && THEN.equals((then_token = getNextToken()).token)/* syntax check */) {
-					// 正式 匹配的有 then 然后执行!
-					if (result_token == null && asOK) {
-						result_token = then_token;
-					}
-					
-					//递归条件，也是超前搜索 
-					//为了 match as then的完整性
-					lookAheadSearchedWillRun(() -> {
-						B_token(matchValue);
-					}, AS, DEFAULT);//开始 中间 结尾 的单词要分清楚
+            if (AS.equals(f_token.token)) {
+                boolean asOK = matchValue != null
+                        &&
+                        matchValue.equals(f_token.value)
+                                |
+                                A_token(matchValue);// left
+                TwoTuple then_token;
+                if (hasNextToken() && THEN.equals((then_token = getNextToken()).token)/* syntax check */) {
+                    // 正式 匹配的有 then 然后执行!
+                    if (result_token == null && asOK) {
+                        result_token = then_token;
+                    }
+
+                    //递归条件，也是超前搜索
+                    //为了 match as then的完整性
+                    lookAheadSearchedWillRun(() -> {
+                        B_token(matchValue);
+                    }, AS, DEFAULT);//开始 中间 结尾 的单词要分清楚
 //					B_token(matchValue);
-				} else {
-					nextTokenError(or(THEN));
-				}
-			} else if (DEFAULT.equals(f_token.token)) {
-				if (result_token == null) {
-					result_token = f_token;
-				}
-			} else {
-				nextTokenError(or(AS, DEFAULT));
-			}
+                } else {
+                    nextTokenError(or(THEN));
+                }
+            } else if (DEFAULT.equals(f_token.token)) {
+                if (result_token == null) {
+                    result_token = f_token;
+                }
+            } else {
+                nextTokenError(or(AS, DEFAULT));
+            }
 
-		} else {
-			nextTokenError(or(AS, DEFAULT));
-		}
+        } else {
+            nextTokenError(or(AS, DEFAULT));
+        }
 
     }
 
@@ -348,17 +348,19 @@ public class ProgramPromise<RESULT> {
      * match as then 必须是一个整体!
      * B -> F | ε
      * A -> as . A | ε
+     *
      * @param matchValue
      */
     private void B_token(Object matchValue) {
-    	if (hasNextToken()) {
-    		F_token(matchValue);
+        if (hasNextToken()) {
+            F_token(matchValue);
         }
-    	//ε <=> 没有代码可执行，没有下一步可执行!
+        //ε <=> 没有代码可执行，没有下一步可执行!
     }
-    
+
     //右递归
-	/**
+
+    /**
      * as handler
      * A -> as . A | ε
      *
@@ -382,8 +384,7 @@ public class ProgramPromise<RESULT> {
                     matched = true;
                 }
                 matched = matched || A_token(matchValue);
-            } 
-            else {
+            } else {
                 //多取一次未处理的话，应该回溯一个
                 //也是递归终止条件
                 tokenIndexDecrement();
@@ -397,42 +398,42 @@ public class ProgramPromise<RESULT> {
     /**
      * T -> else if then 【加入超前搜索!保证完整性】 T | else | ε
      */
-	private void T_token() {
+    private void T_token() {
 
-		// 需要超前遍历 才能 可以随意 的调用任何 完整结构 的语句!
-		lookAheadSearchedWillRun(() -> {
-			TwoTuple t_token = getNextToken();
-			if (ELSE_IF.equals(t_token.token)) {
-				TwoTuple then_token;
-				if (hasNextToken() && THEN.equals((then_token = getNextToken()).token)) {
+        // 需要超前遍历 才能 可以随意 的调用任何 完整结构 的语句!
+        lookAheadSearchedWillRun(() -> {
+            TwoTuple t_token = getNextToken();
+            if (ELSE_IF.equals(t_token.token)) {
+                TwoTuple then_token;
+                if (hasNextToken() && THEN.equals((then_token = getNextToken()).token)) {
 
-					if (result_token == null && parseBoolean(t_token.value)) {
-						result_token = then_token;
-					}
-					// T -> else if then T | else | E
-					// recursion
+                    if (result_token == null && parseBoolean(t_token.value)) {
+                        result_token = then_token;
+                    }
+                    // T -> else if then T | else | E
+                    // recursion
 
-					T_token();
-				} else {
-					nextTokenError(or(THEN));
-				}
-			} else if (ELSE.equals(t_token.token)) {
-				if (result_token == null) {
-					result_token = t_token;
-				}
+                    T_token();
+                } else {
+                    nextTokenError(or(THEN));
+                }
+            } else if (ELSE.equals(t_token.token)) {
+                if (result_token == null) {
+                    result_token = t_token;
+                }
 
-			}
-			//if then 检验是完整的，为了match as then 或者 下一 if then
-			//不需要这一句，去check : if then else if then/
-			// if then else 因为 if then在S_token中实现是完整的
+            }
+            //if then 检验是完整的，为了match as then 或者 下一 if then
+            //不需要这一句，去check : if then else if then/
+            // if then else 因为 if then在S_token中实现是完整的
 //          else {
 //              nextTokenError(or(ELSE_IF, ELSE));
 //          }
 
-		}, ELSE_IF, ELSE);
+        }, ELSE_IF, ELSE);
 
-	}
-    
+    }
+
 
     //不支持 if else 嵌套！
     private void analyzeTokensAndExec() {
@@ -440,7 +441,7 @@ public class ProgramPromise<RESULT> {
         //然后执行！
 
         S_token();
-       
+
 
     }
 

@@ -5,27 +5,28 @@ import com.google.gson.GsonBuilder;
 
 public class JsonUtil {
 
-	public static final int FORMAT_GSON = 1;
-	public static final int GENERAL_GSON = 2;
+    public static final int FORMAT_GSON = 1;
+    public static final int GENERAL_GSON = 2;
 
-	private static Gson formatterGson;
-	private static Gson generalGson;
-	static {
-		formatterGson = new GsonBuilder().setPrettyPrinting().create();
-		generalGson = new Gson();
-	}
+    private static Gson formatterGson;
+    private static Gson generalGson;
 
-	public static Gson instance() {
-		return generalGson;
-	}
+    static {
+        formatterGson = new GsonBuilder().setPrettyPrinting().create();
+        generalGson = new Gson();
+    }
 
-	public static Gson instance(int type) {
+    public static Gson instance() {
+        return generalGson;
+    }
 
-		if (FORMAT_GSON == type) {
-			return formatterGson;
-		}
-		return generalGson;
+    public static Gson instance(int type) {
 
-	}
+        if (FORMAT_GSON == type) {
+            return formatterGson;
+        }
+        return generalGson;
+
+    }
 
 }

@@ -2,15 +2,15 @@ package com.xiuye.util.code.gen;
 
 public interface GenCoder {
 
-	String code();
+    String code();
 
-	String codeLine();
+    String codeLine();
 
-	default String codeBlockBegin() {
-		return "{";
-	}
+    default String codeBlockBegin() {
+        return "{";
+    }
 
-	default String codeBlockEnd() {
-		return "}";
-	}
+    default String codeBlockEnd() {
+        return "}";
+    }
 }

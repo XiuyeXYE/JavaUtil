@@ -2,8 +2,8 @@ package com.xiuye.util.code.gen;
 
 public interface GenParameter {
 
-	String combineParameters();
+    String combineParameters();
 
-	boolean addParameter(String type, String name);
+    boolean addParameter(String type, String name);
 
 }

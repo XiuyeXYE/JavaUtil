@@ -4,33 +4,21 @@ import com.xiuye.util.cls.XType;
 import com.xiuye.util.json.JsonUtil;
 import com.xiuye.util.log.XLog;
 
-
 /**
- * Promise 设计纲要
- * 1.Promise 必须有 结果，即使计算过程中有异常错误，结果应该为null， 并传递给 下一个新的Promise，有 错误
- * 就处理 错误
- * 2.then 处理Promise的结果
- * 3.except处理Promise或者then中的异常错误等
- * 4.Promise 调用了 then
+ * Promise 设计纲要 1.Promise 必须有 结果，即使计算过程中有异常错误，结果应该为null， 并传递给 下一个新的Promise，有 错误
+ * 就处理 错误 2.then 处理Promise的结果 3.except处理Promise或者then中的异常错误等 4.Promise 调用了 then
  * 处理结果 中，遇到错误， 应可以延迟 处理！新的错误 可以 覆盖旧的异常 error public Promise(RESULT
- * result,Throwable error) 可以把上一个 Promise未处理的错误继承和传递下来再处理
- * 5.Result值不具有继承效果，一调用
- * then就处理掉，没有延迟处理效果
- * 6.Promise每调用一次 then except 等，都会返回新的 Promise对象。 这样有利于线程安全。
+ * result,Throwable error) 可以把上一个 Promise未处理的错误继承和传递下来再处理 5.Result值不具有继承效果，一调用
+ * then就处理掉，没有延迟处理效果 6.Promise每调用一次 then except 等，都会返回新的 Promise对象。 这样有利于线程安全。
  * 7.except 表示处理异常，运行过程中没有新的异常产生不应将上次的异常继续 传递下去，应及时清理掉 7.except 和 then 的互相下次调用
- * 应该毫 无任何约束，十分流畅
- * 8.内部变量result保存callback的结果，error保存callback运行中产生的异常 或者未处理的异常
- * 9.世界上，每次执行Promise都是直接执行的！
- * 10.this promise is only single thread
- * 11.result不仅是当前Promise计算的结果，
- * 更是传递给下一个的入参，其作用带有next属性
- * 12.只满足就近匹配，前一个的Promise的计算结果是后一个
- * Promise的传入值！十分重要。
- * 13.添加分支结构！
+ * 应该毫 无任何约束，十分流畅 8.内部变量result保存callback的结果，error保存callback运行中产生的异常 或者未处理的异常
+ * 9.世界上，每次执行Promise都是直接执行的！ 10.this promise is only single thread
+ * 11.result不仅是当前Promise计算的结果， 更是传递给下一个的入参，其作用带有next属性
+ * 12.只满足就近匹配，前一个的Promise的计算结果是后一个 Promise的传入值！十分重要。 13.添加分支结构！
+ *
  * @param <RESULT> 结果类型
  */
 public class Promise<RESULT> {
-
 
     // 一般是这步的计算结果，传递给下一步
     private RESULT result;
@@ -88,13 +76,12 @@ public class Promise<RESULT> {
 ////        this(catchExec(() ->callback.rcv()),error);
 //    }
 
-
     /**
      * R call(I)
      *
      * @param callback
      * @param in
-     * @param <INPUT>
+     * @param          <INPUT>
      */
 //    public <INPUT> Promise(ReturnCallbackWithParam<RESULT, INPUT> callback, INPUT in) {
 //        catchExec(() -> result = callback.rci(in));
@@ -105,7 +92,6 @@ public class Promise<RESULT> {
 //        this(callback, in);
 //        error = error;
 //    }
-
 
     /**
      * void call(I)
@@ -140,11 +126,8 @@ public class Promise<RESULT> {
 //        error = error;
 //    }
 
-
     /**
-     * 不处理上一个Promise返回的结果，
-     * 并返回新的结果给 下一个Promise
-     * void call()
+     * 不处理上一个Promise返回的结果， 并返回新的结果给 下一个Promise void call()
      *
      * @param callback lambda代码
      * @param <R>      处理异常后返回的结果
@@ -155,9 +138,7 @@ public class Promise<RESULT> {
     }
 
     /**
-     * 处理上一个Promise返回的结果,
-     * 并返回新的结果给 下一个Promise
-     * R call(I)
+     * 处理上一个Promise返回的结果, 并返回新的结果给 下一个Promise R call(I)
      *
      * @param callback lambda代码
      * @param <R>      处理异常后返回的结果
@@ -170,9 +151,7 @@ public class Promise<RESULT> {
     // 没有返回类型的,（相当于）继承了RESULT 类型！
 
     /**
-     * 处理上一个Promise返回的结果,
-     * 不返回新的结果给 下一个Promise
-     * void call(I)
+     * 处理上一个Promise返回的结果, 不返回新的结果给 下一个Promise void call(I)
      *
      * @param callback lambda代码
      * @return 新的Promise对象
@@ -182,9 +161,7 @@ public class Promise<RESULT> {
     }
 
     /**
-     * 不处理上一个Promise返回的结果,
-     * 不返回新的结果给 下一个Promise
-     * void call()
+     * 不处理上一个Promise返回的结果, 不返回新的结果给 下一个Promise void call()
      *
      * @param callback lambda代码
      * @return 新的Promise对象
@@ -194,9 +171,7 @@ public class Promise<RESULT> {
     }
 
     /**
-     * 最终
-     * equals finally
-     * void call()
+     * 最终 equals finally void call()
      *
      * @param callback lambda代码
      * @param <R>      处理异常后返回的结果
@@ -207,9 +182,7 @@ public class Promise<RESULT> {
     }
 
     /**
-     * 最终
-     * equals finally
-     * R call(I)
+     * 最终 equals finally R call(I)
      *
      * @param callback lambda代码
      * @param <R>      处理异常后返回的结果
@@ -222,9 +195,7 @@ public class Promise<RESULT> {
     // 没有返回类型的,（相当于）继承了RESULT 类型！
 
     /**
-     * 最终
-     * equals finally
-     * void call(I)
+     * 最终 equals finally void call(I)
      *
      * @param callback lambda代码
      * @return 新的Promise对象
@@ -234,9 +205,7 @@ public class Promise<RESULT> {
     }
 
     /**
-     * 最终
-     * equals finally
-     * void call()
+     * 最终 equals finally void call()
      *
      * @param callback lambda代码
      * @return 新的Promise对象
@@ -246,8 +215,7 @@ public class Promise<RESULT> {
     }
 
     /**
-     * 判断result是否不等于null
-     * 也就是存在啊
+     * 判断result是否不等于null 也就是存在啊
      *
      * @return
      */
@@ -255,27 +223,21 @@ public class Promise<RESULT> {
         return result != null;
     }
 
-
     /**
-     * 上一个Promise结果存在（!=null）则执行！
-     * 不处理上一个Promise返回的结果，
-     * 并返回新的结果给 下一个Promise
-     * void call()
+     * 上一个Promise结果存在（!=null）则执行！ 不处理上一个Promise返回的结果， 并返回新的结果给 下一个Promise void
+     * call()
      *
      * @param callback lambda代码
      * @param <R>      处理异常后返回的结果
      * @return 新的Promise对象
      */
     public <R> Promise<R> exist(ReturnCallbackNoParam<R> callback) {
-        //为null就不必再次传入result了
+        // 为null就不必再次传入result了
         return exist() ? then(callback) : new Promise<>(error);
     }
 
     /**
-     * 上一个Promise结果存在（!=null）则执行！
-     * 处理上一个Promise返回的结果,
-     * 并返回新的结果给 下一个Promise
-     * R call(I)
+     * 上一个Promise结果存在（!=null）则执行！ 处理上一个Promise返回的结果, 并返回新的结果给 下一个Promise R call(I)
      *
      * @param callback lambda代码
      * @param <R>      处理异常后返回的结果
@@ -288,10 +250,8 @@ public class Promise<RESULT> {
     // 没有返回类型的,（相当于）继承了RESULT 类型！
 
     /**
-     * 上一个Promise结果存在（!=null）则执行！
-     * 处理上一个Promise返回的结果,
-     * 不返回新的结果给 下一个Promise
-     * void call(I)
+     * 上一个Promise结果存在（!=null）则执行！ 处理上一个Promise返回的结果, 不返回新的结果给 下一个Promise void
+     * call(I)
      *
      * @param callback lambda代码
      * @return 新的Promise对象
@@ -301,10 +261,8 @@ public class Promise<RESULT> {
     }
 
     /**
-     * 上一个Promise结果存在（!=null）则执行！
-     * 不处理上一个Promise返回的结果,
-     * 不返回新的结果给 下一个Promise
-     * void call()
+     * 上一个Promise结果存在（!=null）则执行！ 不处理上一个Promise返回的结果, 不返回新的结果给 下一个Promise void
+     * call()
      *
      * @param callback lambda代码
      * @return 新的Promise对象
@@ -314,8 +272,7 @@ public class Promise<RESULT> {
     }
 
     /**
-     * 存在result并且是boolean类型，
-     * 并进行转化
+     * 存在result并且是boolean类型， 并进行转化
      *
      * @return
      */
@@ -343,8 +300,7 @@ public class Promise<RESULT> {
     }
 
     /**
-     * if result == true
-     * void call()
+     * if result == true void call()
      *
      * @param callback lambda代码
      * @param <R>      处理异常后返回的结果
@@ -355,8 +311,7 @@ public class Promise<RESULT> {
     }
 
     /**
-     * if result == true
-     * R call(I)
+     * if result == true R call(I)
      *
      * @param callback lambda代码
      * @param <R>      处理异常后返回的结果
@@ -369,8 +324,7 @@ public class Promise<RESULT> {
     // 没有返回类型的,（相当于）继承了RESULT 类型！
 
     /**
-     * if result == true
-     * void call(I)
+     * if result == true void call(I)
      *
      * @param callback lambda代码
      * @return 新的Promise对象
@@ -380,8 +334,7 @@ public class Promise<RESULT> {
     }
 
     /**
-     * if result == true
-     * void call()
+     * if result == true void call()
      *
      * @param callback lambda代码
      * @return 新的Promise对象
@@ -391,8 +344,7 @@ public class Promise<RESULT> {
     }
 
     /**
-     * if result == false
-     * void call()
+     * if result == false void call()
      *
      * @param callback lambda代码
      * @param <R>      处理异常后返回的结果
@@ -403,8 +355,7 @@ public class Promise<RESULT> {
     }
 
     /**
-     * if result == false
-     * R call(I)
+     * if result == false R call(I)
      *
      * @param callback lambda代码
      * @param <R>      处理异常后返回的结果
@@ -417,8 +368,7 @@ public class Promise<RESULT> {
     // 没有返回类型的,（相当于）继承了RESULT 类型！
 
     /**
-     * if result == false
-     * void call(I)
+     * if result == false void call(I)
      *
      * @param callback lambda代码
      * @return 新的Promise对象
@@ -428,8 +378,7 @@ public class Promise<RESULT> {
     }
 
     /**
-     * if result == false
-     * void call()
+     * if result == false void call()
      *
      * @param callback lambda代码
      * @return 新的Promise对象
@@ -438,19 +387,16 @@ public class Promise<RESULT> {
         return !truely() ? then(callback) : new Promise<>(error);
     }
 
-
-    //extension API
-    //没有优先级额！ 因为方便实现,就用就近原则吧！
+    // extension API
+    // 没有优先级额！ 因为方便实现,就用就近原则吧！
     public Promise<Boolean> and(boolean flag) {
         return resolve(truely() && flag, error);
     }
-
 
     public Promise<Boolean> and(ReturnCallbackNoParam<Boolean> callback) {
 //        return !truely() ? then(callback) : new Promise<>(error);
         return resolve(truely() && parseBoolean(catchExec(() -> callback.rcv())), error);
     }
-
 
     public Promise<Boolean> and(ReturnCallbackWithParam<Boolean, RESULT> callback) {
 //        return !truely() ? then(callback) : new Promise<>(error);
@@ -458,18 +404,15 @@ public class Promise<RESULT> {
         return resolve(truely() && parseBoolean(catchExec(() -> callback.rci(result))), error);
     }
 
-
     public Promise<Boolean> and(VoidCallbackWithParam<RESULT> callback) {
 ////        return !truely() ? then(callback) : new Promise<>(error);
         return resolve(truely() && parseBoolean(catchExec(() -> callback.vci(result))), error);
     }
 
-
     public Promise<Boolean> and(VoidCallbackNoParam callback) {
 //        return !truely() ? then(callback) : new Promise<>(error);
         return resolve(truely() && parseBoolean(catchExec(() -> callback.vcv())), error);
     }
-
 
     public Promise<Boolean> or(boolean flag) {
         return resolve(truely() || flag, error);
@@ -479,16 +422,13 @@ public class Promise<RESULT> {
         return resolve(truely() || parseBoolean(catchExec(() -> callback.rcv())), error);
     }
 
-
     public Promise<Boolean> or(ReturnCallbackWithParam<Boolean, RESULT> callback) {
         return resolve(truely() || parseBoolean(catchExec(() -> callback.rci(result))), error);
     }
 
-
     public Promise<Boolean> or(VoidCallbackWithParam<RESULT> callback) {
         return resolve(truely() || parseBoolean(catchExec(() -> callback.vci(result))), error);
     }
-
 
     public Promise<Boolean> or(VoidCallbackNoParam callback) {
         return resolve(truely() || parseBoolean(catchExec(() -> callback.vcv())), error);
@@ -502,11 +442,9 @@ public class Promise<RESULT> {
         return resolve(!parseBoolean(catchExec(() -> callback.rcv())), error);
     }
 
-
     public Promise<Boolean> not(ReturnCallbackWithParam<Boolean, RESULT> callback) {
         return resolve(!parseBoolean(catchExec(() -> callback.rci(result))), error);
     }
-
 
     public Promise<Boolean> not(VoidCallbackWithParam<RESULT> callback) {
         return resolve(!parseBoolean(catchExec(() -> callback.vci(result))), error);
@@ -515,7 +453,6 @@ public class Promise<RESULT> {
     public Promise<Boolean> not(VoidCallbackNoParam callback) {
         return resolve(!parseBoolean(catchExec(() -> callback.vcv())), error);
     }
-
 
 //    private <R> Promise<R> thenInherit(Promise<R> pro){
 //        if(pro.error == null && error != null){
@@ -534,8 +471,7 @@ public class Promise<RESULT> {
     }
 
     /**
-     * 有错误就执行，没有错误，就跳过
-     * R call() 处理上一个Promise的错误！ 不接受上一个Promise的错误并返回新的Promise！
+     * 有错误就执行，没有错误，就跳过 R call() 处理上一个Promise的错误！ 不接受上一个Promise的错误并返回新的Promise！
      *
      * @param callback lambda代码
      * @return 新的Promise对象
@@ -551,8 +487,7 @@ public class Promise<RESULT> {
     // input and return 都有；传入进去后，再次有error的话就传给下一个新的
 
     /**
-     * 有错误就执行，没有错误，就跳过
-     * R call(I) 处理上一个Promise的错误！ 接受上一个Promise的错误并返回新的Promise！
+     * 有错误就执行，没有错误，就跳过 R call(I) 处理上一个Promise的错误！ 接受上一个Promise的错误并返回新的Promise！
      *
      * @param callback lambda代码
      * @return 新的Promise对象
@@ -566,8 +501,7 @@ public class Promise<RESULT> {
     }
 
     /**
-     * 有错误就执行，没有错误，就跳过
-     * void call(I) 处理上一个Promise的错误！ 接受上一个Promise的错误并返回新的Promise！
+     * 有错误就执行，没有错误，就跳过 void call(I) 处理上一个Promise的错误！ 接受上一个Promise的错误并返回新的Promise！
      *
      * @param callback lambda代码
      * @return 新的Promise对象
@@ -581,8 +515,7 @@ public class Promise<RESULT> {
     }
 
     /**
-     * 有错误就执行，没有错误，就跳过
-     * void call() 处理上一个Promise的错误！ 接受上一个Promise的错误并返回新的Promise！
+     * 有错误就执行，没有错误，就跳过 void call() 处理上一个Promise的错误！ 接受上一个Promise的错误并返回新的Promise！
      *
      * @param callback lambda代码
      * @return 新的Promise对象
@@ -591,7 +524,7 @@ public class Promise<RESULT> {
 //        return errorExist()
 //                ? resolve(errorHandler(() -> callback.vcv()), error)
 //                : resolve(result, error);
-              
+
 //        return new Promise<>(errorHandler(() -> callback.vcv()), error);
         return resolve(errorExist() ? errorHandler(() -> callback.vcv()) : result, error);
     }
@@ -604,7 +537,6 @@ public class Promise<RESULT> {
 //        }
 //        return pro;
 //    }
-
 
     /**
      * 捕获代码执行过程中的异常！
@@ -661,8 +593,7 @@ public class Promise<RESULT> {
     }
 
     /**
-     * 捕获代码执行过程中的异常！ for except 的 异常处理代码
-     * 错误处理后返回正常值
+     * 捕获代码执行过程中的异常！ for except 的 异常处理代码 错误处理后返回正常值
      *
      * @param callback
      * @param <R>
@@ -700,8 +631,8 @@ public class Promise<RESULT> {
         });
     }
 
-    //必须自己实现与其他类库无关的接口，哪怕是SDK 标准库
-    //否则 将面临 传参 的 一些莫名其妙的错误！
+    // 必须自己实现与其他类库无关的接口，哪怕是SDK 标准库
+    // 否则 将面临 传参 的 一些莫名其妙的错误！
 
     /**
      * R call (I)
@@ -747,7 +678,6 @@ public class Promise<RESULT> {
         exIndeed = !implicit;
     }
 
-
     public static <R> Promise<R> resolve() {
         return new Promise<>();
     }
@@ -771,7 +701,7 @@ public class Promise<RESULT> {
      * since here,so don't have input
      *
      * @param callback
-     * @param <R>
+     * @param          <R>
      * @return
      */
 //    public static <R> Promise<R> resolve(ReturnCallbackNoParam<R> callback) {
@@ -808,7 +738,6 @@ public class Promise<RESULT> {
 //        return new Promise(callback, error);
 //    }
 
-
     /**
      * exception result promise
      *
@@ -831,7 +760,6 @@ public class Promise<RESULT> {
         return resolve(r, error);
     }
 
-
     public ProgramPromise<RESULT> begin() {
         return new ProgramPromise<>(result, error);
     }
@@ -840,76 +768,71 @@ public class Promise<RESULT> {
         return new ProgramPromise<>();
     }
 
-    public static Promise<Thread> threadS(Runnable run){
-    	return of(new Thread(run));
+    public static Promise<Thread> threadS(Runnable run) {
+        return of(new Thread(run));
     }
-    
-    public Promise<Thread> thread(VoidCallbackNoParam callback){
-    	return threadS(()->{
-    		callback.vcv();
-    	});
+
+    public Promise<Thread> thread(VoidCallbackNoParam callback) {
+        return threadS(() -> {
+            callback.vcv();
+        });
     }
-    
-    public Promise<Thread> thread(VoidCallbackWithParam<RESULT> callback){
-    	return thread(()->{
-    		callback.vci(result);
-    	});
+
+    public Promise<Thread> thread(VoidCallbackWithParam<RESULT> callback) {
+        return thread(() -> {
+            callback.vci(result);
+        });
     }
-    
-    
 
     public Promise<String> toFormatterJson() {
-    	return of(JsonUtil.instance(JsonUtil.FORMAT_GSON).toJson(result));
+        return of(JsonUtil.instance(JsonUtil.FORMAT_GSON).toJson(result));
     }
-    
+
     public Promise<String> toJson() {
-    	return of(JsonUtil.instance().toJson(result));
+        return of(JsonUtil.instance().toJson(result));
     }
-    
+
     @SafeVarargs
-	public static <R> Promise<R[]> log(R...in){
-    	XLog.lg(in);    	
-    	return of(in);
+    public static <R> Promise<R[]> log(R... in) {
+        XLog.lg(in);
+        return of(in);
     }
-	
-	@SafeVarargs
-	public static <R> Promise<R[]> lg(R...in){
-		return log(in);
-	}
-	
-	@SafeVarargs
-	public static <R> Promise<R[]> line(R...in){
-		int old = XLog.setLineLevel(XLog.getLineLevel()+1);
-    	XLog.line(in);
-    	XLog.setLineLevel(old); 	
-		return of(in);
-	}
-	
-	@SafeVarargs
-	public static <R> Promise<R[]> ln(R...in){
+
+    @SafeVarargs
+    public static <R> Promise<R[]> lg(R... in) {
+        return log(in);
+    }
+
+    @SafeVarargs
+    public static <R> Promise<R[]> line(R... in) {
+        int old = XLog.setLineLevel(XLog.getLineLevel() + 1);
+        XLog.line(in);
+        XLog.setLineLevel(old);
+        return of(in);
+    }
+
+    @SafeVarargs
+    public static <R> Promise<R[]> ln(R... in) {
 //		int old = XLog.setLineLevel(XLog.getLineLevel()+1);
-		XLog.attach(1);
-		XLog.line(in);
-		XLog.dettach(1);
+        XLog.attach(1);
+        XLog.line(in);
+        XLog.dettach(1);
 //		XLog.setLineLevel(old); 	
-		return of(in);
-	}
-    
-    public Promise<RESULT> logOut() {
-    	XLog.lg(result);
-    	return of(result);
+        return of(in);
     }
-    
+
+    public Promise<RESULT> logOut() {
+        XLog.lg(result);
+        return of(result);
+    }
+
     public Promise<RESULT> lineOut() {
 //    	int old = XLog.setLineLevel(XLog.getLineLevel()+1);
-    	XLog.attach(1);
-    	XLog.ln(result);
-    	XLog.dettach(1);
+        XLog.attach(1);
+        XLog.ln(result);
+        XLog.dettach(1);
 //    	XLog.setLineLevel(old);
-    	return of(result);    	
+        return of(result);
     }
-    
-    
-   
-    
+
 }
