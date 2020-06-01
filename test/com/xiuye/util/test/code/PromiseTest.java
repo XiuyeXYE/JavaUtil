@@ -223,4 +223,14 @@ public class PromiseTest {
 		});
 		Thread.sleep(3000);
 	}
+	
+	@Test
+	public void testLogOut() {
+		Promise.log(123,666,"ABC");
+		Promise.lg(123,666,"ABC");
+		Promise.ln(123,666,"ABC");
+		Promise.line(123,666,"ABC").lineOut().logOut().toJson().lineOut().toFormatterJson().lineOut().logOut();
+		XLog.ln(123,"ABC");
+		XLog.line(123,"ABC");
+	}
 }

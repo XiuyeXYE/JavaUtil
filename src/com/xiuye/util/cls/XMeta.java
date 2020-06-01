@@ -1,5 +1,7 @@
 package com.xiuye.util.cls;
 
+import java.util.Arrays;
+
 /**
  * class meta info operator
  * 
@@ -7,6 +9,12 @@ package com.xiuye.util.cls;
  *
  */
 public class XMeta {
+	
+
+	public static Caller caller() {
+		return caller(4);
+	}
+
 	/**
 	 * get caller function info
 	 * 
@@ -16,12 +24,14 @@ public class XMeta {
 	public static Caller caller(int functionLayer) {
 		return caller(Thread.currentThread(), functionLayer);
 	}
-	
-	public static Caller caller(Thread parent,int functionLayer) {
+
+	public static Caller caller(Thread parent, int functionLayer) {
 		StackTraceElement[] ss = parent.getStackTrace();
 		Caller c = null;
 		if (ss.length > functionLayer) {
 			c = new Caller();
+			c.setLevel(functionLayer);
+			c.setTrace(ss);
 			c.setClassName(ss[functionLayer].getClassName());
 			c.setFileName(ss[functionLayer].getFileName());
 			c.setLineNumber(ss[functionLayer].getLineNumber());
@@ -44,6 +54,10 @@ public class XMeta {
 		private String classLoaderName;
 		private String moduleName;
 		private String moduleVersion;
+		
+		private StackTraceElement[] trace;
+		
+		private int level;
 
 		public String getClassName() {
 			return className;
@@ -101,12 +115,33 @@ public class XMeta {
 			this.moduleVersion = moduleVersion;
 		}
 
+		public StackTraceElement[] getTrace() {
+			return trace;
+		}
+
+		public void setTrace(StackTraceElement[] trace) {
+			this.trace = trace;
+		}
+
+
+		public int getLevel() {
+			return level;
+		}
+
+		public void setLevel(int level) {
+			this.level = level;
+		}
+
 		@Override
 		public String toString() {
 			return "Caller [className=" + className + ", methodName=" + methodName + ", fileName=" + fileName
 					+ ", lineNumber=" + lineNumber + ", classLoaderName=" + classLoaderName + ", moduleName="
-					+ moduleName + ", moduleVersion=" + moduleVersion + "]";
+					+ moduleName + ", moduleVersion=" + moduleVersion + ", level=" + level + ", trace="
+					+ Arrays.toString(trace) + "]";
 		}
+		
+		
+		
 
 	}
 }

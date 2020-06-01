@@ -27,6 +27,20 @@ import com.xiuye.util.time.XTime.Callback;
  */
 public class XCode {
 
+	private static int level = 5;
+	
+	public static int attach(int delta) {
+		int old = level;
+		level += delta;
+		return old;
+	}
+	
+	public static int dettach(int delta) {
+		int old = level;
+		level -= delta;
+		return old;
+	}
+	
 	/**
 	 * run code and return time of code running
 	 * 
@@ -34,7 +48,7 @@ public class XCode {
 	 * @return run nanoseconds
 	 */
 	public static synchronized long run(Runnable runnable) {
-		return run(5,runnable);
+		return run(level,runnable);
 	}
 	
 	/**
@@ -44,7 +58,7 @@ public class XCode {
 	 * @param cs
 	 */
 	public static synchronized long runNS(Runnable runnable, Callback... cs) {
-		return runNS(5,runnable);
+		return runNS(level,runnable);
 	}
 	
 	/**
@@ -54,7 +68,7 @@ public class XCode {
 	 * @param cs
 	 */
 	public static synchronized long runMS(Runnable runnable, Callback... cs) {
-		return runMS(5,runnable);
+		return runMS(level,runnable);
 	}
 	
 	/**

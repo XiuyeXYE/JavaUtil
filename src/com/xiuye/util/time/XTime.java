@@ -50,6 +50,18 @@ public class XTime {
 	public int getLevel() {
 		return level;
 	}
+	
+	public int attach(int delta) {
+		int old = level;
+		level += delta;
+		return old;
+	}
+	
+	public int dettach(int delta) {
+		int old = level;
+		level -= delta;
+		return old;
+	}
 
 	/**
 	 * check start time and start caller existence

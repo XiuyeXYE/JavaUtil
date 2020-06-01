@@ -15,30 +15,53 @@ import com.xiuye.util.cls.XMeta.Caller;
 public class XLog {
 
 	private static int level = 4;
-	
-	public static <T> void ln(T... t) {
+
+	public static int setLineLevel(int lvl) {
 		int old = level;
-		level = 5;
-		line(t);
-		level = old;
+		level = lvl;
+		return old;
+	}
+
+	public static int getLineLevel() {
+		return level;
+	}
+
+	public static int attach(int delta) {
+		int old = level;
+		level += delta;
+		return old;
 	}
 	
+	public static int dettach(int delta) {
+		int old = level;
+		level -= delta;
+		return old;
+	}
+	
+	@SafeVarargs
+	public static <T> void ln(T... t) {
+//		int old = level;
+//		level = old + 1;
+		attach(1);
+		line(t);
+		dettach(1);
+//		level = old;
+		
+	}
+
+	@SafeVarargs
 	public static <T> void line(T... t) {
 		Caller caller = XMeta.caller(level);
 		String fileline = "\t[ line:" + caller.getLineNumber() + " | " + caller.getClassName() + " | "
 				+ caller.getFileName() + " ]";
 		Object[] os = new Object[t.length + 1];
-//		os[0] = fileline;
-//		log(t.length, os.length);
 		for (int i = 0; i < t.length; i++) {
-//			log(i);
 			os[i] = t[i];
 		}
 		os[t.length] = fileline;
 		log(os);
 	}
-	
-	
+
 	/**
 	 * output many params
 	 * 
@@ -504,7 +527,5 @@ public class XLog {
 		}
 
 	}
-	
-	
 
 }

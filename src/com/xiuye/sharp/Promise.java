@@ -1,6 +1,7 @@
 package com.xiuye.sharp;
 
 import com.xiuye.util.cls.XType;
+import com.xiuye.util.json.JsonUtil;
 import com.xiuye.util.log.XLog;
 
 
@@ -855,7 +856,58 @@ public class Promise<RESULT> {
     	});
     }
     
+    
 
+    public Promise<String> toFormatterJson() {
+    	return of(JsonUtil.instance(JsonUtil.FORMAT_GSON).toJson(result));
+    }
+    
+    public Promise<String> toJson() {
+    	return of(JsonUtil.instance().toJson(result));
+    }
+    
+    @SafeVarargs
+	public static <R> Promise<R[]> log(R...in){
+    	XLog.lg(in);    	
+    	return of(in);
+    }
+	
+	@SafeVarargs
+	public static <R> Promise<R[]> lg(R...in){
+		return log(in);
+	}
+	
+	@SafeVarargs
+	public static <R> Promise<R[]> line(R...in){
+		int old = XLog.setLineLevel(XLog.getLineLevel()+1);
+    	XLog.line(in);
+    	XLog.setLineLevel(old); 	
+		return of(in);
+	}
+	
+	@SafeVarargs
+	public static <R> Promise<R[]> ln(R...in){
+//		int old = XLog.setLineLevel(XLog.getLineLevel()+1);
+		XLog.attach(1);
+		XLog.line(in);
+		XLog.dettach(1);
+//		XLog.setLineLevel(old); 	
+		return of(in);
+	}
+    
+    public Promise<RESULT> logOut() {
+    	XLog.lg(result);
+    	return of(result);
+    }
+    
+    public Promise<RESULT> lineOut() {
+//    	int old = XLog.setLineLevel(XLog.getLineLevel()+1);
+    	XLog.attach(1);
+    	XLog.ln(result);
+    	XLog.dettach(1);
+//    	XLog.setLineLevel(old);
+    	return of(result);    	
+    }
     
     
    
