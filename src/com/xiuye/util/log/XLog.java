@@ -30,7 +30,7 @@ public class XLog {
 		Object[] os = new Object[t.length + 1];
 //		os[0] = fileline;
 //		log(t.length, os.length);
-		for (int i = 00; i < t.length; i++) {
+		for (int i = 0; i < t.length; i++) {
 //			log(i);
 			os[i] = t[i];
 		}
