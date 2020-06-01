@@ -1,5 +1,6 @@
 package com.xiuye.sharp;
 
+import com.google.gson.Gson;
 import com.xiuye.util.cls.XType;
 import com.xiuye.util.json.JsonUtil;
 import com.xiuye.util.log.XLog;
@@ -791,48 +792,78 @@ public class Promise<RESULT> {
     public Promise<String> toJson() {
         return of(JsonUtil.instance().toJson(result));
     }
+    
+    public <R> Promise<R> toObject(Class<R> clazz) {
+    	return of(JsonUtil.instance().fromJson(result!=null?result.toString():null,clazz));
+    }
 
+    public static Promise<Gson> formatterJsonKitS(){
+    	return of(JsonUtil.instance(JsonUtil.FORMAT_GSON));
+    }
+    
+    public static Promise<Gson> jsonKitS(){
+    	return of(JsonUtil.instance());
+    }
+    
+    public Promise<Gson> formatterJsonKit(){
+    	return of(JsonUtil.instance(JsonUtil.FORMAT_GSON));
+    }
+    
+    public Promise<Gson> jsonKit(){
+    	return of(JsonUtil.instance());
+    }
+    
     @SafeVarargs
-    public static <R> Promise<R[]> log(R... in) {
+    public static <R> Promise<R[]> logS(R... in) {
         XLog.lg(in);
         return of(in);
     }
 
     @SafeVarargs
-    public static <R> Promise<R[]> lg(R... in) {
-        return log(in);
+    public static <R> Promise<R[]> lgS(R... in) {
+        return logS(in);
     }
 
     @SafeVarargs
-    public static <R> Promise<R[]> line(R... in) {
-        int old = XLog.setLineLevel(XLog.getLineLevel() + 1);
-        XLog.line(in);
-        XLog.setLineLevel(old);
-        return of(in);
-    }
-
-    @SafeVarargs
-    public static <R> Promise<R[]> ln(R... in) {
-//		int old = XLog.setLineLevel(XLog.getLineLevel()+1);
-        XLog.attach(1);
+    public static <R> Promise<R[]> lineS(R... in) {
+//        int old = XLog.setLineLevel(XLog.getLineLevel() + 1);
+    	XLog.attach(1);
         XLog.line(in);
         XLog.dettach(1);
-//		XLog.setLineLevel(old); 	
+//        XLog.setLineLevel(old);
         return of(in);
     }
 
-    public Promise<RESULT> logOut() {
+    @SafeVarargs
+    public static <R> Promise<R[]> lnS(R... in) {
+        XLog.attach(1);
+        XLog.ln(in);
+        XLog.dettach(1);
+        return of(in);
+    }
+
+    public Promise<RESULT> log() {
         XLog.lg(result);
         return of(result);
     }
+    
+    public Promise<RESULT> lg() {
+    	XLog.lg(result);
+    	return of(result);
+    }
 
-    public Promise<RESULT> lineOut() {
-//    	int old = XLog.setLineLevel(XLog.getLineLevel()+1);
+    public Promise<RESULT> line() {
         XLog.attach(1);
-        XLog.ln(result);
+        XLog.line(result);
         XLog.dettach(1);
-//    	XLog.setLineLevel(old);
         return of(result);
+    }
+    
+    public Promise<RESULT> ln() {
+    	XLog.attach(1);
+    	XLog.ln(result);
+    	XLog.dettach(1);
+    	return of(result);
     }
 
 }

@@ -226,11 +226,31 @@ public class PromiseTest {
 	
 	@Test
 	public void testLogOut() {
-		Promise.log(123,666,"ABC");
-		Promise.lg(123,666,"ABC");
-		Promise.ln(123,666,"ABC");
-		Promise.line(123,666,"ABC").lineOut().logOut().toJson().lineOut().toFormatterJson().lineOut().logOut();
+		Promise.logS(123,666,"ABC");
+		Promise.lgS(123,666,"ABC");
+		Promise.lnS(123,666,"ABC");
+		Promise.lineS(123,666,"ABC").line().log().toJson().line().toFormatterJson().line().log();
 		XLog.ln(123,"ABC");
 		XLog.line(123,"ABC");
+		String []ss = {
+			"A","B","C"	
+		};
+		Promise.of(ss).line();
+		Promise.of(ss).toJson().line().toJson().line();
+		Promise.of(ss).toFormatterJson().line().toFormatterJson().line();
+		Promise.formatterJsonKitS().then(d->{
+			return d.fromJson((String)null, Object.class);
+		}).line();
+		Promise.of(ss).toJson().line().toObject(String[].class).then(d->{
+			for(String s : d) {
+				XLog.ln(s);
+			}
+			return null;
+		}).toObject(String[].class).line().and(true).or(true).line().ln();
+		
 	}
+	
+	
+	
+	
 }
