@@ -42,11 +42,6 @@ public class SingletonBeanPoolPromise<R> {
 	}
 
 
-	private SingletonBeanPoolPromise<R> getBean(String name, Class<R> clazz) {
-		result = clazz.cast(beans.get(name));
-		return this;
-	}
-
 	private <I> SingletonBeanPoolPromise<R> register(String name, I in) {
 		synchronized (SingletonBeanPoolPromise.class) {
 			if (Objects.isNull(beans.putIfAbsent(name, in))) {
