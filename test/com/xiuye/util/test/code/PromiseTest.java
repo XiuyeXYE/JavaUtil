@@ -305,5 +305,15 @@ public class PromiseTest {
 		});
 
 	}
+	
+	@Test
+	public void testBeansPool() {
+		Promise.beanS("abc",String.class).getBean().end().ln();
+		Promise.beanS("abc", "ABC").register().getBean().end().ln();
+		Promise.beanS("abc").getBean().end().ln();
+		Promise.beanS("abc",String.class).getBean().end().ln();
+		Promise.beanS("abc").end().ln().bean("abc").getBean()
+		.end().ln();
+	}
 
 }

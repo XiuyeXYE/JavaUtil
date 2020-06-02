@@ -639,34 +639,33 @@ public class Promise<RESULT> {
 		return new ProgramPromise<>();
 	}
 
-	public static <R,I> Promise<AbstractPromiseTask<VoidCallbackNoParam, R, I>> taskS(VoidCallbackNoParam callback) {
+	public static <R, I> Promise<AbstractPromiseTask<VoidCallbackNoParam, R, I>> taskS(VoidCallbackNoParam callback) {
 		AbstractPromiseTask<VoidCallbackNoParam, R, I> taskObj = new PromiseTaskVCV<>(callback);
 		taskObj.start();
 		return of(taskObj);
 	}
-	
-	public static <R,I> Promise<AbstractPromiseTask<VoidCallbackWithParam<I>, R, I>> taskS(
+
+	public static <R, I> Promise<AbstractPromiseTask<VoidCallbackWithParam<I>, R, I>> taskS(
 			VoidCallbackWithParam<I> callback) {
 		AbstractPromiseTask<VoidCallbackWithParam<I>, R, I> taskObj = new PromiseTaskVCI<>(callback);
 		taskObj.start();
 		return of(taskObj);
 	}
-	
-	public static <R,I> Promise<AbstractPromiseTask<ReturnCallbackNoParam<R>, R, I>> taskS(
+
+	public static <R, I> Promise<AbstractPromiseTask<ReturnCallbackNoParam<R>, R, I>> taskS(
 			ReturnCallbackNoParam<R> callback) {
 		AbstractPromiseTask<ReturnCallbackNoParam<R>, R, I> taskObj = new PromiseTaskRCV<>(callback);
 		taskObj.start();
 		return of(taskObj);
 	}
-	
-	public static <R,I> Promise<AbstractPromiseTask<ReturnCallbackWithParam<R, I>, R, I>> taskS(
+
+	public static <R, I> Promise<AbstractPromiseTask<ReturnCallbackWithParam<R, I>, R, I>> taskS(
 			ReturnCallbackWithParam<R, I> callback) {
 		AbstractPromiseTask<ReturnCallbackWithParam<R, I>, R, I> taskObj = new PromiseTaskRCI<>(callback);
 		taskObj.start();
 		return of(taskObj);
 	}
-	
-	
+
 	public <R> Promise<AbstractPromiseTask<VoidCallbackNoParam, R, RESULT>> task(VoidCallbackNoParam callback) {
 		AbstractPromiseTask<VoidCallbackNoParam, R, RESULT> taskObj = new PromiseTaskVCV<>(callback, result);
 		taskObj.start();
@@ -918,6 +917,30 @@ public class Promise<RESULT> {
 			XLog.dettach(3);
 		});
 		return of(result, error);
+	}
+
+	public static <R> SingletonBeanPoolPromise<R> beanS(String name) {
+		return new SingletonBeanPoolPromise<>(name);
+	}
+
+	public static <R> SingletonBeanPoolPromise<R> beanS(String name, Class<R> clazz) {
+		return new SingletonBeanPoolPromise<>(name, clazz);
+	}
+
+	public static <R> SingletonBeanPoolPromise<R> beanS(String name, R object) {
+		return new SingletonBeanPoolPromise<>(name, object);
+	}
+
+	public <R> SingletonBeanPoolPromise<R> bean(String name) {
+		return new SingletonBeanPoolPromise<>(name);
+	}
+
+	public <R> SingletonBeanPoolPromise<R> bean(String name, Class<R> clazz) {
+		return new SingletonBeanPoolPromise<>(name, clazz);
+	}
+
+	public <R> SingletonBeanPoolPromise<R> bean(String name, R object) {
+		return new SingletonBeanPoolPromise<>(name, object);
 	}
 
 }
