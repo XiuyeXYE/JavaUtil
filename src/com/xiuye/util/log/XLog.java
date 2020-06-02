@@ -25,6 +25,8 @@ public class XLog {
         return level;
     }
 
+    private static final Object lock = new Object();
+    
     public static int attach(int delta) {
         int old = level;
         level += delta;
@@ -34,7 +36,7 @@ public class XLog {
     public static int dettach(int delta) {
         int old = level;
         level -= delta;
-        return old;
+        return old;        
     }
 
     @SafeVarargs

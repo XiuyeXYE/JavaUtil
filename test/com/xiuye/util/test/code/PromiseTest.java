@@ -218,16 +218,35 @@ public class PromiseTest {
 	
 	@Test
 	public void testThread() throws InterruptedException {
-		Promise.threadS(()->{
-			XLog.ln("thread S");
-		}).then(t->{
-			t.start();
-		}).thread(d->{
+//		Promise.threadS(()->{
+//			XLog.ln("thread S");
+//		}).then(t->{
+//			t.start();
+//		}).thread(d->{
+//			XLog.ln(d);
+//		}).then(d->{
+//			d.start();
+//		});
+		
+		Promise.of()
+//		.task(()->{
+//			XLog.ln(123);
+//		})
+//		.task(d->{
+//			XLog.ln(d);
+//		})
+		.task(d->{
 			XLog.ln(d);
-		}).then(d->{
-			d.start();
-		});
-		Thread.sleep(3000);
+			return 100;
+		})
+		.task(d->{
+			XLog.ln(d,d.get(),d.getError());
+		})
+		.task(()->88888)
+		.line()
+		;
+//		Thread.sleep(3000);
+//		Thread.class.wait();
 	}
 	
 	@Test
@@ -296,6 +315,23 @@ public class PromiseTest {
 		}
 		
 		
+		
+	}
+	
+	@Test
+	public void testReject() {
+//		Promise.reject(new RuntimeException("ABC")).then(d->{
+//			XLog.ln(d);
+//			return d;
+//		}).line();
+		
+		Promise.reject(new RuntimeException("ABC")).except(e->{
+			XLog.ln(e);
+			return e;
+		}).line();
+		
+		new Promise<>(123);
+		new Promise<>(new RuntimeException("ABC")).except(()->{});
 		
 	}
 	
