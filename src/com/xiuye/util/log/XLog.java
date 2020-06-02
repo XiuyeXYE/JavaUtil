@@ -5,6 +5,8 @@ import com.xiuye.util.cls.XMeta.Caller;
 
 import java.io.PrintStream;
 import java.util.Objects;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * System.out extension
@@ -25,9 +27,11 @@ public class XLog {
         return level;
     }
 
-    private static final Object lock = new Object();
+    
+    private static final Lock mutex = new ReentrantLock();
     
     public static int attach(int delta) {
+		mutex.lock();
         int old = level;
         level += delta;
         return old;
@@ -36,6 +40,7 @@ public class XLog {
     public static int dettach(int delta) {
         int old = level;
         level -= delta;
+        mutex.unlock();
         return old;        
     }
 

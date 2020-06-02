@@ -229,12 +229,12 @@ public class PromiseTest {
 //		});
 		
 		Promise.of()
-//		.task(()->{
-//			XLog.ln(123);
-//		})
-//		.task(d->{
-//			XLog.ln(d);
-//		})
+		.task(()->{
+			XLog.ln(123);
+		})
+		.task(d->{
+			XLog.ln(d);
+		})
 		.task(d->{
 			XLog.ln(d);
 			return 100;
@@ -244,9 +244,22 @@ public class PromiseTest {
 		})
 		.task(()->88888)
 		.line()
+		.ln()
 		;
-//		Thread.sleep(3000);
+		Promise.lineS("ABC",123);
+		Promise.lnS("ABC",123);
+		Thread.sleep(3000);
 //		Thread.class.wait();
+		
+		Promise.taskS(()->{
+			throw new RuntimeException("OKOKOKOKOKOKOK");
+		}).except(e->{
+			XLog.ln(e);
+			e.printStackTrace();
+		}).then(d->{
+			XLog.ln(d,d.get(),d.getError());
+		});
+		
 	}
 	
 	@Test

@@ -639,6 +639,34 @@ public class Promise<RESULT> {
 		return new ProgramPromise<>();
 	}
 
+	public static <R,I> Promise<AbstractPromiseTask<VoidCallbackNoParam, R, I>> taskS(VoidCallbackNoParam callback) {
+		AbstractPromiseTask<VoidCallbackNoParam, R, I> taskObj = new PromiseTaskVCV<>(callback);
+		taskObj.start();
+		return of(taskObj);
+	}
+	
+	public static <R,I> Promise<AbstractPromiseTask<VoidCallbackWithParam<I>, R, I>> taskS(
+			VoidCallbackWithParam<I> callback) {
+		AbstractPromiseTask<VoidCallbackWithParam<I>, R, I> taskObj = new PromiseTaskVCI<>(callback);
+		taskObj.start();
+		return of(taskObj);
+	}
+	
+	public static <R,I> Promise<AbstractPromiseTask<ReturnCallbackNoParam<R>, R, I>> taskS(
+			ReturnCallbackNoParam<R> callback) {
+		AbstractPromiseTask<ReturnCallbackNoParam<R>, R, I> taskObj = new PromiseTaskRCV<>(callback);
+		taskObj.start();
+		return of(taskObj);
+	}
+	
+	public static <R,I> Promise<AbstractPromiseTask<ReturnCallbackWithParam<R, I>, R, I>> taskS(
+			ReturnCallbackWithParam<R, I> callback) {
+		AbstractPromiseTask<ReturnCallbackWithParam<R, I>, R, I> taskObj = new PromiseTaskRCI<>(callback);
+		taskObj.start();
+		return of(taskObj);
+	}
+	
+	
 	public <R> Promise<AbstractPromiseTask<VoidCallbackNoParam, R, RESULT>> task(VoidCallbackNoParam callback) {
 		AbstractPromiseTask<VoidCallbackNoParam, R, RESULT> taskObj = new PromiseTaskVCV<>(callback, result);
 		taskObj.start();
@@ -667,7 +695,7 @@ public class Promise<RESULT> {
 		return of(taskObj, error);
 	}
 
-	public abstract class AbstractPromiseTask<FUNC, R, I> extends Thread {
+	public static abstract class AbstractPromiseTask<FUNC, R, I> extends Thread {
 
 		protected FUNC func;
 		protected R result;
@@ -737,7 +765,7 @@ public class Promise<RESULT> {
 
 	}
 
-	public class PromiseTaskRCI<R, I> extends AbstractPromiseTask<ReturnCallbackWithParam<R, I>, R, I> {
+	public static class PromiseTaskRCI<R, I> extends AbstractPromiseTask<ReturnCallbackWithParam<R, I>, R, I> {
 
 		public PromiseTaskRCI(ReturnCallbackWithParam<R, I> func) {
 			super(func);
@@ -755,7 +783,7 @@ public class Promise<RESULT> {
 
 	}
 
-	public class PromiseTaskRCV<R, I> extends AbstractPromiseTask<ReturnCallbackNoParam<R>, R, I> {
+	public static class PromiseTaskRCV<R, I> extends AbstractPromiseTask<ReturnCallbackNoParam<R>, R, I> {
 
 		public PromiseTaskRCV(ReturnCallbackNoParam<R> func) {
 			super(func);
@@ -773,7 +801,7 @@ public class Promise<RESULT> {
 
 	}
 
-	public class PromiseTaskVCI<R, I> extends AbstractPromiseTask<VoidCallbackWithParam<I>, R, I> {
+	public static class PromiseTaskVCI<R, I> extends AbstractPromiseTask<VoidCallbackWithParam<I>, R, I> {
 
 		public PromiseTaskVCI(VoidCallbackWithParam<I> func) {
 			super(func);
@@ -791,7 +819,7 @@ public class Promise<RESULT> {
 
 	}
 
-	public class PromiseTaskVCV<R, I> extends AbstractPromiseTask<VoidCallbackNoParam, R, I> {
+	public static class PromiseTaskVCV<R, I> extends AbstractPromiseTask<VoidCallbackNoParam, R, I> {
 
 		public PromiseTaskVCV(VoidCallbackNoParam func) {
 			super(func);
@@ -871,21 +899,24 @@ public class Promise<RESULT> {
 	}
 
 	public Promise<RESULT> lg() {
-//		XLog.lg(result);
 		return log();
 	}
 
 	public Promise<RESULT> line() {
-		XLog.attach(1);
-		XLog.line(result);
-		XLog.dettach(1);
+		catchExec(() -> {
+			XLog.attach(3);
+			XLog.line(result);
+			XLog.dettach(3);
+		});
 		return of(result, error);
 	}
 
 	public Promise<RESULT> ln() {
-		XLog.attach(1);
-		XLog.ln(result);
-		XLog.dettach(1);
+		catchExec(() -> {
+			XLog.attach(3);
+			XLog.ln(result);
+			XLog.dettach(3);
+		});
 		return of(result, error);
 	}
 
