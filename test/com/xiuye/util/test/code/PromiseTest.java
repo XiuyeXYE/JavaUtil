@@ -319,5 +319,33 @@ public class PromiseTest {
 		Promise.beanS(String.class).getBean().end().ln();
 		Promise.beanS(String.class,"CCCCC",true).register().getBean().end().ln();
 	}
+	
+	@Test
+	public void testBeansPool2() {
+		Promise.beanS(String.class).getBean().end().ln();
+		Promise.beanS("a","ABC").register().getBean().end().ln()
+		.then(d->{
+			XLog.ln(d.toCharArray());
+			return d.toCharArray();
+		})
+		.bean(String.class, "DEF").register().getBean().end().ln()
+		.bean(String.class).getBean().end().ln()
+		.bean("a").getBean().end().ln()
+		;
+		for(int i=0;i<100;i++) {
+			Promise.beanS(String.class,"abc"+i,true)
+			.register()
+			.getBean()
+			.end()
+			.ln();
+			Promise.beanS("abc"+i,"abc"+i)
+			.register()
+			.getBean()
+			.end()
+			.ln();
+		}
+		Promise.beanS(String.class).getBean().end().ln();
+	}
+
 
 }
