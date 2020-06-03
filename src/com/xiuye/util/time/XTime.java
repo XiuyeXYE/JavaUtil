@@ -1,95 +1,189 @@
 package com.xiuye.util.time;
 
-import java.util.Objects;
-
 import com.xiuye.util.cls.XMeta;
 import com.xiuye.util.cls.XMeta.Caller;
 import com.xiuye.util.log.XLog;
 
+import java.util.Objects;
+
+/**
+ * time operator
+ *
+ * @author xiuye
+ */
 public class XTime {
 
-	private static long STIME = -1;
+    private long stime = -1;
 
-	private static Caller SCALLER = null;
+    private Caller scaller = null;
 
-	private static final int LEVEL = 3;
-	
+    private Thread parent;
 
-	private static void checkTime() {
-		if (STIME == -1 || Objects.isNull(SCALLER)) {
-			throw new RuntimeException("Not call start() function firstly!");
-		}
-	}
+    private int level;
 
-	private static void executeAllCallback(Callback... cs) {
-		for (Callback c : cs) {
-			c.run();
-		}
-	}
+    public XTime() {
+        this(3);
+    }
 
-	private static void codeSectionMSG() {
-		Caller eCaller = XMeta.caller(LEVEL + 1);
-		String codeSectionMSG = "\r\n=====This Code Section=====\nFrom\n";
-		codeSectionMSG += "    Class Name : " + SCALLER.getClassName() + "\n    Method Name : "
-				+ SCALLER.getMethodName() + "\n    File Name : " + SCALLER.getFileName() + "\n    Enter Line : "
-				+ (SCALLER.getLineNumber() + 1) + "\nTo\n" + "    Class Name : " + eCaller.getClassName()
-				+ "\n    Method Name : " + eCaller.getMethodName() + "\n    File Name : " + eCaller.getFileName()
-				+ "\n    Exit Line : " + (eCaller.getLineNumber() - 1);
-		XLog.log(codeSectionMSG);
-	}
+    public XTime(int level) {
+        this(Thread.currentThread(), level);
+    }
 
-	public interface Callback {
-		void run();
-	}
+    public XTime(Thread parent, int level) {
+        this.level = level;
+        this.parent = parent;
+    }
 
-	public static long start() {
-		SCALLER = XMeta.caller(LEVEL);
-		return STIME = System.nanoTime();
-	}
+    /**
+     * input new level and return old
+     *
+     * @param level
+     * @return
+     */
+    public int setLevel(int level) {
+        int lvl = level;
+        this.level = level;
+        return lvl;
+    }
 
-	public static long cost() {
-		checkTime();
-		return System.nanoTime() - STIME;
-	}
+    public int getLevel() {
+        return level;
+    }
 
-	public static void reset() {
-		STIME = -1;
-	}
+    public int attach(int delta) {
+        int old = level;
+        level += delta;
+        return old;
+    }
 
-	public static long outByNS(Callback... cs) {
-		long e = System.nanoTime();// place it here precision
-		checkTime();
-		codeSectionMSG();
-		long cost = e - STIME;
-		XLog.log("This running time costs : " + cost + " ns");
-		executeAllCallback(cs);
-		SCALLER = XMeta.caller(LEVEL);
-		STIME = System.nanoTime();// place it here precision
-		return cost;
-	}
+    public int dettach(int delta) {
+        int old = level;
+        level -= delta;
+        return old;
+    }
 
-	public static long outByMS(Callback... cs) {
-		long e = System.nanoTime();
-		checkTime();
-		codeSectionMSG();
-		long cost = e - STIME;
-		XLog.log("This running time costs : " + String.format("%.6f", cost / 1000000.0) + " ms");
-		executeAllCallback(cs);
-		SCALLER = XMeta.caller(LEVEL);
-		STIME = System.nanoTime();
-		return cost;
-	}
+    /**
+     * check start time and start caller existence
+     */
+    private void checkTime() {
+        if (stime == -1 || Objects.isNull(scaller)) {
+            throw new RuntimeException("Not call start() function firstly!");
+        }
+    }
 
-	public static long outByS(Callback... cs) {
-		long e = System.nanoTime();
-		checkTime();
-		codeSectionMSG();
-		long cost = e - STIME;
-		XLog.log("This running time costs : " + String.format("%.9f", cost / 1000000000.0) + " s");
-		executeAllCallback(cs);
-		SCALLER = XMeta.caller(LEVEL);
-		STIME = System.nanoTime();
-		return cost;
-	}
+    /**
+     * execute callbacks
+     *
+     * @param cs
+     */
+    private void executeAllCallback(Callback... cs) {
+        for (Callback c : cs) {
+            c.run();
+        }
+    }
+
+    /**
+     * System.out running code section
+     */
+    private void codeSectionMSG() {
+        Caller eCaller = XMeta.caller(parent, level + 1);
+        String codeSectionMSGStr = "\r\n=====This Code Section=====\nFrom\n";
+        codeSectionMSGStr += "    Class Name : " + scaller.getClassName() + "\n    Method Name : "
+                + scaller.getMethodName() + "\n    File Name : " + scaller.getFileName() + "\n    Enter Line : "
+                + (scaller.getLineNumber()) + "\nTo\n" + "    Class Name : " + eCaller.getClassName()
+                + "\n    Method Name : " + eCaller.getMethodName() + "\n    File Name : " + eCaller.getFileName()
+                + "\n    Exit Line : " + (eCaller.getLineNumber());
+        XLog.log(codeSectionMSGStr);
+    }
+
+    /**
+     * callback
+     *
+     * @author xiuye
+     */
+    public interface Callback {
+        void run();
+    }
+
+    /**
+     * start and init first time and caller
+     *
+     * @return nanoseconds
+     */
+    public long start() {
+        scaller = XMeta.caller(parent, level);
+        return stime = System.nanoTime();
+    }
+
+    /**
+     * from start to now cost time
+     *
+     * @return
+     */
+    public long cost() {
+        checkTime();
+        return System.nanoTime() - stime;
+    }
+
+    /**
+     * set start time not inited!
+     */
+    public void reset() {
+        stime = -1;
+    }
+
+    /**
+     * output runing code section info nanoseconds
+     *
+     * @param cs
+     * @return
+     */
+    public long outByNS(Callback... cs) {
+        long e = System.nanoTime();// place it here precision
+        checkTime();
+        codeSectionMSG();
+        long cost = e - stime;
+        XLog.log("This running time costs : " + cost + " ns");
+        executeAllCallback(cs);
+        scaller = XMeta.caller(parent, level);
+        stime = System.nanoTime();// place it here precision
+        return cost;
+    }
+
+    /**
+     * output runing code section info milliseconds
+     *
+     * @param cs
+     * @return
+     */
+    public long outByMS(Callback... cs) {
+        long e = System.nanoTime();
+        checkTime();
+        codeSectionMSG();
+        long cost = e - stime;
+        XLog.log("This running time costs : " + String.format("%.6f", cost / 1000000.0) + " ms");
+        executeAllCallback(cs);
+        scaller = XMeta.caller(parent, level);
+        stime = System.nanoTime();
+        return cost;
+    }
+
+    /**
+     * output runing code section info seconds
+     *
+     * @param cs
+     * @return
+     */
+    public long outByS(Callback... cs) {
+        long e = System.nanoTime();
+        checkTime();
+        codeSectionMSG();
+        long cost = e - stime;
+        XLog.log("This running time costs : " + String.format("%.9f", cost / 1000000000.0) + " s");
+        executeAllCallback(cs);
+        scaller = XMeta.caller(parent, level);
+        stime = System.nanoTime();
+        return cost;
+    }
 
 }

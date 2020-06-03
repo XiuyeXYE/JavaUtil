@@ -4,8 +4,16 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.xiuyexye</groupId>
 	<artifactId>xyjava</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.11</version>
 	<description>Utilities for java</description>
+
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+
+
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<testSourceDirectory>test</testSourceDirectory>
@@ -17,6 +25,22 @@
 					<source>1.8</source>
 					<target>1.8</target>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<additionalparam>-Xdoclint:none</additionalparam>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
@@ -31,5 +55,32 @@
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
 		</dependency>
+		<dependency>
+			<groupId>com.github.abel533</groupId>
+			<artifactId>ECharts</artifactId>
+			<version>3.0.0.6</version>
+		</dependency>
 	</dependencies>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<scm>
+		<tag>jdk8</tag>
+		<url>git@github.com:XiuyeXYE/JavaUtil.git</url>
+		<connection>scm:git:git@github.com:XiuyeXYE/JavaUtil.git</connection>
+		<developerConnection>scm:git:git@github.com:XiuyeXYE/JavaUtil.git</developerConnection>
+	</scm>
+	<developers>
+		<developer>
+			<name>xiuye</name>
+			<email>xiuye_engineer@outlook.com</email>
+			<organization>ABCXIUYE</organization>
+		</developer>
+	</developers>
+
 </project>
