@@ -311,9 +311,13 @@ public class PromiseTest {
 		Promise.beanS("abc",String.class).getBean().end().ln();
 		Promise.beanS("abc", "ABC").register().getBean().end().ln();
 		Promise.beanS("abc").getBean().end().ln();
-		Promise.beanS("abc",String.class).getBean().end().ln();
+		Promise.beanS("def",String.class,"DEF").register().getBean().end().ln();
+		Promise.beanS("def",String.class).getBean().end().ln();
 		Promise.beanS("abc").end().ln().bean("abc").getBean()
 		.end().ln();
+		
+		Promise.beanS(String.class).getBean().end().ln();
+		Promise.beanS(String.class,"CCCCC",true).register().getBean().end().ln();
 	}
 
 }

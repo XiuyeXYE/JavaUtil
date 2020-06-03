@@ -919,28 +919,76 @@ public class Promise<RESULT> {
 		return of(result, error);
 	}
 
-	public static <R> SingletonBeanPoolPromise<R> beanS(String name) {
-		return new SingletonBeanPoolPromise<>(name);
+	public static <R> BeanPoolPromise<R> beanS(String name) {
+		return new BeanPoolPromise<>(name);
 	}
 
-	public static <R> SingletonBeanPoolPromise<R> beanS(String name, Class<R> clazz) {
-		return new SingletonBeanPoolPromise<>(name, clazz);
+	public static <R> BeanPoolPromise<R> beanS(String name, R object) {
+		return beanS(name, object, false);
 	}
 
-	public static <R> SingletonBeanPoolPromise<R> beanS(String name, R object) {
-		return new SingletonBeanPoolPromise<>(name, object);
+	public static <R> BeanPoolPromise<R> beanS(String name, R object, boolean replace) {
+		return new BeanPoolPromise<>(name, object, replace);
 	}
 
-	public <R> SingletonBeanPoolPromise<R> bean(String name) {
-		return new SingletonBeanPoolPromise<>(name);
+	public static <R> BeanPoolPromise<R> beanS(String name, Class<R> clazz) {
+		return new BeanPoolPromise<>(name, clazz);
 	}
 
-	public <R> SingletonBeanPoolPromise<R> bean(String name, Class<R> clazz) {
-		return new SingletonBeanPoolPromise<>(name, clazz);
+	public static <R> BeanPoolPromise<R> beanS(String name, Class<R> clazz, R r) {
+		return beanS(name, clazz, r, false);
 	}
 
-	public <R> SingletonBeanPoolPromise<R> bean(String name, R object) {
-		return new SingletonBeanPoolPromise<>(name, object);
+	public static <R> BeanPoolPromise<R> beanS(String name, Class<R> clazz, R r, boolean replace) {
+		return new BeanPoolPromise<>(name, clazz, r, replace);
+	}
+
+	public static <R> BeanPoolPromise<R> beanS(Class<R> clazz) {
+		return new BeanPoolPromise<>(clazz);
+	}
+
+	public static <R> BeanPoolPromise<R> beanS(Class<R> clazz, R r) {
+		return beanS(clazz, r, false);
+	}
+
+	public static <R> BeanPoolPromise<R> beanS(Class<R> clazz, R r, boolean replace) {
+		return new BeanPoolPromise<>(clazz, r, replace);
+	}
+
+	public <R> BeanPoolPromise<R> bean(String name) {
+		return beanS(name);
+	}
+
+	public <R> BeanPoolPromise<R> bean(String name, R object) {
+		return beanS(name, object);
+	}
+
+	public <R> BeanPoolPromise<R> bean(String name, R object, boolean replace) {
+		return beanS(name, object, replace);
+	}
+
+	public <R> BeanPoolPromise<R> bean(String name, Class<R> clazz) {
+		return beanS(name, clazz);
+	}
+
+	public <R> BeanPoolPromise<R> bean(String name, Class<R> clazz, R r) {
+		return beanS(name, clazz, r);
+	}
+
+	public <R> BeanPoolPromise<R> bean(String name, Class<R> clazz, R r, boolean replace) {
+		return beanS(name, clazz, r, replace);
+	}
+
+	public <R> BeanPoolPromise<R> bean(Class<R> clazz) {
+		return beanS(clazz);
+	}
+
+	public <R> BeanPoolPromise<R> bean(Class<R> clazz, R r) {
+		return beanS(clazz, r);
+	}
+
+	public <R> BeanPoolPromise<R> bean(Class<R> clazz, R r, boolean replace) {
+		return beanS(clazz, r, replace);
 	}
 
 }
