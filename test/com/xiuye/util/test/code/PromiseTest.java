@@ -7,6 +7,7 @@ import java.util.concurrent.TimeoutException;
 import org.junit.Test;
 
 import com.xiuye.sharp.Promise;
+import com.xiuye.util.code.XCode;
 import com.xiuye.util.log.XLog;
 
 public class PromiseTest {
@@ -330,18 +331,43 @@ public class PromiseTest {
 		.bean(String.class).getBean().end().ln()
 		.bean("a").getBean().end().ln()
 		;
-		for(int i=0;i<100;i++) {
-			Promise.beanS(String.class,"abc"+i,true)
-			.register()
-			.getBean()
-			.end()
-			.ln();
-			Promise.beanS("abc"+i,"abc"+i)
-			.register()
-			.getBean()
-			.end()
-			.ln();
-		}
+//		XCode.runS(()->{
+//			for(int i=0;i<10000;i++) {
+//				Promise.beanS(String.class,"abc"+i,true)
+//				.register()
+//				.getBean()
+//				.end()
+//				.ln();
+//				Promise.beanS("abc"+i,"abc"+i)
+//				.register()
+//				.getBean()
+//				.end()
+//				.ln();
+//			}
+//		});
+		
+		XCode.runS(()->{
+			for(int i=0;i<10000;i++) {
+				int j = i;
+				
+				Promise.taskS(()->{
+					Promise.beanS(String.class,"abc"+j,true)
+					.register()
+					.getBean()
+					.end()
+					.ln();
+				});
+				Promise.taskS(()->{
+					Promise.beanS("abc"+j,"abc"+j)
+					.register()
+					.getBean()
+					.end()
+					.ln();
+				});
+				
+			}
+		});
+		
 		Promise.beanS(String.class).getBean().end().ln();
 	}
 
