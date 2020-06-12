@@ -1,5 +1,9 @@
 package com.xiuye.util.test.code;
 
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
@@ -371,5 +375,39 @@ public class PromiseTest {
 		Promise.beanS(String.class).getBean().end().ln();
 	}
 
+	@Test
+	public void testNetworkServer() {
+		Promise.udpS(8888).then(d->{
+			byte []data = new byte[1024];
+			DatagramPacket dp = new DatagramPacket(data, data.length);
+			try {
+				d.receive(dp);
+				XLog.lg(dp,new String(data));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		});
+	}
 
+	@Test
+	public void testNetworkClient() {
+		
+		Promise.udpS().then(d->{
+			String s = "汉字，这是汉字！嘿嘿!";
+			try {
+				DatagramPacket dp = new DatagramPacket(
+						s.getBytes(), 
+						s.getBytes().length,
+						InetAddress.getByName("localhost"),
+						8888
+						);
+				d.send(dp);
+				XLog.lg("sent!");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		});
+	}
 }

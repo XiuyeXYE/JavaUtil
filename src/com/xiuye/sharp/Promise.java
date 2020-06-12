@@ -1,5 +1,11 @@
 package com.xiuye.sharp;
 
+import java.io.IOException;
+import java.net.DatagramSocket;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketException;
+
 import com.google.gson.Gson;
 import com.xiuye.util.cls.XType;
 import com.xiuye.util.json.JsonUtil;
@@ -990,5 +996,59 @@ public class Promise<RESULT> {
 	public <R> BeanPoolPromise<R> bean(Class<R> clazz, R r, boolean replace) {
 		return beanS(clazz, r, replace);
 	}
+
+	public static Promise<ServerSocket> tcpS(int port) {
+
+		try {
+			return of(new ServerSocket(port));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return of();
+	}
+
+	public Promise<ServerSocket> tcp(int port) {
+		return tcpS(port);
+	}
+
+	public static Promise<Socket> tcpS(String ip, int port) {
+		try {
+			return of(new Socket(ip, port));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return of();
+	}
+
+	public Promise<Socket> tcp(String ip, int port) {
+		return tcp(ip, port);
+	}
+
+	public static Promise<DatagramSocket> udpS(int port) {
+		try {
+			return of(new DatagramSocket(port));
+		} catch (SocketException e) {
+			e.printStackTrace();
+		}
+		return of();
+	}
+
+	public Promise<DatagramSocket> udp(int port) {
+		return udpS(port);
+	}
+	
+	public static Promise<DatagramSocket> udpS(){
+		try {
+			return of(new DatagramSocket());
+		} catch (SocketException e) {
+			e.printStackTrace();
+		}
+		return of();
+	}
+	
+	public Promise<DatagramSocket> udp(){
+		return udpS();
+	}
+	
 
 }
