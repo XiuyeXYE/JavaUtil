@@ -1,6 +1,8 @@
 package com.xiuye.util.test.code;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -377,37 +379,74 @@ public class PromiseTest {
 
 	@Test
 	public void testNetworkServer() {
-		Promise.udpS(8888).then(d->{
-			byte []data = new byte[1024];
-			DatagramPacket dp = new DatagramPacket(data, data.length);
-			try {
-				d.receive(dp);
-				XLog.lg(dp,new String(data));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-		});
+//		Promise.udpS(8888).then(d->{
+//			byte []data = new byte[1024];
+//			DatagramPacket dp = new DatagramPacket(data, data.length);
+//			try {
+//				d.receive(dp);
+//				XLog.lg(dp,new String(data));
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//			
+//		});
+	
+//		Promise.tcpS(8888).then(d->{
+//			try {
+//				return d.accept();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			return null;
+//		}).exist(d->{
+//			try {
+//				InputStream is = d.getInputStream();
+////				int i=-1;
+////				while((i=is.read())!=-1) {
+////					XLog.print(i);
+////				}
+//				byte []data = new byte[1024];
+//				is.read(data);
+//				XLog.lg(new String(data));
+//				d.close();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//			
+//		});
+		
 	}
 
 	@Test
 	public void testNetworkClient() {
 		
-		Promise.udpS().then(d->{
-			String s = "汉字，这是汉字！嘿嘿!";
-			try {
-				DatagramPacket dp = new DatagramPacket(
-						s.getBytes(), 
-						s.getBytes().length,
-						InetAddress.getByName("localhost"),
-						8888
-						);
-				d.send(dp);
-				XLog.lg("sent!");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-		});
+//		Promise.tcpS("localhost",8888).then(d->{
+//			OutputStream os;
+//			try {
+//				os = d.getOutputStream();
+//				os.write("汉字".getBytes());
+//				d.close();
+//			} catch (IOException e1) {
+//				e1.printStackTrace();
+//			}
+//		});
+		
+//		Promise.udpS().then(d->{
+//			String s = "汉字，这是汉字！嘿嘿!";
+//			try {
+//				DatagramPacket dp = new DatagramPacket(
+//						s.getBytes(), 
+//						s.getBytes().length,
+//						InetAddress.getByName("localhost"),
+//						8888
+//						);
+//				d.send(dp);
+//				XLog.lg("sent!");
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//			
+//		});
 	}
 }
