@@ -4,8 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.xiuyexye</groupId>
 	<artifactId>xyjava</artifactId>
-	<version>0.0.11</version>
-	<description>Utilities for java</description>
+	<version>0.0.13</version>
+	<description>java lib for me</description>
 
 	<parent>
 		<groupId>org.sonatype.oss</groupId>

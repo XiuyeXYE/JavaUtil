@@ -7,6 +7,7 @@ import java.util.concurrent.TimeoutException;
 import org.junit.Test;
 
 import com.xiuye.sharp.Promise;
+import com.xiuye.util.code.XCode;
 import com.xiuye.util.log.XLog;
 
 public class PromiseTest {
@@ -330,20 +331,116 @@ public class PromiseTest {
 		.bean(String.class).getBean().end().ln()
 		.bean("a").getBean().end().ln()
 		;
-		for(int i=0;i<100;i++) {
-			Promise.beanS(String.class,"abc"+i,true)
-			.register()
-			.getBean()
-			.end()
-			.ln();
-			Promise.beanS("abc"+i,"abc"+i)
-			.register()
-			.getBean()
-			.end()
-			.ln();
-		}
+//		XCode.runS(()->{
+//			for(int i=0;i<10000;i++) {
+//				Promise.beanS(String.class,"abc"+i,true)
+//				.register()
+//				.getBean()
+//				.end()
+//				.ln();
+//				Promise.beanS("abc"+i,"abc"+i)
+//				.register()
+//				.getBean()
+//				.end()
+//				.ln();
+//			}
+//		});
+		
+		XCode.runS(()->{
+			for(int i=0;i<10000;i++) {
+				int j = i;
+				
+				Promise.taskS(()->{
+					Promise.beanS(String.class,"abc"+j,true)
+					.register()
+					.getBean()
+					.end()
+					.ln();
+				});
+				Promise.taskS(()->{
+					Promise.beanS("abc"+j,"abc"+j)
+					.register()
+					.getBean()
+					.end()
+					.ln();
+				});
+				
+			}
+		});
+		
 		Promise.beanS(String.class).getBean().end().ln();
 	}
 
+	@Test
+	public void testNetworkServer() {
+//		Promise.udpS(8888).then(d->{
+//			byte []data = new byte[1024];
+//			DatagramPacket dp = new DatagramPacket(data, data.length);
+//			try {
+//				d.receive(dp);
+//				XLog.lg(dp,new String(data));
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//			
+//		});
+	
+//		Promise.tcpS(8888).then(d->{
+//			try {
+//				return d.accept();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			return null;
+//		}).exist(d->{
+//			try {
+//				InputStream is = d.getInputStream();
+////				int i=-1;
+////				while((i=is.read())!=-1) {
+////					XLog.print(i);
+////				}
+//				byte []data = new byte[1024];
+//				is.read(data);
+//				XLog.lg(new String(data));
+//				d.close();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//			
+//		});
+		
+	}
 
+	@Test
+	public void testNetworkClient() {
+		
+//		Promise.tcpS("localhost",8888).then(d->{
+//			OutputStream os;
+//			try {
+//				os = d.getOutputStream();
+//				os.write("汉字".getBytes());
+//				d.close();
+//			} catch (IOException e1) {
+//				e1.printStackTrace();
+//			}
+//		});
+		
+//		Promise.udpS().then(d->{
+//			String s = "汉字，这是汉字！嘿嘿!";
+//			try {
+//				DatagramPacket dp = new DatagramPacket(
+//						s.getBytes(), 
+//						s.getBytes().length,
+//						InetAddress.getByName("localhost"),
+//						8888
+//						);
+//				d.send(dp);
+//				XLog.lg("sent!");
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//			
+//		});
+	}
 }
