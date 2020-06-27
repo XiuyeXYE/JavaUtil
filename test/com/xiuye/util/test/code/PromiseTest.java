@@ -1,9 +1,18 @@
 package com.xiuye.util.test.code;
 
+import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
+import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.KeeperException;
+import org.apache.zookeeper.ZooKeeper;
+import org.apache.zookeeper.Watcher.Event.EventType;
+import org.apache.zookeeper.Watcher.Event.KeeperState;
+import org.apache.zookeeper.ZooDefs;
+import org.apache.zookeeper.data.Stat;
 import org.junit.Test;
 
 import com.xiuye.sharp.Promise;
@@ -304,33 +313,28 @@ public class PromiseTest {
 		});
 
 	}
-	
+
 	@Test
 	public void testBeansPool() {
-		Promise.beanS("abc",String.class).getBean().end().ln();
+		Promise.beanS("abc", String.class).getBean().end().ln();
 		Promise.beanS("abc", "ABC").register().getBean().end().ln();
 		Promise.beanS("abc").getBean().end().ln();
-		Promise.beanS("def",String.class,"DEF").register().getBean().end().ln();
-		Promise.beanS("def",String.class).getBean().end().ln();
-		Promise.beanS("abc").end().ln().bean("abc").getBean()
-		.end().ln();
-		
+		Promise.beanS("def", String.class, "DEF").register().getBean().end().ln();
+		Promise.beanS("def", String.class).getBean().end().ln();
+		Promise.beanS("abc").end().ln().bean("abc").getBean().end().ln();
+
 		Promise.beanS(String.class).getBean().end().ln();
-		Promise.beanS(String.class,"CCCCC",true).register().getBean().end().ln();
+		Promise.beanS(String.class, "CCCCC", true).register().getBean().end().ln();
 	}
-	
+
 	@Test
 	public void testBeansPool2() {
 		Promise.beanS(String.class).getBean().end().ln();
-		Promise.beanS("a","ABC").register().getBean().end().ln()
-		.then(d->{
+		Promise.beanS("a", "ABC").register().getBean().end().ln().then(d -> {
 			XLog.ln(d.toCharArray());
 			return d.toCharArray();
-		})
-		.bean(String.class, "DEF").register().getBean().end().ln()
-		.bean(String.class).getBean().end().ln()
-		.bean("a").getBean().end().ln()
-		;
+		}).bean(String.class, "DEF").register().getBean().end().ln().bean(String.class).getBean().end().ln().bean("a")
+				.getBean().end().ln();
 //		XCode.runS(()->{
 //			for(int i=0;i<10000;i++) {
 //				Promise.beanS(String.class,"abc"+i,true)
@@ -345,29 +349,21 @@ public class PromiseTest {
 //				.ln();
 //			}
 //		});
-		
-		XCode.runS(()->{
-			for(int i=0;i<10000;i++) {
+
+		XCode.runS(() -> {
+			for (int i = 0; i < 10000; i++) {
 				int j = i;
-				
-				Promise.taskS(()->{
-					Promise.beanS(String.class,"abc"+j,true)
-					.register()
-					.getBean()
-					.end()
-					.ln();
+
+				Promise.taskS(() -> {
+					Promise.beanS(String.class, "abc" + j, true).register().getBean().end().ln();
 				});
-				Promise.taskS(()->{
-					Promise.beanS("abc"+j,"abc"+j)
-					.register()
-					.getBean()
-					.end()
-					.ln();
+				Promise.taskS(() -> {
+					Promise.beanS("abc" + j, "abc" + j).register().getBean().end().ln();
 				});
-				
+
 			}
 		});
-		
+
 		Promise.beanS(String.class).getBean().end().ln();
 	}
 
@@ -384,7 +380,7 @@ public class PromiseTest {
 //			}
 //			
 //		});
-	
+
 //		Promise.tcpS(8888).then(d->{
 //			try {
 //				return d.accept();
@@ -409,12 +405,12 @@ public class PromiseTest {
 //			}
 //			
 //		});
-		
+
 	}
 
 	@Test
 	public void testNetworkClient() {
-		
+
 //		Promise.tcpS("localhost",8888).then(d->{
 //			OutputStream os;
 //			try {
@@ -425,7 +421,7 @@ public class PromiseTest {
 //				e1.printStackTrace();
 //			}
 //		});
-		
+
 //		Promise.udpS().then(d->{
 //			String s = "汉字，这是汉字！嘿嘿!";
 //			try {
@@ -442,5 +438,35 @@ public class PromiseTest {
 //			}
 //			
 //		});
+	}
+
+	private ZooKeeper zk = null;
+
+//	@Test
+	public void testZooKeeper() throws IOException, InterruptedException, KeeperException {
+		CountDownLatch connectedSemaphore = new CountDownLatch(1);
+		Stat stat = new Stat();
+		String path = "/demo_five";
+		zk = new ZooKeeper("127.0.0.1:2181", 5000, e -> {
+			if (KeeperState.SyncConnected == e.getState()) {
+				if (EventType.None == e.getType() && null == e.getPath()) {
+					connectedSemaphore.countDown();
+				} else if (e.getType() == EventType.NodeDataChanged) {
+					try {
+						XLog.ln(zk);
+						XLog.ln("配置已修改，新值为：" + new String(zk.getData(e.getPath(), true, stat)));
+					} catch (KeeperException | InterruptedException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+//		zk.create(path, "终于".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+		connectedSemaphore.await();
+		XLog.ln(new String(zk.getData(path, true, stat)));
+		zk.setData(path, "第三方科技按还款法还是开发开放了".getBytes(), -1);
+		
+		Thread.sleep(10000);
+
 	}
 }
