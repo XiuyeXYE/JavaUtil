@@ -17,41 +17,41 @@ public class PromiseTest {
 	public void test() {
 		//default true
 //		Promise.implyErrorHandler(false);
-		new Promise<>(99999).then(d -> {
+		new Promise<>(99999).THEN(d -> {
 			XLog.lg(d);
 			XLog.lg("void call(I in)");
 
-		}).then(d -> {
+		}).THEN(d -> {
 			XLog.lg(d);
 			XLog.lg("R call(I in)");
 
 			return 999;
-		}).then(() -> {
+		}).THEN(() -> {
 			XLog.lg("R call()");
 			return "ABC";
-		}).then(() -> {
+		}).THEN(() -> {
 			XLog.lg("void call()");
-		}).then(() -> {
+		}).THEN(() -> {
 			XLog.lg("End");
-		}).then(() -> {
+		}).THEN(() -> {
 			throw new RuntimeException("My Exception intentional");
-		}).except(e -> {
+		}).EXCEPT(e -> {
 			XLog.lg(e);
 			return e;
-		}).except(e -> {
+		}).EXCEPT(e -> {
 			XLog.lg(e);
-		}).except(e -> {
+		}).EXCEPT(e -> {
 			XLog.lg(e);
-		}).except(() -> {
+		}).EXCEPT(() -> {
 			throw new RuntimeException("Nothing");
-		})./* then(()->{}). */except(e -> {
+		})./* then(()->{}). */EXCEPT(e -> {
 			XLog.lg(e);
 			return 100;
-		}).except(d -> {
+		}).EXCEPT(d -> {
 			XLog.log(d);
-		}).except(() -> {
+		}).EXCEPT(() -> {
 
-		}).except(() -> {
+		}).EXCEPT(() -> {
 			
 		});
 	}
@@ -59,31 +59,31 @@ public class PromiseTest {
 	@Test
 	public void testIfElse() {
 		
-		Promise.resolve()
-		.begin()
-		.ef(false)
-		.then(()->{
+		Promise.RESOLVE()
+		.BEGIN()
+		.IF(false)
+		.THEN(()->{
 			XLog.lg("123");
 		})
-		.eeseEf(true)
-		.then(()->{
+		.ELIF(true)
+		.THEN(()->{
 			XLog.lg("then");
 		})
-		.eeseEf(true)
-		.then(()->{
+		.ELIF(true)
+		.THEN(()->{
 			XLog.lg("then2");
 		})
-		.eese(()->{
+		.ELSE(()->{
 			XLog.lg("ABC");
 		})
-		.ef(true)
-		.then(()->{
+		.IF(true)
+		.THEN(()->{
 			XLog.lg("2 then");
 		})
-		.eese(()->{
+		.ELSE(()->{
 			XLog.lg("EESE");
 		})
-		.end().then(d->{			
+		.END().THEN(d->{			
 			XLog.lg(d);
 		});
 		
@@ -103,19 +103,19 @@ public class PromiseTest {
 	
 	@Test
 	public void testMatchAs() {
-		Promise.of().begin().match(123).as(99).then(()->{
+		Promise.OF().BEGIN().MATCH(123).AS(99).THEN(()->{
 			XLog.lg("matched 1");
-		}).as(100).as(123).then(()->{
+		}).AS(100).AS(123).THEN(()->{
 			XLog.lg("matched 2");
-		}).defaut(()->{
+		}).DEFAUT(()->{
 			XLog.lg("default");
-		}).end();
+		}).END();
 		
-		Promise.of().begin().match(11).as(56789).as(11).then(()->{
+		Promise.OF().BEGIN().MATCH(11).AS(56789).AS(11).THEN(()->{
 			XLog.lg("56789");
-		}).defaut(()->{
+		}).DEFAUT(()->{
 			XLog.lg("default");
-		}).then(()->{}).end().then(()->{
+		}).THEN(()->{}).END().THEN(()->{
 			XLog.lg("then");
 		});
 		XLog.lg(null instanceof String);
@@ -127,104 +127,104 @@ public class PromiseTest {
 	@Test
 	public void testAllSwitchStatement() {
 		
-		Promise.beginS().ef(false).then(()->{
+		Promise.BEGINS().IF(false).THEN(()->{
 			XLog.lg(false);
-		}).eeseEf(true).then(()->{
+		}).ELIF(true).THEN(()->{
 			XLog.lg(127,true);
-		}).eese(()->{
+		}).ELSE(()->{
 			XLog.lg("else");
-		}).ef(true).then(()->{
+		}).IF(true).THEN(()->{
 			XLog.lg(131,true);
-		}).eese(()->{
+		}).ELSE(()->{
 			XLog.lg("eese");
-		}).match(5).as(7).then(()->{
+		}).MATCH(5).AS(7).THEN(()->{
 			XLog.lg(7);
 		})
-		.as(5).then(()->{
+		.AS(5).THEN(()->{
 			XLog.lg(137,5);
 		})
-		.defaut(()->{
+		.DEFAUT(()->{
 			XLog.lg(999);
 		})
-		.ef(true).then(()->{
+		.IF(true).THEN(()->{
 			XLog.lg(139,true);
 		})
-		.end();
+		.END();
 		
-		Promise.beginS().match(123).as(123).as(99).then(()->{
+		Promise.BEGINS().MATCH(123).AS(123).AS(99).THEN(()->{
 			XLog.lg(149,123);
-		}).end();
+		}).END();
 		
-		Promise.beginS().match(99)
-		.as(123).then(()->{
+		Promise.BEGINS().MATCH(99)
+		.AS(123).THEN(()->{
 			XLog.lg(153,123);
 		})
-		.as(99).as(100).then(()->{
+		.AS(99).AS(100).THEN(()->{
 			XLog.lg(157,123);
 		})
-		.ef(true).then(()->{XLog.lg(159,true);})
-		.ef(true).then(()->{XLog.lg(160,true);})
-		.match(true).defaut(()->{XLog.lg(161,true);})
-		.match("ABC").as("ABC").then(()->{
+		.IF(true).THEN(()->{XLog.lg(159,true);})
+		.IF(true).THEN(()->{XLog.lg(160,true);})
+		.MATCH(true).DEFAUT(()->{XLog.lg(161,true);})
+		.MATCH("ABC").AS("ABC").THEN(()->{
 			XLog.lg("ABC");
 		})
-		.match(1).as(1).as(2)
-		.then(()->{
+		.MATCH(1).AS(1).AS(2)
+		.THEN(()->{
 			XLog.lg(1);
 		})
-		.ef(false)
-		.then(()->{
+		.IF(false)
+		.THEN(()->{
 			XLog.lg(false);
 		})
-		.eeseEf(true)
-		.then(()->{
+		.ELIF(true)
+		.THEN(()->{
 			XLog.lg(true);
 		})
-		.ef(false)
-		.then(()->{
+		.IF(false)
+		.THEN(()->{
 			XLog.lg(false);
 		})
-		.eese(()->{
+		.ELSE(()->{
 			XLog.lg("else");
 		})
-		.ef(false)
-		.then(()->{
+		.IF(false)
+		.THEN(()->{
 			XLog.lg("doing");
 		})
 //		.ef(false)
-		.match(11)
-		.as(88)
-		.as(11)
-		.then(()->{
+		.MATCH(11)
+		.AS(88)
+		.AS(11)
+		.THEN(()->{
 			XLog.lg(193);
 		})
-		.as(11)
-		.then(()->{
+		.AS(11)
+		.THEN(()->{
 			XLog.lg(197);
 		})
-		.defaut(()->{
+		.DEFAUT(()->{
 			XLog.lg("default");
 		})
-		.ef(true)
-		.then(()->{
+		.IF(true)
+		.THEN(()->{
 			XLog.line(true);
 		})
-		.ef(true)
-		.then(()->{
+		.IF(true)
+		.THEN(()->{
 			XLog.ln(true);
 		})
-		.end();
+		.END();
 	}
 	
 	@Test
 	public void testThread() throws InterruptedException {
 		Promise.threadS(()->{
 			XLog.ln("thread S");
-		}).then(t->{
+		}).THEN(t->{
 			t.start();
 		}).thread(d->{
 			XLog.ln(d);
-		}).then(d->{
+		}).THEN(d->{
 			d.start();
 		});
 		Thread.sleep(3000);
@@ -241,22 +241,22 @@ public class PromiseTest {
 		String []ss = {
 			"A","B","C"	
 		};
-		Promise.of(ss).line();
-		Promise.of(ss).toJson().line().toJson().line();
-		Promise.of(ss).toFormatterJson().line().toFormatterJson().line();
-		Promise.formatterJsonKitS().then(d->{
+		Promise.OF(ss).line();
+		Promise.OF(ss).toJson().line().toJson().line();
+		Promise.OF(ss).toFormatterJson().line().toFormatterJson().line();
+		Promise.formatterJsonKitS().THEN(d->{
 			return d.fromJson((String)null, Object.class);
 		}).line();
-		Promise.of(ss).toJson().line().toObject(String[].class).then(d->{
+		Promise.OF(ss).toJson().line().toObject(String[].class).THEN(d->{
 			for(String s : d) {
 				XLog.ln(s);
 			}
 			return null;
-		}).toObject(String[].class).line().and(true).or(true).line().ln();
+		}).toObject(String[].class).line().AND(true).OR(true).line().ln();
 		
-		Promise.of(new A("ABC","DEF")).toFormatterJson().line().toObject(Map.class).line()
+		Promise.OF(new A("ABC","DEF")).toFormatterJson().line().toObject(Map.class).line()
 		.toFormatterJson().line().toObject(A.class).line()
-		.toObject(Map.class).except(e->{
+		.toObject(Map.class).EXCEPT(e->{
 			e.printStackTrace();
 		}).line();
 		
