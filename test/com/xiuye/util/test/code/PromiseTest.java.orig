@@ -53,12 +53,43 @@ public class PromiseTest {
 <<<<<<< HEAD
 		}).EXCEPT(() -> {
 			
+=======
+		}).except(() -> {
+
+>>>>>>> 129ac581f0ae333784ad502729c1b2e1a9c35b62
 		});
 	}
 
 	@Test
 	public void testIfElse() {
-
+<<<<<<< HEAD
+		
+		Promise.RESOLVE()
+		.BEGIN()
+		.IF(false)
+		.THEN(()->{
+			XLog.lg("123");
+		})
+		.ELIF(true)
+		.THEN(()->{
+			XLog.lg("then");
+		})
+		.ELIF(true)
+		.THEN(()->{
+			XLog.lg("then2");
+		})
+		.ELSE(()->{
+			XLog.lg("ABC");
+		})
+		.IF(true)
+		.THEN(()->{
+			XLog.lg("2 then");
+		})
+		.ELSE(()->{
+			XLog.lg("EESE");
+		})
+		.END().THEN(d->{			
+=======
 
 		Promise.resolve().begin().ef(false).then(() -> {
 			XLog.lg("123");
@@ -73,7 +104,7 @@ public class PromiseTest {
 		}).eese(() -> {
 			XLog.lg("EESE");
 		}).end().then(d -> {
-
+>>>>>>> 129ac581f0ae333784ad502729c1b2e1a9c35b62
 			XLog.lg(d);
 		});
 
@@ -94,6 +125,7 @@ public class PromiseTest {
 
 	@Test
 	public void testMatchAs() {
+<<<<<<< HEAD
 		Promise.OF().BEGIN().MATCH(123).AS(99).THEN(()->{
 			XLog.lg("matched 1");
 		}).AS(100).AS(123).THEN(()->{
@@ -107,6 +139,7 @@ public class PromiseTest {
 		}).DEFAUT(()->{
 			XLog.lg("default");
 		}).THEN(()->{}).END().THEN(()->{
+=======
 		Promise.of().begin().match(123).as(99).then(() -> {
 			XLog.lg("matched 1");
 		}).as(100).as(123).then(() -> {
@@ -121,6 +154,7 @@ public class PromiseTest {
 			XLog.lg("default");
 		}).then(() -> {
 		}).end().then(() -> {
+>>>>>>> 129ac581f0ae333784ad502729c1b2e1a9c35b62
 			XLog.lg("then");
 		});
 		XLog.lg(null instanceof String);
@@ -131,6 +165,7 @@ public class PromiseTest {
 
 	@Test
 	public void testAllSwitchStatement() {
+<<<<<<< HEAD
 		
 		Promise.BEGINS().IF(false).THEN(()->{
 			XLog.lg(false);
@@ -219,6 +254,7 @@ public class PromiseTest {
 			XLog.ln(true);
 		})
 		.END();
+=======
 
 		Promise.beginS().ef(false).then(() -> {
 			XLog.lg(false);
@@ -281,10 +317,12 @@ public class PromiseTest {
 				}).ef(true).then(() -> {
 					XLog.ln(true);
 				}).end();
+>>>>>>> 129ac581f0ae333784ad502729c1b2e1a9c35b62
 	}
 
 	@Test
 	public void testThread() throws InterruptedException {
+<<<<<<< HEAD
 		Promise.threadS(()->{
 			XLog.ln("thread S");
 		}).THEN(t->{
@@ -317,6 +355,7 @@ public class PromiseTest {
 		}).task(() -> 88888).line().ln();
 		Promise.lineS("ABC", 123);
 		Promise.lnS("ABC", 123);
+>>>>>>> 129ac581f0ae333784ad502729c1b2e1a9c35b62
 		Thread.sleep(3000);
 //		Thread.class.wait();
 
@@ -336,6 +375,7 @@ public class PromiseTest {
 
 	@Test
 	public void testLogOut() throws InterruptedException, ExecutionException, TimeoutException {
+<<<<<<< HEAD
 		Promise.logS(123,666,"ABC");
 		Promise.lgS(123,666,"ABC");
 		Promise.lnS(123,666,"ABC");
