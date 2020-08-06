@@ -155,6 +155,7 @@ public class XCodeTest {
 		XLog.lg(info);
 		Map<String,String> codes = XType.map();
 		codes.put("com.xiuye.util.test.code.Demo1",info.code());
+//		codes.put(info.getPackageName(),info.code());
 		XYCompiler.compileCode(codes);
 		XYClassLoader cl = XType.createClassLoader();
 		XLog.lg(cl.load("com.xiuye.util.test.code.Demo1"));
