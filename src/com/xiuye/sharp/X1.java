@@ -1,12 +1,15 @@
 package com.xiuye.sharp;
 
-import com.xiuye.util.cls.XType;
-
 import java.util.List;
 
-public class ProgramPromise<RESULT> {
+import com.xiuye.util.cls.XType;
 
-    // ================= programming ================
+//for if else_if else;match as
+//for program code 
+//x extension: x1
+public class X1 <RESULT>{
+	
+	 // ================= programming ================
 
     private static final String IF = "if";
     private static final String ELSE_IF = "else if";
@@ -41,11 +44,11 @@ public class ProgramPromise<RESULT> {
     private Throwable error;
 
 
-    protected ProgramPromise() {
+    protected X1() {
         this.tokens = XType.list();
     }
 
-    protected ProgramPromise(RESULT r, Throwable error) {
+    protected X1(RESULT r, Throwable error) {
         this();
         this.result = r;
         this.error = error;
@@ -71,13 +74,13 @@ public class ProgramPromise<RESULT> {
      * @param <I>
      * @return
      */
-    public <I> ProgramPromise<RESULT> IF(I t) {
+    public <I> X1<RESULT> IF(I t) {
         addToken(IF, t);
 //        return programPromise(tokens);
         return this;
     }
 
-    public <I> ProgramPromise<RESULT> ELIF(I t) {
+    public <I> X1<RESULT> ELIF(I t) {
         addToken(ELSE_IF, t);
 //        return programPromise(tokens);
         return this;
@@ -92,30 +95,30 @@ public class ProgramPromise<RESULT> {
      * @param in
      * @return
      */
-    public <I> ProgramPromise<RESULT> MATCH(I in) {
+    public <I> X1<RESULT> MATCH(I in) {
         addToken(MATCH, in);
         return this;
     }
 
-    public <I> ProgramPromise<RESULT> AS(I in) {
+    public <I> X1<RESULT> AS(I in) {
         addToken(AS, in);
         return this;
     }
 
-    public ProgramPromise<RESULT> DEFAUT(VoidCallbackNoParam callback) {
+    public X1<RESULT> DEFAUT(VoidCallbackNoParam callback) {
         addToken(DEFAULT, callback);
         return this;
     }
 
 
-    public ProgramPromise<RESULT> THEN(VoidCallbackNoParam callback) {
+    public X1<RESULT> THEN(VoidCallbackNoParam callback) {
         addToken(THEN, callback);
 //        return programPromise(tokens);
         return this;
     }
 
 
-    public ProgramPromise<RESULT> ELSE(VoidCallbackNoParam callback) {
+    public X1<RESULT> ELSE(VoidCallbackNoParam callback) {
         addToken(ELSE, callback);
 //        return programPromise(tokens);
         return this;
@@ -204,6 +207,20 @@ public class ProgramPromise<RESULT> {
     public interface VoidCallbackNoParam {
         void vcv();
     }
+    
+    public interface VoidCallbackWithParam<I>{
+    	void vci(I t);
+    }
+    
+    
+    public interface ReturnCallbackNoParam<R>{
+    	R rcv();
+    }
+    
+    public interface ReturnCallbackWithParam<R,I>{
+    	R rci(I i);
+    }
+    
 
     //自顶向下分析
     //主要是选择分支结构的
@@ -446,13 +463,13 @@ public class ProgramPromise<RESULT> {
     }
 
 
-    public Promise<RESULT> end() {
+    public X<RESULT> end() {
 
         analyzeTokensAndExec();
 //        clear tokens!
         tokens = null;
-        return Promise.OF(result, error);
+        return X.of(result, error);
     }
 
-
+	
 }

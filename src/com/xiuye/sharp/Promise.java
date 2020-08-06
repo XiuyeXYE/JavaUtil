@@ -74,9 +74,9 @@ public class Promise<RESULT> {
 	 * @param <R>      处理异常后返回的结果
 	 * @return 新的Promise对象
 	 */
-	public <R> Promise<R> then(ReturnCallbackNoParam<R> callback) {
+	public <R> Promise<R> THEN(ReturnCallbackNoParam<R> callback) {
 //        return new Promise<>(catchExec(() -> callback.rcv()), error);
-		return resolve(catchExec(() -> callback.rcv()), error);
+		return RESOLVE(catchExec(() -> callback.rcv()), error);
 	}
 
 	/**
@@ -86,9 +86,9 @@ public class Promise<RESULT> {
 	 * @param <R>      处理异常后返回的结果
 	 * @return 新的Promise对象
 	 */
-	public <R> Promise<R> then(ReturnCallbackWithParam<R, RESULT> callback) {
+	public <R> Promise<R> THEN(ReturnCallbackWithParam<R, RESULT> callback) {
 //        return new Promise<>(catchExec(() -> callback.rci(result)), error);
-		return resolve(catchExec(() -> callback.rci(result)), error);
+		return RESOLVE(catchExec(() -> callback.rci(result)), error);
 	}
 
 	// 没有返回类型的,（相当于）继承了RESULT 类型！
@@ -99,9 +99,9 @@ public class Promise<RESULT> {
 	 * @param callback lambda代码
 	 * @return 新的Promise对象
 	 */
-	public Promise<RESULT> then(VoidCallbackWithParam<RESULT> callback) {
+	public Promise<RESULT> THEN(VoidCallbackWithParam<RESULT> callback) {
 //        return new Promise<>(catchExec(() -> callback.vci(result)), error);
-		return resolve(catchExec(() -> callback.vci(result)), error);
+		return RESOLVE(catchExec(() -> callback.vci(result)), error);
 	}
 
 	/**
@@ -110,9 +110,9 @@ public class Promise<RESULT> {
 	 * @param callback lambda代码
 	 * @return 新的Promise对象
 	 */
-	public Promise<RESULT> then(VoidCallbackNoParam callback) {
+	public Promise<RESULT> THEN(VoidCallbackNoParam callback) {
 //        return new Promise<>(catchExec(() -> callback.vcv()), error);
-		return resolve(catchExec(() -> callback.vcv()), error);
+		return RESOLVE(catchExec(() -> callback.vcv()), error);
 	}
 
 	/**
@@ -122,8 +122,8 @@ public class Promise<RESULT> {
 	 * @param <R>      处理异常后返回的结果
 	 * @return 新的Promise对象
 	 */
-	public <R> Promise<R> lastly(ReturnCallbackNoParam<R> callback) {
-		return then(callback);
+	public <R> Promise<R> FINALLY(ReturnCallbackNoParam<R> callback) {
+		return THEN(callback);
 	}
 
 	/**
@@ -133,8 +133,8 @@ public class Promise<RESULT> {
 	 * @param <R>      处理异常后返回的结果
 	 * @return 新的Promise对象
 	 */
-	public <R> Promise<R> lastly(ReturnCallbackWithParam<R, RESULT> callback) {
-		return then(callback);
+	public <R> Promise<R> FINALLY(ReturnCallbackWithParam<R, RESULT> callback) {
+		return THEN(callback);
 	}
 
 	// 没有返回类型的,（相当于）继承了RESULT 类型！
@@ -145,8 +145,8 @@ public class Promise<RESULT> {
 	 * @param callback lambda代码
 	 * @return 新的Promise对象
 	 */
-	public Promise<RESULT> lastly(VoidCallbackWithParam<RESULT> callback) {
-		return then(callback);
+	public Promise<RESULT> FINALLY(VoidCallbackWithParam<RESULT> callback) {
+		return THEN(callback);
 	}
 
 	/**
@@ -155,8 +155,8 @@ public class Promise<RESULT> {
 	 * @param callback lambda代码
 	 * @return 新的Promise对象
 	 */
-	public Promise<RESULT> lastly(VoidCallbackNoParam callback) {
-		return then(callback);
+	public Promise<RESULT> FINALLY(VoidCallbackNoParam callback) {
+		return THEN(callback);
 	}
 
 	/**
@@ -164,8 +164,12 @@ public class Promise<RESULT> {
 	 *
 	 * @return
 	 */
-	public boolean exist() {
+	private boolean exist() {
 		return result != null;
+	}
+	
+	public Promise<Boolean> EXIST() {
+		return OF(exist(),error);
 	}
 
 	/**
@@ -176,9 +180,9 @@ public class Promise<RESULT> {
 	 * @param <R>      处理异常后返回的结果
 	 * @return 新的Promise对象
 	 */
-	public <R> Promise<R> exist(ReturnCallbackNoParam<R> callback) {
+	public <R> Promise<R> EXIST(ReturnCallbackNoParam<R> callback) {
 		// 为null就不必再次传入result了
-		return exist() ? then(callback) : reject(error);
+		return exist() ? THEN(callback) : REJECT(error);
 	}
 
 	/**
@@ -188,9 +192,9 @@ public class Promise<RESULT> {
 	 * @param <R>      处理异常后返回的结果
 	 * @return 新的Promise对象
 	 */
-	public <R> Promise<R> exist(ReturnCallbackWithParam<R, RESULT> callback) {
+	public <R> Promise<R> EXIST(ReturnCallbackWithParam<R, RESULT> callback) {
 //        return exist() ? then(callback) : new Promise<>(error);
-		return exist() ? then(callback) : reject(error);
+		return exist() ? THEN(callback) : REJECT(error);
 	}
 
 	// 没有返回类型的,（相当于）继承了RESULT 类型！
@@ -202,9 +206,9 @@ public class Promise<RESULT> {
 	 * @param callback lambda代码
 	 * @return 新的Promise对象
 	 */
-	public Promise<RESULT> exist(VoidCallbackWithParam<RESULT> callback) {
+	public Promise<RESULT> EXIST(VoidCallbackWithParam<RESULT> callback) {
 //        return exist() ? then(callback) : new Promise<>(error);
-		return exist() ? then(callback) : reject(error);
+		return exist() ? THEN(callback) : REJECT(error);
 	}
 
 	/**
@@ -214,9 +218,9 @@ public class Promise<RESULT> {
 	 * @param callback lambda代码
 	 * @return 新的Promise对象
 	 */
-	public Promise<RESULT> exist(VoidCallbackNoParam callback) {
+	public Promise<RESULT> EXIST(VoidCallbackNoParam callback) {
 //        return exist() ? then(callback) : new Promise<>(error);
-		return exist() ? then(callback) : reject(error);
+		return exist() ? THEN(callback) : REJECT(error);
 	}
 
 	private <I> boolean parseBoolean(I t) {
@@ -236,7 +240,7 @@ public class Promise<RESULT> {
 	 *
 	 * @return
 	 */
-	public boolean truely() {
+	private boolean truely() {
 //        boolean b = false;
 //        if (exist()) {
 //            b = true;
@@ -247,6 +251,10 @@ public class Promise<RESULT> {
 //        return b;
 		return parseBoolean(result);
 	}
+	
+	public Promise<Boolean> T(){
+		return OF(truely(),error);
+	}
 
 	/**
 	 * if result == true void call()
@@ -255,8 +263,8 @@ public class Promise<RESULT> {
 	 * @param <R>      处理异常后返回的结果
 	 * @return 新的Promise对象
 	 */
-	public <R> Promise<R> truely(ReturnCallbackNoParam<R> callback) {
-		return truely() ? then(callback) : reject(error);
+	public <R> Promise<R> T(ReturnCallbackNoParam<R> callback) {
+		return truely() ? THEN(callback) : REJECT(error);
 	}
 
 	/**
@@ -266,8 +274,8 @@ public class Promise<RESULT> {
 	 * @param <R>      处理异常后返回的结果
 	 * @return 新的Promise对象
 	 */
-	public <R> Promise<R> truely(ReturnCallbackWithParam<R, RESULT> callback) {
-		return truely() ? then(callback) : reject(error);
+	public <R> Promise<R> T(ReturnCallbackWithParam<R, RESULT> callback) {
+		return truely() ? THEN(callback) : REJECT(error);
 	}
 
 	// 没有返回类型的,（相当于）继承了RESULT 类型！
@@ -278,8 +286,8 @@ public class Promise<RESULT> {
 	 * @param callback lambda代码
 	 * @return 新的Promise对象
 	 */
-	public Promise<RESULT> truely(VoidCallbackWithParam<RESULT> callback) {
-		return truely() ? then(callback) : reject(error);
+	public Promise<RESULT> T(VoidCallbackWithParam<RESULT> callback) {
+		return truely() ? THEN(callback) : REJECT(error);
 	}
 
 	/**
@@ -288,10 +296,14 @@ public class Promise<RESULT> {
 	 * @param callback lambda代码
 	 * @return 新的Promise对象
 	 */
-	public Promise<RESULT> truely(VoidCallbackNoParam callback) {
-		return truely() ? then(callback) : reject(error);
+	public Promise<RESULT> T(VoidCallbackNoParam callback) {
+		return truely() ? THEN(callback) : REJECT(error);
 	}
 
+	public Promise<Boolean> F(){
+		return OF(!truely(),error);
+	}
+	
 	/**
 	 * if result == false void call()
 	 *
@@ -299,8 +311,8 @@ public class Promise<RESULT> {
 	 * @param <R>      处理异常后返回的结果
 	 * @return 新的Promise对象
 	 */
-	public <R> Promise<R> falsely(ReturnCallbackNoParam<R> callback) {
-		return !truely() ? then(callback) : reject(error);
+	public <R> Promise<R> F(ReturnCallbackNoParam<R> callback) {
+		return !truely() ? THEN(callback) : REJECT(error);
 	}
 
 	/**
@@ -310,8 +322,8 @@ public class Promise<RESULT> {
 	 * @param <R>      处理异常后返回的结果
 	 * @return 新的Promise对象
 	 */
-	public <R> Promise<R> falsely(ReturnCallbackWithParam<R, RESULT> callback) {
-		return !truely() ? then(callback) : reject(error);
+	public <R> Promise<R> F(ReturnCallbackWithParam<R, RESULT> callback) {
+		return !truely() ? THEN(callback) : REJECT(error);
 	}
 
 	// 没有返回类型的,（相当于）继承了RESULT 类型！
@@ -322,8 +334,8 @@ public class Promise<RESULT> {
 	 * @param callback lambda代码
 	 * @return 新的Promise对象
 	 */
-	public Promise<RESULT> falsely(VoidCallbackWithParam<RESULT> callback) {
-		return !truely() ? then(callback) : reject(error);
+	public Promise<RESULT> F(VoidCallbackWithParam<RESULT> callback) {
+		return !truely() ? THEN(callback) : REJECT(error);
 	}
 
 	/**
@@ -332,82 +344,84 @@ public class Promise<RESULT> {
 	 * @param callback lambda代码
 	 * @return 新的Promise对象
 	 */
-	public Promise<RESULT> falsely(VoidCallbackNoParam callback) {
-		return !truely() ? then(callback) : reject(error);
+	public Promise<RESULT> F(VoidCallbackNoParam callback) {
+		return !truely() ? THEN(callback) : REJECT(error);
 	}
 
 	// extension API
 	// 没有优先级额！ 因为方便实现,就用就近原则吧！
-	public Promise<Boolean> and(boolean flag) {
-		return resolve(truely() && flag, error);
+	public Promise<Boolean> AND(boolean flag) {
+		return RESOLVE(truely() && flag, error);
 	}
 
-	public Promise<Boolean> and(ReturnCallbackNoParam<Boolean> callback) {
+	public Promise<Boolean> AND(ReturnCallbackNoParam<Boolean> callback) {
 //        return !truely() ? then(callback) : new Promise<>(error);
-		return resolve(truely() && parseBoolean(catchExec(() -> callback.rcv())), error);
+		return RESOLVE(truely() && parseBoolean(catchExec(() -> callback.rcv())), error);
 	}
 
-	public Promise<Boolean> and(ReturnCallbackWithParam<Boolean, RESULT> callback) {
+	public Promise<Boolean> AND(ReturnCallbackWithParam<Boolean, RESULT> callback) {
 //        return !truely() ? then(callback) : new Promise<>(error);
 //        return resolve(callback,result,error);
-		return resolve(truely() && parseBoolean(catchExec(() -> callback.rci(result))), error);
+		return RESOLVE(truely() && parseBoolean(catchExec(() -> callback.rci(result))), error);
 	}
 
-	public Promise<Boolean> and(VoidCallbackWithParam<RESULT> callback) {
+	public Promise<Boolean> AND(VoidCallbackWithParam<RESULT> callback) {
 ////        return !truely() ? then(callback) : new Promise<>(error);
-		return resolve(truely() && parseBoolean(catchExec(() -> callback.vci(result))), error);
+		return RESOLVE(truely() && parseBoolean(catchExec(() -> callback.vci(result))), error);
 	}
 
-	public Promise<Boolean> and(VoidCallbackNoParam callback) {
+	public Promise<Boolean> AND(VoidCallbackNoParam callback) {
 //        return !truely() ? then(callback) : new Promise<>(error);
-		return resolve(truely() && parseBoolean(catchExec(() -> callback.vcv())), error);
+		return RESOLVE(truely() && parseBoolean(catchExec(() -> callback.vcv())), error);
 	}
 
-	public Promise<Boolean> or(boolean flag) {
-		return resolve(truely() || flag, error);
+	public Promise<Boolean> OR(boolean flag) {
+		return RESOLVE(truely() || flag, error);
 	}
 
-	public Promise<Boolean> or(ReturnCallbackNoParam<Boolean> callback) {
-		return resolve(truely() || parseBoolean(catchExec(() -> callback.rcv())), error);
+	public Promise<Boolean> OR(ReturnCallbackNoParam<Boolean> callback) {
+		return RESOLVE(truely() || parseBoolean(catchExec(() -> callback.rcv())), error);
 	}
 
-	public Promise<Boolean> or(ReturnCallbackWithParam<Boolean, RESULT> callback) {
-		return resolve(truely() || parseBoolean(catchExec(() -> callback.rci(result))), error);
+	public Promise<Boolean> OR(ReturnCallbackWithParam<Boolean, RESULT> callback) {
+		return RESOLVE(truely() || parseBoolean(catchExec(() -> callback.rci(result))), error);
 	}
 
-	public Promise<Boolean> or(VoidCallbackWithParam<RESULT> callback) {
-		return resolve(truely() || parseBoolean(catchExec(() -> callback.vci(result))), error);
+	public Promise<Boolean> OR(VoidCallbackWithParam<RESULT> callback) {
+		return RESOLVE(truely() || parseBoolean(catchExec(() -> callback.vci(result))), error);
 	}
 
-	public Promise<Boolean> or(VoidCallbackNoParam callback) {
-		return resolve(truely() || parseBoolean(catchExec(() -> callback.vcv())), error);
+	public Promise<Boolean> OR(VoidCallbackNoParam callback) {
+		return RESOLVE(truely() || parseBoolean(catchExec(() -> callback.vcv())), error);
 	}
 
-	public Promise<Boolean> not() {
-		return resolve(!truely(), error);
+	public Promise<Boolean> NOT() {
+		return RESOLVE(!truely(), error);
 	}
 
-	public Promise<Boolean> not(ReturnCallbackNoParam<Boolean> callback) {
-		return resolve(!parseBoolean(catchExec(() -> callback.rcv())), error);
+	public Promise<Boolean> NOT(ReturnCallbackNoParam<Boolean> callback) {
+		return RESOLVE(!parseBoolean(catchExec(() -> callback.rcv())), error);
 	}
 
-	public Promise<Boolean> not(ReturnCallbackWithParam<Boolean, RESULT> callback) {
-		return resolve(!parseBoolean(catchExec(() -> callback.rci(result))), error);
+	public Promise<Boolean> NOT(ReturnCallbackWithParam<Boolean, RESULT> callback) {
+		return RESOLVE(!parseBoolean(catchExec(() -> callback.rci(result))), error);
 	}
 
-	public Promise<Boolean> not(VoidCallbackWithParam<RESULT> callback) {
-		return resolve(!parseBoolean(catchExec(() -> callback.vci(result))), error);
+	public Promise<Boolean> NOT(VoidCallbackWithParam<RESULT> callback) {
+		return RESOLVE(!parseBoolean(catchExec(() -> callback.vci(result))), error);
 	}
 
-	public Promise<Boolean> not(VoidCallbackNoParam callback) {
-		return resolve(!parseBoolean(catchExec(() -> callback.vcv())), error);
+	public Promise<Boolean> NOT(VoidCallbackNoParam callback) {
+		return RESOLVE(!parseBoolean(catchExec(() -> callback.vcv())), error);
 	}
 
 	// 传入都是空！所以随便返回什么类型
 
-	public boolean errorExist() {
+	private boolean errorExist() {
 		return error != null;
 	}
+	
+	
 
 	/**
 	 * 有错误就执行，没有错误，就跳过 R call() 处理上一个Promise的错误！ 不接受上一个Promise的错误并返回新的Promise！
@@ -415,8 +429,8 @@ public class Promise<RESULT> {
 	 * @param callback lambda代码
 	 * @return 新的Promise对象
 	 */
-	public Promise<RESULT> except(ReturnCallbackNoParam<RESULT> callback) {
-		return resolve(errorExist() ? errorHandler(() -> callback.rcv()) : result, error);
+	public Promise<RESULT> EXCEPT(ReturnCallbackNoParam<RESULT> callback) {
+		return RESOLVE(errorExist() ? errorHandler(() -> callback.rcv()) : result, error);
 	}
 
 	// input and return 都有；传入进去后，再次有error的话就传给下一个新的
@@ -427,8 +441,8 @@ public class Promise<RESULT> {
 	 * @param callback lambda代码
 	 * @return 新的Promise对象
 	 */
-	public Promise<RESULT> except(ReturnCallbackWithParam<RESULT, Throwable> callback) {
-		return resolve(errorExist() ? errorHandler(() -> callback.rci(error)) : result, error);
+	public Promise<RESULT> EXCEPT(ReturnCallbackWithParam<RESULT, Throwable> callback) {
+		return RESOLVE(errorExist() ? errorHandler(() -> callback.rci(error)) : result, error);
 	}
 
 	/**
@@ -437,8 +451,8 @@ public class Promise<RESULT> {
 	 * @param callback lambda代码
 	 * @return 新的Promise对象
 	 */
-	public Promise<RESULT> except(VoidCallbackWithParam<Throwable> callback) {
-		return resolve(errorExist() ? errorHandler(() -> callback.vci(error)) : result, error);
+	public Promise<RESULT> EXCEPT(VoidCallbackWithParam<Throwable> callback) {
+		return RESOLVE(errorExist() ? errorHandler(() -> callback.vci(error)) : result, error);
 	}
 
 	/**
@@ -447,13 +461,13 @@ public class Promise<RESULT> {
 	 * @param callback lambda代码
 	 * @return 新的Promise对象
 	 */
-	public Promise<RESULT> except(VoidCallbackNoParam callback) {
+	public Promise<RESULT> EXCEPT(VoidCallbackNoParam callback) {
 //        return errorExist()
 //                ? resolve(errorHandler(() -> callback.vcv()), error)
 //                : resolve(result, error);
 
 //        return new Promise<>(errorHandler(() -> callback.vcv()), error);
-		return resolve(errorExist() ? errorHandler(() -> callback.vcv()) : result, error);
+		return RESOLVE(errorExist() ? errorHandler(() -> callback.vcv()) : result, error);
 	}
 
 	/**
@@ -596,7 +610,7 @@ public class Promise<RESULT> {
 		exIndeed = !implicit;
 	}
 
-	public static <R> Promise<R> resolve() {
+	public static <R> Promise<R> RESOLVE() {
 		return new Promise<>();
 	}
 
@@ -607,11 +621,11 @@ public class Promise<RESULT> {
 	 * @param <R>
 	 * @return
 	 */
-	public static <R> Promise<R> resolve(R r) {
+	public static <R> Promise<R> RESOLVE(R r) {
 		return new Promise<>(r);
 	}
 
-	private static <R, E extends Throwable> Promise<R> resolve(R r, E error) {
+	private static <R, E extends Throwable> Promise<R> RESOLVE(R r, E error) {
 		return new Promise<>(r, error);
 	}
 
@@ -621,83 +635,83 @@ public class Promise<RESULT> {
 	 * @param e
 	 * @return
 	 */
-	public static <R, E extends Throwable> Promise<R> reject(E e) {
+	public static <R, E extends Throwable> Promise<R> REJECT(E e) {
 		return new Promise<>(e);
 	}
 
-	public static <R> Promise<R> of() {
-		return resolve();
+	public static <R> Promise<R> OF() {
+		return RESOLVE();
 	}
 
-	public static <R> Promise<R> of(R t) {
-		return resolve(t);
+	public static <R> Promise<R> OF(R t) {
+		return RESOLVE(t);
 	}
 
-	public static <R, E extends Throwable> Promise<R> of(R r, E error) {
-		return resolve(r, error);
+	public static <R, E extends Throwable> Promise<R> OF(R r, E error) {
+		return RESOLVE(r, error);
 	}
 
-	public ProgramPromise<RESULT> begin() {
+	public ProgramPromise<RESULT> BEGIN() {
 		return new ProgramPromise<>(result, error);
 	}
 
-	public static <R> ProgramPromise<R> beginS() {
+	public static <R> ProgramPromise<R> BEGINS() {
 		return new ProgramPromise<>();
 	}
 
-	public static <R, I> Promise<AbstractPromiseTask<VoidCallbackNoParam, R, I>> taskS(VoidCallbackNoParam callback) {
+	public static <R, I> Promise<AbstractPromiseTask<VoidCallbackNoParam, R, I>> TASKS(VoidCallbackNoParam callback) {
 		AbstractPromiseTask<VoidCallbackNoParam, R, I> taskObj = new PromiseTaskVCV<>(callback);
 		taskObj.start();
-		return of(taskObj);
+		return OF(taskObj);
 	}
 
-	public static <R, I> Promise<AbstractPromiseTask<VoidCallbackWithParam<I>, R, I>> taskS(
+	public static <R, I> Promise<AbstractPromiseTask<VoidCallbackWithParam<I>, R, I>> TASKS(
 			VoidCallbackWithParam<I> callback) {
 		AbstractPromiseTask<VoidCallbackWithParam<I>, R, I> taskObj = new PromiseTaskVCI<>(callback);
 		taskObj.start();
-		return of(taskObj);
+		return OF(taskObj);
 	}
 
-	public static <R, I> Promise<AbstractPromiseTask<ReturnCallbackNoParam<R>, R, I>> taskS(
+	public static <R, I> Promise<AbstractPromiseTask<ReturnCallbackNoParam<R>, R, I>> TASKS(
 			ReturnCallbackNoParam<R> callback) {
 		AbstractPromiseTask<ReturnCallbackNoParam<R>, R, I> taskObj = new PromiseTaskRCV<>(callback);
 		taskObj.start();
-		return of(taskObj);
+		return OF(taskObj);
 	}
 
-	public static <R, I> Promise<AbstractPromiseTask<ReturnCallbackWithParam<R, I>, R, I>> taskS(
+	public static <R, I> Promise<AbstractPromiseTask<ReturnCallbackWithParam<R, I>, R, I>> TASKS(
 			ReturnCallbackWithParam<R, I> callback) {
 		AbstractPromiseTask<ReturnCallbackWithParam<R, I>, R, I> taskObj = new PromiseTaskRCI<>(callback);
 		taskObj.start();
-		return of(taskObj);
+		return OF(taskObj);
 	}
 
-	public <R> Promise<AbstractPromiseTask<VoidCallbackNoParam, R, RESULT>> task(VoidCallbackNoParam callback) {
+	public <R> Promise<AbstractPromiseTask<VoidCallbackNoParam, R, RESULT>> TASK(VoidCallbackNoParam callback) {
 		AbstractPromiseTask<VoidCallbackNoParam, R, RESULT> taskObj = new PromiseTaskVCV<>(callback, result);
 		taskObj.start();
-		return of(taskObj, error);
+		return OF(taskObj, error);
 	}
 
-	public <R> Promise<AbstractPromiseTask<VoidCallbackWithParam<RESULT>, R, RESULT>> task(
+	public <R> Promise<AbstractPromiseTask<VoidCallbackWithParam<RESULT>, R, RESULT>> TASK(
 			VoidCallbackWithParam<RESULT> callback) {
 		AbstractPromiseTask<VoidCallbackWithParam<RESULT>, R, RESULT> taskObj = new PromiseTaskVCI<>(callback, result);
 		taskObj.start();
-		return of(taskObj, error);
+		return OF(taskObj, error);
 	}
 
-	public <R> Promise<AbstractPromiseTask<ReturnCallbackNoParam<R>, R, RESULT>> task(
+	public <R> Promise<AbstractPromiseTask<ReturnCallbackNoParam<R>, R, RESULT>> TASK(
 			ReturnCallbackNoParam<R> callback) {
 		AbstractPromiseTask<ReturnCallbackNoParam<R>, R, RESULT> taskObj = new PromiseTaskRCV<>(callback, result);
 		taskObj.start();
-		return of(taskObj, error);
+		return OF(taskObj, error);
 	}
 
-	public <R> Promise<AbstractPromiseTask<ReturnCallbackWithParam<R, RESULT>, R, RESULT>> task(
+	public <R> Promise<AbstractPromiseTask<ReturnCallbackWithParam<R, RESULT>, R, RESULT>> TASK(
 			ReturnCallbackWithParam<R, RESULT> callback) {
 		AbstractPromiseTask<ReturnCallbackWithParam<R, RESULT>, R, RESULT> taskObj = new PromiseTaskRCI<>(callback,
 				result);
 		taskObj.start();
-		return of(taskObj, error);
+		return OF(taskObj, error);
 	}
 
 	public static abstract class AbstractPromiseTask<FUNC, R, I> extends Thread {
@@ -843,38 +857,38 @@ public class Promise<RESULT> {
 	}
 
 	public Promise<String> toFormatterJson() {
-		return of(catchExec(() -> JsonUtil.instance(JsonUtil.FORMAT_GSON).toJson(result)), error);
+		return OF(catchExec(() -> JsonUtil.instance(JsonUtil.FORMAT_GSON).toJson(result)), error);
 	}
 
 	public Promise<String> toJson() {
-		return of(catchExec(() -> JsonUtil.instance().toJson(result)));
+		return OF(catchExec(() -> JsonUtil.instance().toJson(result)));
 	}
 
 	public <R> Promise<R> toObject(Class<R> clazz) {
-		return of(catchExec(() -> JsonUtil.instance().fromJson(result != null ? result.toString() : null, clazz)),
+		return OF(catchExec(() -> JsonUtil.instance().fromJson(result != null ? result.toString() : null, clazz)),
 				error);
 	}
 
 	public static Promise<Gson> formatterJsonKitS() {
-		return of(JsonUtil.instance(JsonUtil.FORMAT_GSON));
+		return OF(JsonUtil.instance(JsonUtil.FORMAT_GSON));
 	}
 
 	public static Promise<Gson> jsonKitS() {
-		return of(JsonUtil.instance());
+		return OF(JsonUtil.instance());
 	}
 
 	public Promise<Gson> formatterJsonKit() {
-		return of(catchExec(() -> JsonUtil.instance(JsonUtil.FORMAT_GSON)), error);
+		return OF(catchExec(() -> JsonUtil.instance(JsonUtil.FORMAT_GSON)), error);
 	}
 
 	public Promise<Gson> jsonKit() {
-		return of(catchExec(() -> JsonUtil.instance()), error);
+		return OF(catchExec(() -> JsonUtil.instance()), error);
 	}
 
 	@SafeVarargs
 	public static <R> Promise<R[]> logS(R... in) {
 		XLog.lg(in);
-		return of(in);
+		return OF(in);
 	}
 
 	@SafeVarargs
@@ -887,7 +901,7 @@ public class Promise<RESULT> {
 		XLog.attach(1);
 		XLog.line(in);
 		XLog.dettach(1);
-		return of(in);
+		return OF(in);
 	}
 
 	@SafeVarargs
@@ -895,12 +909,12 @@ public class Promise<RESULT> {
 		XLog.attach(1);
 		XLog.ln(in);
 		XLog.dettach(1);
-		return of(in);
+		return OF(in);
 	}
 
 	public Promise<RESULT> log() {
 		XLog.lg(result);
-		return of(result, error);
+		return OF(result, error);
 	}
 
 	public Promise<RESULT> lg() {
@@ -913,7 +927,7 @@ public class Promise<RESULT> {
 			XLog.line(result);
 			XLog.dettach(3);
 		});
-		return of(result, error);
+		return OF(result, error);
 	}
 
 	public Promise<RESULT> ln() {
@@ -922,7 +936,7 @@ public class Promise<RESULT> {
 			XLog.ln(result);
 			XLog.dettach(3);
 		});
-		return of(result, error);
+		return OF(result, error);
 	}
 
 	public static <R> BeanPoolPromise<R> beanS(String name) {
@@ -1000,11 +1014,11 @@ public class Promise<RESULT> {
 	public static Promise<ServerSocket> tcpS(int port) {
 
 		try {
-			return of(new ServerSocket(port));
+			return OF(new ServerSocket(port));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return of();
+		return OF();
 	}
 
 	public Promise<ServerSocket> tcp(int port) {
@@ -1013,11 +1027,11 @@ public class Promise<RESULT> {
 
 	public static Promise<Socket> tcpS(String ip, int port) {
 		try {
-			return of(new Socket(ip, port));
+			return OF(new Socket(ip, port));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return of();
+		return OF();
 	}
 
 	public Promise<Socket> tcp(String ip, int port) {
@@ -1026,11 +1040,11 @@ public class Promise<RESULT> {
 
 	public static Promise<DatagramSocket> udpS(int port) {
 		try {
-			return of(new DatagramSocket(port));
+			return OF(new DatagramSocket(port));
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
-		return of();
+		return OF();
 	}
 
 	public Promise<DatagramSocket> udp(int port) {
@@ -1039,11 +1053,11 @@ public class Promise<RESULT> {
 	
 	public static Promise<DatagramSocket> udpS(){
 		try {
-			return of(new DatagramSocket());
+			return OF(new DatagramSocket());
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
-		return of();
+		return OF();
 	}
 	
 	public Promise<DatagramSocket> udp(){
