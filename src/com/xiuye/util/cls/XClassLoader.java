@@ -8,14 +8,14 @@ import java.net.URLClassLoader;
  *
  * @author xiuye
  */
-public class XYClassLoader extends URLClassLoader {
+public class XClassLoader extends URLClassLoader {
 
     /**
      * ClassLoader constructor
      *
      * @param urls
      */
-    public XYClassLoader(URL[] urls) {
+    public XClassLoader(URL[] urls) {
         super(urls);
     }
 
