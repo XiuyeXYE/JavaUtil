@@ -6,7 +6,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
+import com.google.gson.Gson;
 import com.xiuye.util.cls.XType;
+import com.xiuye.util.json.JsonUtil;
 import com.xiuye.util.log.XLog;
 
 public class X<RESULT> {// sharp tools
@@ -726,4 +728,47 @@ public class X<RESULT> {// sharp tools
 		return udpS();
 	}
 
+	
+	public X<String> toFormatterJson() {
+		return of(catchExec(() -> JsonUtil.instance(JsonUtil.FORMAT_GSON).toJson(result),this), error);
+	}
+
+	public X<String> toJson() {
+		return of(catchExec(() -> JsonUtil.instance().toJson(result),this));
+	}
+
+	public <R> X<R> toObject(Class<R> clazz) {
+		return of(catchExec(() -> JsonUtil.instance().fromJson(result != null ? result.toString() : null, clazz),this),
+				error);
+	}
+
+	public static X<Gson> formatterJsonKitS() {
+		return of(JsonUtil.instance(JsonUtil.FORMAT_GSON));
+	}
+
+	public static X<Gson> jsonKitS() {
+		return of(JsonUtil.instance());
+	}
+
+	public X<Gson> formatterJsonKit() {
+		return of(catchExec(() -> JsonUtil.instance(JsonUtil.FORMAT_GSON),this), error);
+	}
+
+	public X<Gson> jsonKit() {
+		return of(catchExec(() -> JsonUtil.instance(),this), error);
+	}
+
+	
+	public static <R> X<R> x() {
+		return resolve();
+	}
+
+	public static <R> X<R> x(R t) {
+		return resolve(t);
+	}
+
+	public static <R, E extends Throwable> X<R> x(R r, E error) {
+		return resolve(r, error);
+	}
+	
 }
