@@ -50,6 +50,10 @@ public class TestX {
 		}).end().ln().THEN(d->{
 			XLog.ln(d);
 		});
+		X.beginS().MATCH(99).DEFAUT(d->{
+			XLog.ln(d);
+			return "JKL";
+		}).end().ln();
 	}	
 	@Test
 	public void testXTask() {
