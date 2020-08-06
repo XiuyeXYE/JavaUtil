@@ -37,8 +37,20 @@ public class TestX {
 		X.beginS().MATCH("ABC").AS(1).AS(2).THEN(()->{
 			XLog.ln("MATCH OK!");
 		}).end().ln();
-	}
-	
+		
+		X.beginS().MATCH(123).AS("ABC").THEN(d->{
+			XLog.ln(d);
+		}).DEFAUT(d->{
+			XLog.ln("default",d);
+		}).end().ln();
+		
+		X.beginS().MATCH(888).AS(888).THEN(d->{
+			XLog.ln(d);
+			return "ABC";
+		}).end().ln().THEN(d->{
+			XLog.ln(d);
+		});
+	}	
 	@Test
 	public void testXTask() {
 		X.taskS(()->{

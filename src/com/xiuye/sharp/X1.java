@@ -1,5 +1,7 @@
 package com.xiuye.sharp;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import java.util.List;
 
 import com.xiuye.util.cls.XType;
@@ -20,7 +22,7 @@ public class X1 <RESULT>{
     private static final String DEFAULT = "default";
 
 
-    private class TwoTuple {
+    private class TwoTuple{
         public String token;
         public Object value;
 
@@ -37,7 +39,12 @@ public class X1 <RESULT>{
 
     private List<TwoTuple> tokens;
     private TwoTuple result_token;
+    private Object inputValue;
+    
     private int token_index = 0;
+    
+    
+    
     //Promise的结果，在end后仍然传给 新的Promise
     //error同
     private RESULT result;
@@ -109,12 +116,40 @@ public class X1 <RESULT>{
         addToken(DEFAULT, callback);
         return this;
     }
+    
+    public <I> X1<RESULT> DEFAUT(VoidCallbackWithParam<I> callback) {
+    	addToken(DEFAULT, callback);
+    	return this;
+    }
+    
+    public <R,I> X1<RESULT> DEFAUT(ReturnCallbackWithParam<R,I> callback) {
+    	addToken(DEFAULT, callback);
+    	return this;
+    }
+    public <R> X1<RESULT> DEFAUT(ReturnCallbackNoParam<R> callback) {
+    	addToken(DEFAULT, callback);
+    	return this;
+    }
 
 
     public X1<RESULT> THEN(VoidCallbackNoParam callback) {
         addToken(THEN, callback);
 //        return programPromise(tokens);
         return this;
+    }
+    
+    public <I> X1<RESULT> THEN(VoidCallbackWithParam<I> callback) {
+    	addToken(THEN, callback);
+    	return this;
+    }
+    
+    public <R,I> X1<RESULT> THEN(ReturnCallbackWithParam<R,I> callback) {
+    	addToken(THEN, callback);
+    	return this;
+    }
+    public <R> X1<RESULT> THEN(ReturnCallbackNoParam<R> callback) {
+    	addToken(THEN, callback);
+    	return this;
     }
 
 
@@ -123,6 +158,21 @@ public class X1 <RESULT>{
 //        return programPromise(tokens);
         return this;
     }
+    
+    
+    public <I> X1<RESULT> ELSE(VoidCallbackWithParam<I> callback) {
+    	addToken(ELSE, callback);
+    	return this;
+    }
+    
+    public <R,I> X1<RESULT> ELSE(ReturnCallbackWithParam<R,I> callback) {
+    	addToken(ELSE, callback);
+    	return this;
+    }
+    public <R> X1<RESULT> ELSE(ReturnCallbackNoParam<R> callback) {
+    	addToken(ELSE, callback);
+    	return this;
+    }
 
     private void callTokenCallback() {
         if (result_token != null) {
@@ -130,8 +180,25 @@ public class X1 <RESULT>{
                 VoidCallbackNoParam callback = XType.cast(result_token.value);
                 callback.vcv();
             }
+            else if(result_token.value instanceof VoidCallbackWithParam) {
+            	VoidCallbackWithParam<Object> callback = XType.cast(result_token.value);
+            	callback.vci(inputValue);            	
+            }
+            else if(result_token.value instanceof ReturnCallbackNoParam) {
+            	ReturnCallbackNoParam<?> callback = XType.cast(result_token.value);
+            	callback.rcv();
+            }
+            else if(result_token.value instanceof ReturnCallbackWithParam){
+            	ReturnCallbackWithParam<RESULT,Object> callback = XType.cast(result_token.value);
+            	result = callback.rci(inputValue);
+            }
+            
+            inputValue = null;
+            
             //clear the previous executed token!!! 
+          
             result_token = null;
+            
         }
 
     }
@@ -176,7 +243,7 @@ public class X1 <RESULT>{
         return tokens.get(index);
     }
 
-    private void addToken(String token, Object value) {
+    private void  addToken(String token, Object value) {
         tokens.add(new TwoTuple(token, value));
     }
 
@@ -272,6 +339,7 @@ public class X1 <RESULT>{
                     // 将要执行的token装入到 result_token中！
                     if (result_token == null && parseBoolean(start_token.value)) {
                         result_token = then_token;
+                        inputValue = start_token.value;                        
                     }
                     // T -> else if then T | else | ε
                     T_token();
@@ -336,6 +404,7 @@ public class X1 <RESULT>{
                     // 正式 匹配的有 then 然后执行!
                     if (result_token == null && asOK) {
                         result_token = then_token;
+                        inputValue = matchValue;
                     }
 
                     //递归条件，也是超前搜索
@@ -350,6 +419,7 @@ public class X1 <RESULT>{
             } else if (DEFAULT.equals(f_token.token)) {
                 if (result_token == null) {
                     result_token = f_token;
+                    inputValue = matchValue;
                 }
             } else {
                 nextTokenError(or(AS, DEFAULT));
@@ -426,6 +496,7 @@ public class X1 <RESULT>{
 
                     if (result_token == null && parseBoolean(t_token.value)) {
                         result_token = then_token;
+                        inputValue = t_token.value;
                     }
                     // T -> else if then T | else | E
                     // recursion
@@ -437,6 +508,7 @@ public class X1 <RESULT>{
             } else if (ELSE.equals(t_token.token)) {
                 if (result_token == null) {
                     result_token = t_token;
+                    inputValue = null;
                 }
 
             }
