@@ -61,6 +61,55 @@ public class TestCompiler {
 		Method f3 = clazz.getMethod("f3", int.class,int.class);
 		XLog.ln(f3.invoke(obj, 98,88));
 		
+		
+		
+		
+	}
+	
+	@Test
+	public void testProxy() throws MalformedURLException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException, NoSuchMethodException, SecurityException {
+		
+		ClassInfo dc = new ClassInfo("com.xy.app", "Tdd");
+		dc.addImportPackage("com.xiuye.test.TestClass");
+		dc.addImportPackage("com.xiuye.test.TestInterface");
+		dc.addImportPackage("com.xiuye.util.log.XLog");
+		dc.ext("TestClass");
+		dc.impl("TestInterface");
+		dc.addConstructor("System.out.println(\"Hello World!Constructor!\");"
+				+ "System.out.println(a);"
+				+ "System.out.println(b);"
+				+ "","int","a","int","b");
+		dc.addField("int", "lang");
+		dc.addField("int", "lang2", "100");
+		dc.addMethod("int", "f1", "return a>b?a:b;", "int", "a", "int", "b");
+		dc.addMethod("void", "testClass", "XLog.ln(\"testClass\");");
+		dc.addMethod("void", "testInterface", "XLog.ln(\"testInterface\");");
+		
+		XLog.ln(dc);
+		
+		
+		Map<String,String> code = XType.map();
+		code.put(dc.getFullName(),dc.toString());
+		XCompiler.compileCode(code);
+		XClassLoader cl = XType.createClassLoader();
+		
+		
+		
+		Class<TestClass> clazz1 = cl.load(dc.getFullName());
+		XLog.ln(clazz1);
+		
+		Constructor<TestClass> con = clazz1.getConstructor(int.class,int.class);
+		TestClass obj1 = con.newInstance(7,88);
+		
+		obj1.testClass();
+		
+		Class<TestInterface> clazz2 = cl.load(dc.getFullName());
+		XLog.ln(clazz2);
+		
+		
+		XLog.ln(clazz1.getClassLoader());
+		XLog.ln(clazz2.getClassLoader());
+		XLog.ln(cl);
 	}
 
 	public static void main(String[] args) {

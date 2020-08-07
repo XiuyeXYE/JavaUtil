@@ -2,7 +2,9 @@ package com.xiuye.util.code.gen;
 
 import com.xiuye.util.cls.XType;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class ClassInfo implements GenImportPackages, GenModifier, GenField, GenFcuntion, GenCoder {
 
@@ -26,6 +28,9 @@ public class ClassInfo implements GenImportPackages, GenModifier, GenField, GenF
 	private List<FieldInfo> fields;
 	private List<FunctionInfo> functions;
 
+	private String superClasses;
+	private List<String> interfaces;
+
 	{
 		importPackages = XType.list();
 		modifiers = XType.list();
@@ -35,7 +40,7 @@ public class ClassInfo implements GenImportPackages, GenModifier, GenField, GenF
 
 	public ClassInfo() {
 	}
-	
+
 	void importPackage(String importPacage) {
 		this.addImportPackage(importPacage);
 	}
@@ -51,7 +56,7 @@ public class ClassInfo implements GenImportPackages, GenModifier, GenField, GenF
 	public String getFullName() {
 		return packageName + "." + name;
 	}
-	
+
 	public void addField(String type, String name) {
 		FieldInfo fi = new FieldInfo();
 		fi.setAccess(FieldInfo.ACCESS_PRIVATE);
@@ -61,7 +66,7 @@ public class ClassInfo implements GenImportPackages, GenModifier, GenField, GenF
 		fi.setName(name);
 		this.addField(fi);
 	}
-	
+
 	public void addField(String type, String name, String value) {
 		FieldInfo fi = new FieldInfo();
 		fi.setAccess(FieldInfo.ACCESS_PRIVATE);
@@ -75,11 +80,26 @@ public class ClassInfo implements GenImportPackages, GenModifier, GenField, GenF
 		addMethod("void", "set" + bName, "this." + name + "=" + name + ";", type, name);
 		addMethod(type, "get" + bName, "return this." + name + ";");
 	}
-	
+
 	public void addConstructor(String methodBody, String... params) {
-		addMethod(null,name,methodBody,params);
+		addMethod(null, name, methodBody, params);
 	}
-	
+
+	public void ext(String... superClasses) {
+		if (superClasses.length > 0) {
+			if (TYPE_CLASS.equalsIgnoreCase(this.type)) {
+				this.superClasses = superClasses[0];
+			} else if (TYPE_INTERFACE.equalsIgnoreCase(this.type)) {
+				this.interfaces = Arrays.asList(superClasses);
+			}
+		}
+
+	}
+
+	public void impl(String... interfaces) {
+		this.interfaces = Arrays.asList(interfaces);
+	}
+
 	public void addMethod(String returnType, String name, String methodBody, String... params) {
 
 		if (params.length % 2 != 0) {
@@ -98,7 +118,6 @@ public class ClassInfo implements GenImportPackages, GenModifier, GenField, GenF
 		fi.setFunctionBody(methodBody);
 		this.addFunction(fi);
 	}
-
 
 	public String getPackageName() {
 		return packageName;
@@ -164,13 +183,41 @@ public class ClassInfo implements GenImportPackages, GenModifier, GenField, GenF
 	@Override
 	public String code() {
 		return "package " + packageName + ";\n" + combinePackages() + "\n" + XType.nvl(access, ACCESS_DEFAULT) + " "
-				+ combineModifiers() + type + " " + name + "\n" + codeBlockBegin() + "\n" + combineFields() + "\n"
-				+ combineFunctions() + "\n" + codeBlockEnd();
+				+ combineModifiers() + type + " " + name + combineExtends() + "\n" + codeBlockBegin() + "\n"
+				+ combineFields() + "\n" + combineFunctions() + "\n" + codeBlockEnd();
 	}
 
 	@Override
 	public String codeLine() {
 		return code() + "\n";
+	}
+
+	public String combineExtends() {
+		StringBuffer si = new StringBuffer();
+		if (TYPE_CLASS.equalsIgnoreCase(this.type)) {
+			if (Objects.nonNull(superClasses) && !superClasses.isEmpty()) {
+				si.append(" extends ");
+				si.append(superClasses);
+			}
+			if (Objects.nonNull(this.interfaces) && !interfaces.isEmpty()) {
+				si.append(" implements ");
+				for (int i = 0; i < interfaces.size() - 1; i++) {
+					si.append(interfaces.get(i) + ",");
+				}
+				si.append(interfaces.get(interfaces.size() - 1));
+			}
+		} else if (TYPE_INTERFACE.equalsIgnoreCase(this.type)) {
+			if (Objects.nonNull(this.interfaces) && !interfaces.isEmpty()) {
+				si.append(" extends ");
+				for (int i = 0; i < interfaces.size() - 1; i++) {
+					si.append(interfaces.get(i) + ",");
+				}
+				si.append(interfaces.get(interfaces.size() - 1));
+			}
+		}
+
+		return si.toString();
+
 	}
 
 	@Override

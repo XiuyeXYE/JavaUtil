@@ -12,6 +12,8 @@ public class TestDirectefWeightGraph {
 		List<DirectedWeightEdge> [] adj;
 	}
 
+	//distTo[v]  == s->v 的路径权重之和
+	//edgeTo[v]  == s->v 的到数第一条边,也就是最后一条边 
 	private double []distTo;//s->v 的距离 ,distTo[s]=0!
 	private DirectedWeightEdge []edgeTo;//s->v 的边,最短路径
 	
