@@ -70,9 +70,10 @@ public class TestCompiler {
 	public void testProxy() throws MalformedURLException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException, NoSuchMethodException, SecurityException {
 		
 		ClassInfo dc = new ClassInfo("com.xy.app", "Tdd");
-		dc.addImportPackage("com.xiuye.test.TestClass");
-		dc.addImportPackage("com.xiuye.test.TestInterface");
-		dc.addImportPackage("com.xiuye.util.log.XLog");
+//		dc.addImportPackage("com.xiuye.test.TestClass");
+		dc.importPackage("com.xiuye.util.log.XLog",
+				"com.xiuye.test.TestInterface",
+				"com.xiuye.test.TestClass");
 		dc.ext("TestClass");
 		dc.impl("TestInterface");
 		dc.addConstructor("System.out.println(\"Hello World!Constructor!\");"

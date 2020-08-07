@@ -41,10 +41,6 @@ public class ClassInfo implements GenImportPackages, GenModifier, GenField, GenF
 	public ClassInfo() {
 	}
 
-	void importPackage(String importPacage) {
-		this.addImportPackage(importPacage);
-	}
-
 	public ClassInfo(String packageName, String simpleClassName) {
 		this.setPackageName(packageName);
 		this.setAccess(ClassInfo.ACCESS_PUBLIC);
@@ -272,6 +268,19 @@ public class ClassInfo implements GenImportPackages, GenModifier, GenField, GenF
 	@Override
 	public boolean addImportPackage(String packageName) {
 		return importPackages.add(packageName);
+	}
+
+	@Override
+	public boolean importPackage(String... packageName) {
+
+		boolean ret = false;
+
+		for (String pack : packageName) {
+			ret = addImportPackage(pack);
+		}
+
+		return ret;
+
 	}
 
 }
