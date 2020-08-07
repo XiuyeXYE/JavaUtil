@@ -1,6 +1,6 @@
 package com.xiuye.util.proxy;
 
-public class ProxyInterface {
+public class XProxy {
 
 //	proxy()
 

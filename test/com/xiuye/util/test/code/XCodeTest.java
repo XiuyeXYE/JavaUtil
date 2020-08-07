@@ -9,9 +9,9 @@ import java.util.UUID;
 import org.junit.Test;
 
 import com.xiuye.util.cls.XType;
-import com.xiuye.util.cls.XYClassLoader;
+import com.xiuye.util.cls.XClassLoader;
 import com.xiuye.util.code.XCode;
-import com.xiuye.util.code.XYCompiler;
+import com.xiuye.util.code.XCompiler;
 import com.xiuye.util.code.gen.ClassInfo;
 import com.xiuye.util.code.gen.FieldInfo;
 import com.xiuye.util.code.gen.FunctionInfo;
@@ -65,8 +65,8 @@ public class XCodeTest {
 				"package com.xiuye.util.test.code;" + "import com.xiuye.util.log.XLog;"
 						+ " public class AIImpl implements AI{" + " public void f(){XLog.lg(\"AI::f()\");} " + ""
 						+ "public void run(){XLog.lg(\"AIImpl::run()\");}" + "}");
-		XLog.lg(XYCompiler.compileCode(code) ? "successful" : "failure");
-		XYClassLoader cl = XType.createClassLoader();
+		XLog.lg(XCompiler.compileCode(code) ? "successful" : "failure");
+		XClassLoader cl = XType.createClassLoader();
 //		XLog.lg(cl.loadClass("com.xiuye.util.test.code.AI"));
 		Class<?> clazz = cl.load("com.xiuye.util.test.code.AIImpl");
 		clazz = cl.load("com.xiuye.util.test.code.AIImpl");
@@ -89,7 +89,7 @@ public class XCodeTest {
 				"package com.xiuye.util.test.code;" + "import com.xiuye.util.test.code.XCodeTest.CI;"
 						+ "import com.xiuye.util.log.XLog;" + " public class CIImpl implements CI{" + "public void c(){"
 						+ "XLog.lg(\"CIImpl::c()\");" + "}" + "}");
-		XLog.lg(XYCompiler.compileCode(codes2));
+		XLog.lg(XCompiler.compileCode(codes2));
 		XLog.lg(cl.load("com.xiuye.BIImpl"));
 		XLog.lg(cl.load("com.xiuye.BIImpl").newInstance());
 		BI b = XType.cast(cl.load("com.xiuye.BIImpl").newInstance());
@@ -155,8 +155,9 @@ public class XCodeTest {
 		XLog.lg(info);
 		Map<String,String> codes = XType.map();
 		codes.put("com.xiuye.util.test.code.Demo1",info.code());
-		XYCompiler.compileCode(codes);
-		XYClassLoader cl = XType.createClassLoader();
+//		codes.put(info.getPackageName(),info.code());
+		XCompiler.compileCode(codes);
+		XClassLoader cl = XType.createClassLoader();
 		XLog.lg(cl.load("com.xiuye.util.test.code.Demo1"));
 		Class<?> clazz = cl.load("com.xiuye.util.test.code.Demo1");
 		

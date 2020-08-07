@@ -5,7 +5,8 @@ import java.util.Objects;
 
 import com.xiuye.util.cls.XType;
 
-public class BeanPoolPromise<R> {
+//singleton beans manager
+public class X2<R> {
 
 	// name -> bean
 	// 多元信息保存
@@ -30,7 +31,7 @@ public class BeanPoolPromise<R> {
 	 * @param name
 	 * @param clazz
 	 */
-	public BeanPoolPromise(String name, Class<R> clazz) {
+	public X2(String name, Class<R> clazz) {
 		this.beanOps = new NameAndClassBeanPoolPromise(name, clazz);
 	}
 
@@ -39,7 +40,7 @@ public class BeanPoolPromise<R> {
 	 * 
 	 * @param name
 	 */
-	public BeanPoolPromise(String name) {
+	public X2(String name) {
 		this.beanOps = new NameBeanPoolPromise(name);
 	}
 
@@ -48,7 +49,7 @@ public class BeanPoolPromise<R> {
 	 * 
 	 * @param clazz
 	 */
-	public BeanPoolPromise(Class<R> clazz) {
+	public X2(Class<R> clazz) {
 		this.beanOps = new ClassBeanPoolPromise(clazz);
 	}
 
@@ -59,11 +60,11 @@ public class BeanPoolPromise<R> {
 	 * @param clazz
 	 * @param r
 	 */
-	public BeanPoolPromise(String name, Class<R> clazz, R r) {
+	public X2(String name, Class<R> clazz, R r) {
 		this(name, clazz, r, false);
 	}
 
-	public BeanPoolPromise(String name, Class<R> clazz, R r, boolean replace) {
+	public X2(String name, Class<R> clazz, R r, boolean replace) {
 		this.beanOps = new NameAndClassBeanPoolPromise(name, clazz, r, replace);
 	}
 
@@ -73,11 +74,11 @@ public class BeanPoolPromise<R> {
 	 * @param clazz
 	 * @param r
 	 */
-	public BeanPoolPromise(Class<R> clazz, R r) {
+	public X2(Class<R> clazz, R r) {
 		this(clazz, r, false);
 	}
 
-	public BeanPoolPromise(Class<R> clazz, R r, boolean replace) {
+	public X2(Class<R> clazz, R r, boolean replace) {
 		this.beanOps = new ClassBeanPoolPromise(clazz, r, replace);
 	}
 
@@ -87,11 +88,11 @@ public class BeanPoolPromise<R> {
 	 * @param name
 	 * @param r
 	 */
-	public BeanPoolPromise(String name, R r) {
+	public X2(String name, R r) {
 		this(name, r, false);
 	}
 
-	public BeanPoolPromise(String name, R r, boolean replace) {
+	public X2(String name, R r, boolean replace) {
 		this.beanOps = new NameBeanPoolPromise(name, r, replace);
 	}
 
@@ -120,7 +121,7 @@ public class BeanPoolPromise<R> {
 					classMappingBeans.put(clazz, in);
 				} else {
 					if (Objects.nonNull(classMappingBeans.putIfAbsent(clazz, in))) {
-						throw new RuntimeException("The class: " + clazz + " for bean already exists!");
+						throw new RuntimeException("Bean:the class: " + clazz + " already exists!");
 					}
 				}
 			}
@@ -270,12 +271,12 @@ public class BeanPoolPromise<R> {
 
 	}
 
-	public BeanPoolPromise<R> getBean() {
+	public X2<R> getBean() {
 		result = this.beanOps.getBean();
 		return this;
 	}
 
-	public BeanPoolPromise<R> register() {
+	public X2<R> register() {
 		this.beanOps.register();
 		return this;
 	}

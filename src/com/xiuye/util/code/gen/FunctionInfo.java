@@ -3,155 +3,163 @@ package com.xiuye.util.code.gen;
 import com.xiuye.util.cls.XType;
 
 import java.util.List;
+import java.util.Objects;
 
 public class FunctionInfo implements GenModifier, GenParameter, GenCoder {
 
-    public static class Parameter {
+	public static class Parameter {
 
-        private String type;
-        private String name;
+		private String type;
+		private String name;
 
-        public Parameter() {
-        }
+		public Parameter() {
+		}
 
-        public Parameter(String type, String name) {
-            this.type = type;
-            this.name = name;
-        }
+		public Parameter(String type, String name) {
+			this.type = type;
+			this.name = name;
+		}
 
-        public String getType() {
-            return type;
-        }
+		public String getType() {
+			return type;
+		}
 
-        public void setType(String type) {
-            this.type = type;
-        }
+		public void setType(String type) {
+			this.type = type;
+		}
 
-        public String getName() {
-            return name;
-        }
+		public String getName() {
+			return name;
+		}
 
-        public void setName(String name) {
-            this.name = name;
-        }
+		public void setName(String name) {
+			this.name = name;
+		}
 
-        @Override
-        public String toString() {
-            return type + " " + name;
-        }
+		@Override
+		public String toString() {
+			return type + " " + name;
+		}
 
-    }
+	}
 
-    public static final String ACCESS_PRIVATE = "private";
-    public static final String ACCESS_DEFAULT = "";
-    public static final String ACCESS_PROTECTED = "protected";
-    public static final String ACCESS_PUBLIC = "public";
+	public static final String ACCESS_PRIVATE = "private";
+	public static final String ACCESS_DEFAULT = "";
+	public static final String ACCESS_PROTECTED = "protected";
+	public static final String ACCESS_PUBLIC = "public";
 
-    public static final String STATIC_MODIFIER = "static";
-    public static final String FINAL_MODIFIER = "final";
+	public static final String STATIC_MODIFIER = "static";
+	public static final String FINAL_MODIFIER = "final";
 
-    private String access;
-    private List<String> modifiers;
-    private String type;
-    private String name;
-    private List<Parameter> parameters;
-    private String functionBody;
+	private String access;
+	private List<String> modifiers;
+	private String type;
+	private String name;
+	private List<Parameter> parameters;
+	private String functionBody;
 
-    public FunctionInfo() {
-        modifiers = XType.list();
-        parameters = XType.list();
-    }
+	public FunctionInfo() {
+		modifiers = XType.list();
+		parameters = XType.list();
+	}
 
-    public String getAccess() {
-        return access;
-    }
+	public String getAccess() {
+		return access;
+	}
 
-    public void setAccess(String access) {
-        this.access = access;
-    }
+	public void setAccess(String access) {
+		this.access = access;
+	}
 
-    public List<String> getModifiers() {
-        return modifiers;
-    }
+	public List<String> getModifiers() {
+		return modifiers;
+	}
 
-    public void setModifiers(List<String> modifiers) {
-        this.modifiers = modifiers;
-    }
+	public void setModifiers(List<String> modifiers) {
+		this.modifiers = modifiers;
+	}
 
-    public String getType() {
-        return type;
-    }
+	public String getType() {
+		return type;
+	}
 
-    public void setType(String type) {
-        this.type = type;
-    }
+	public void setType(String type) {
+		this.type = type;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public List<Parameter> getParameters() {
-        return parameters;
-    }
+	public List<Parameter> getParameters() {
+		return parameters;
+	}
 
-    public String getFunctionBody() {
-        return functionBody;
-    }
+	public String getFunctionBody() {
+		return functionBody;
+	}
 
-    public void setFunctionBody(String functionBody) {
-        this.functionBody = functionBody;
-    }
+	public void setFunctionBody(String functionBody) {
+		this.functionBody = functionBody;
+	}
 
-    @Override
-    public String toString() {
-        return codeLine();
-    }
+	@Override
+	public String toString() {
+		return codeLine();
+	}
 
-    @Override
-    public boolean addModifier(String modifier) {
-        return modifiers.add(modifier);
-    }
+	@Override
+	public boolean addModifier(String modifier) {
+		return modifiers.add(modifier);
+	}
 
-    @Override
-    public String combineModifiers() {
-        if (modifiers.isEmpty())
-            return " ";
-        StringBuffer mc = new StringBuffer();
-        modifiers.forEach(d -> {
-            mc.append(d + " ");
-        });
-        return mc.toString();
-    }
+	@Override
+	public String combineModifiers() {
+		if (modifiers.isEmpty())
+			return " ";
+		StringBuffer mc = new StringBuffer();
+		modifiers.forEach(d -> {
+			mc.append(d + " ");
+		});
+		return mc.toString();
+	}
 
-    @Override
-    public boolean addParameter(String type, String name) {
-        return parameters.add(new Parameter(type, name));
-    }
+	@Override
+	public boolean addParameter(String type, String name) {
+		return parameters.add(new Parameter(type, name));
+	}
 
-    @Override
-    public String combineParameters() {
+	@Override
+	public String combineParameters() {
 
-        List<String> pc = XType.list();
-        parameters.forEach(d -> {
-            pc.add(d.toString());
-        });
+		List<String> pc = XType.list();
+		parameters.forEach(d -> {
+			pc.add(d.toString());
+		});
 
-        return String.join(",", pc);
-    }
+		return String.join(",", pc);
+	}
 
-    @Override
-    public String code() {
-        return XType.nvl(access, ACCESS_DEFAULT) + " " + combineModifiers() + XType.nvl(type, "") + " " + name + "(" + combineParameters() + ")"
-                + codeBlockBegin() + functionBody + codeBlockEnd();
-    }
+	@Override
+	public String code() {
+		String tmp = XType.nvl(access, ACCESS_DEFAULT) + " " + combineModifiers() + XType.nvl(type, "") + " " + name
+				+ "(" + combineParameters() + ")";
+		if (Objects.nonNull(functionBody) && !functionBody.isEmpty()) {
+			tmp += codeBlockBegin() + functionBody + codeBlockEnd();
+		}else {
+			tmp += ";";
+		}
 
-    @Override
-    public String codeLine() {
-        return code() + "\n";
-    }
+		return tmp;
+	}
+
+	@Override
+	public String codeLine() {
+		return code() + "\n";
+	}
 
 }

@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.xiuyexye</groupId>
 	<artifactId>xyjava</artifactId>
-	<version>0.0.13</version>
+	<version>0.0.16</version>
 	<description>java lib for me</description>
 
 	<parent>
@@ -60,6 +60,14 @@
 			<artifactId>ECharts</artifactId>
 			<version>3.0.0.6</version>
 		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.apache.zookeeper/zookeeper -->
+		<dependency>
+			<groupId>org.apache.zookeeper</groupId>
+			<artifactId>zookeeper</artifactId>
+			<version>3.6.1</version>
+		</dependency>
+		
 	</dependencies>
 
 	<licenses>

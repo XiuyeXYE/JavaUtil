@@ -1,12 +1,17 @@
 package com.xiuye.sharp;
 
-import com.xiuye.util.cls.XType;
+import static org.hamcrest.CoreMatchers.instanceOf;
 
 import java.util.List;
 
-public class ProgramPromise<RESULT> {
+import com.xiuye.util.cls.XType;
 
-    // ================= programming ================
+//for if else_if else;match as
+//for program code 
+//x extension: x1
+public class X1 <RESULT>{
+	
+	 // ================= programming ================
 
     private static final String IF = "if";
     private static final String ELSE_IF = "else if";
@@ -17,7 +22,7 @@ public class ProgramPromise<RESULT> {
     private static final String DEFAULT = "default";
 
 
-    private class TwoTuple {
+    private class TwoTuple{
         public String token;
         public Object value;
 
@@ -34,18 +39,23 @@ public class ProgramPromise<RESULT> {
 
     private List<TwoTuple> tokens;
     private TwoTuple result_token;
+    private Object inputValue;
+    
     private int token_index = 0;
+    
+    
+    
     //Promise的结果，在end后仍然传给 新的Promise
     //error同
     private RESULT result;
     private Throwable error;
 
 
-    protected ProgramPromise() {
+    protected X1() {
         this.tokens = XType.list();
     }
 
-    protected ProgramPromise(RESULT r, Throwable error) {
+    protected X1(RESULT r, Throwable error) {
         this();
         this.result = r;
         this.error = error;
@@ -71,13 +81,13 @@ public class ProgramPromise<RESULT> {
      * @param <I>
      * @return
      */
-    public <I> ProgramPromise<RESULT> IF(I t) {
+    public <I> X1<RESULT> IF(I t) {
         addToken(IF, t);
 //        return programPromise(tokens);
         return this;
     }
 
-    public <I> ProgramPromise<RESULT> ELIF(I t) {
+    public <I> X1<RESULT> ELIF(I t) {
         addToken(ELSE_IF, t);
 //        return programPromise(tokens);
         return this;
@@ -92,33 +102,76 @@ public class ProgramPromise<RESULT> {
      * @param in
      * @return
      */
-    public <I> ProgramPromise<RESULT> MATCH(I in) {
+    public <I> X1<RESULT> MATCH(I in) {
         addToken(MATCH, in);
         return this;
     }
 
-    public <I> ProgramPromise<RESULT> AS(I in) {
+    public <I> X1<RESULT> AS(I in) {
         addToken(AS, in);
         return this;
     }
 
-    public ProgramPromise<RESULT> DEFAUT(VoidCallbackNoParam callback) {
+    public X1<RESULT> DEFAUT(VoidCallbackNoParam callback) {
         addToken(DEFAULT, callback);
         return this;
     }
+    
+    public <I> X1<RESULT> DEFAUT(VoidCallbackWithParam<I> callback) {
+    	addToken(DEFAULT, callback);
+    	return this;
+    }
+    
+    public <R,I> X1<RESULT> DEFAUT(ReturnCallbackWithParam<R,I> callback) {
+    	addToken(DEFAULT, callback);
+    	return this;
+    }
+    public <R> X1<RESULT> DEFAUT(ReturnCallbackNoParam<R> callback) {
+    	addToken(DEFAULT, callback);
+    	return this;
+    }
 
 
-    public ProgramPromise<RESULT> THEN(VoidCallbackNoParam callback) {
+    public X1<RESULT> THEN(VoidCallbackNoParam callback) {
         addToken(THEN, callback);
 //        return programPromise(tokens);
         return this;
     }
+    
+    public <I> X1<RESULT> THEN(VoidCallbackWithParam<I> callback) {
+    	addToken(THEN, callback);
+    	return this;
+    }
+    
+    public <R,I> X1<RESULT> THEN(ReturnCallbackWithParam<R,I> callback) {
+    	addToken(THEN, callback);
+    	return this;
+    }
+    public <R> X1<RESULT> THEN(ReturnCallbackNoParam<R> callback) {
+    	addToken(THEN, callback);
+    	return this;
+    }
 
 
-    public ProgramPromise<RESULT> ELSE(VoidCallbackNoParam callback) {
+    public X1<RESULT> ELSE(VoidCallbackNoParam callback) {
         addToken(ELSE, callback);
 //        return programPromise(tokens);
         return this;
+    }
+    
+    
+    public <I> X1<RESULT> ELSE(VoidCallbackWithParam<I> callback) {
+    	addToken(ELSE, callback);
+    	return this;
+    }
+    
+    public <R,I> X1<RESULT> ELSE(ReturnCallbackWithParam<R,I> callback) {
+    	addToken(ELSE, callback);
+    	return this;
+    }
+    public <R> X1<RESULT> ELSE(ReturnCallbackNoParam<R> callback) {
+    	addToken(ELSE, callback);
+    	return this;
     }
 
     private void callTokenCallback() {
@@ -127,8 +180,25 @@ public class ProgramPromise<RESULT> {
                 VoidCallbackNoParam callback = XType.cast(result_token.value);
                 callback.vcv();
             }
+            else if(result_token.value instanceof VoidCallbackWithParam) {
+            	VoidCallbackWithParam<Object> callback = XType.cast(result_token.value);
+            	callback.vci(inputValue);            	
+            }
+            else if(result_token.value instanceof ReturnCallbackNoParam) {
+            	ReturnCallbackNoParam<?> callback = XType.cast(result_token.value);
+            	callback.rcv();
+            }
+            else if(result_token.value instanceof ReturnCallbackWithParam){
+            	ReturnCallbackWithParam<RESULT,Object> callback = XType.cast(result_token.value);
+            	result = callback.rci(inputValue);
+            }
+            
+            inputValue = null;
+            
             //clear the previous executed token!!! 
+          
             result_token = null;
+            
         }
 
     }
@@ -173,7 +243,7 @@ public class ProgramPromise<RESULT> {
         return tokens.get(index);
     }
 
-    private void addToken(String token, Object value) {
+    private void  addToken(String token, Object value) {
         tokens.add(new TwoTuple(token, value));
     }
 
@@ -204,6 +274,20 @@ public class ProgramPromise<RESULT> {
     public interface VoidCallbackNoParam {
         void vcv();
     }
+    
+    public interface VoidCallbackWithParam<I>{
+    	void vci(I t);
+    }
+    
+    
+    public interface ReturnCallbackNoParam<R>{
+    	R rcv();
+    }
+    
+    public interface ReturnCallbackWithParam<R,I>{
+    	R rci(I i);
+    }
+    
 
     //自顶向下分析
     //主要是选择分支结构的
@@ -255,6 +339,7 @@ public class ProgramPromise<RESULT> {
                     // 将要执行的token装入到 result_token中！
                     if (result_token == null && parseBoolean(start_token.value)) {
                         result_token = then_token;
+                        inputValue = start_token.value;                        
                     }
                     // T -> else if then T | else | ε
                     T_token();
@@ -319,6 +404,7 @@ public class ProgramPromise<RESULT> {
                     // 正式 匹配的有 then 然后执行!
                     if (result_token == null && asOK) {
                         result_token = then_token;
+                        inputValue = matchValue;
                     }
 
                     //递归条件，也是超前搜索
@@ -333,6 +419,7 @@ public class ProgramPromise<RESULT> {
             } else if (DEFAULT.equals(f_token.token)) {
                 if (result_token == null) {
                     result_token = f_token;
+                    inputValue = matchValue;
                 }
             } else {
                 nextTokenError(or(AS, DEFAULT));
@@ -409,6 +496,7 @@ public class ProgramPromise<RESULT> {
 
                     if (result_token == null && parseBoolean(t_token.value)) {
                         result_token = then_token;
+                        inputValue = t_token.value;
                     }
                     // T -> else if then T | else | E
                     // recursion
@@ -420,6 +508,7 @@ public class ProgramPromise<RESULT> {
             } else if (ELSE.equals(t_token.token)) {
                 if (result_token == null) {
                     result_token = t_token;
+                    inputValue = null;
                 }
 
             }
@@ -446,13 +535,13 @@ public class ProgramPromise<RESULT> {
     }
 
 
-    public Promise<RESULT> end() {
+    public X<RESULT> end() {
 
         analyzeTokensAndExec();
 //        clear tokens!
         tokens = null;
-        return Promise.OF(result, error);
+        return X.of(result, error);
     }
 
-
+	
 }

@@ -1,6 +1,6 @@
 package com.xiuye.util.cls;
 
-import com.xiuye.util.cls.XYClassLoader;
+import com.xiuye.util.cls.XClassLoader;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -560,8 +560,8 @@ public class XType {
      * @param urls
      * @return
      */
-    public static XYClassLoader createClassLoader(URL[] urls) {
-        return new XYClassLoader(urls);
+    public static XClassLoader createClassLoader(URL[] urls) {
+        return new XClassLoader(urls);
     }
 
     /**
@@ -570,7 +570,7 @@ public class XType {
      * @return
      * @throws MalformedURLException
      */
-    public static XYClassLoader createClassLoader() throws MalformedURLException {
+    public static XClassLoader createClassLoader() throws MalformedURLException {
         return createClassLoader(".");
     }
 
@@ -581,7 +581,7 @@ public class XType {
      * @return
      * @throws MalformedURLException
      */
-    public static XYClassLoader createClassLoader(String... paths) throws MalformedURLException {
+    public static XClassLoader createClassLoader(String... paths) throws MalformedURLException {
         List<URL> urlsList = list();
         for (String p : paths) {
             URL u = Paths.get(p).toUri().toURL();
@@ -599,7 +599,7 @@ public class XType {
      * @return
      * @throws MalformedURLException
      */
-    public static XYClassLoader createClassLoader(List<String> paths) throws MalformedURLException {
+    public static XClassLoader createClassLoader(List<String> paths) throws MalformedURLException {
 
         URL[] urls = new URL[paths.size()];
 
@@ -672,5 +672,40 @@ public class XType {
 //		return newInstance(R::new);
 //	}
 
+    public static String firstUpperCase(String str) {
+    	String ret = null;
+    	if(Objects.nonNull(str)) {
+    		char[] strArr = str.toCharArray();
+        	if(strArr.length>0) {
+//        		strArr[0] -='a';
+//        		strArr[0] += 'A';
+//        		
+        		if(!Character.isUpperCase(strArr[0])) {
+        			strArr[0] = Character.toUpperCase(strArr[0]);
+        		}
+        		ret = String.valueOf(strArr);
+        	}
+    	}    	
+    	return ret;
+    }
+    
+    public static String firstLowerCase(String str) {
+    	String ret = null;
+    	if(Objects.nonNull(str)) {
+    		char[] strArr = str.toCharArray();
+        	if(strArr.length>0) {
+//        		strArr[0] -='a';
+//        		strArr[0] += 'A';
+//        		
+        		if(!Character.isLowerCase(strArr[0])) {
+        			strArr[0] = Character.toLowerCase(strArr[0]);
+        		}
+        		ret = String.valueOf(strArr);
+        	}
+    	}    	
+    	return ret;
+    }
+    
+    
 
 }
