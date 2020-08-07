@@ -58,8 +58,8 @@ public class TestCompiler {
 		
 		//下面的调用会无限的循环,无限的套娃!!!
 		//好好看看 f3 和 外部类的 调用关系!!!
-		Method f3 = clazz.getMethod("f3", int.class,int.class);
-		XLog.ln(f3.invoke(obj, 98,88));
+//		Method f3 = clazz.getMethod("f3", int.class,int.class);
+//		XLog.ln(f3.invoke(obj, 98,88));
 		
 		
 		
