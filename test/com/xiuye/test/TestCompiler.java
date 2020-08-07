@@ -96,16 +96,14 @@ public class TestCompiler {
 		
 		
 		Class<TestClass> clazz1 = cl.load(dc.getFullName());
-		XLog.ln(clazz1);
-		
-		Constructor<TestClass> con = clazz1.getConstructor(int.class,int.class);
-		TestClass obj1 = con.newInstance(7,88);
-		
+		Constructor<TestClass> con1 = clazz1.getConstructor(int.class,int.class);
+		TestClass obj1 = con1.newInstance(7,88);
 		obj1.testClass();
 		
 		Class<TestInterface> clazz2 = cl.load(dc.getFullName());
-		XLog.ln(clazz2);
-		
+		Constructor<TestInterface> con2 = clazz2.getConstructor(int.class,int.class);
+		TestInterface obj2 = con2.newInstance(99,108);
+		obj2.testInterface();
 		
 		XLog.ln(clazz1.getClassLoader());
 		XLog.ln(clazz2.getClassLoader());
