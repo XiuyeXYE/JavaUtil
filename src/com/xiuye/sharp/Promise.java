@@ -25,6 +25,7 @@ import com.xiuye.util.log.XLog;
  *
  * @param <RESULT> 结果类型
  */
+@Deprecated
 public class Promise<RESULT> {
 
 	// 一般是这步的计算结果，传递给下一步

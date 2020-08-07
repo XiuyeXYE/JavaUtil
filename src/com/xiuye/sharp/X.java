@@ -57,7 +57,8 @@ public class X<RESULT> {// sharp tools
 			throw new RuntimeException("Some errors occur!" + "Please use \"except\" to handle error next step!", e);
 		}, x);
 	}
-
+	
+	//有异常都捕获
 	private static <R, T> R catchExec(ReturnCallbackNoParam<R> callback, X<T> x) {
 		ifError(x);
 		try {
@@ -663,7 +664,7 @@ public class X<RESULT> {// sharp tools
 		return beanS(clazz, r, replace);
 	}
 
-	private void set(RESULT r) {
+	public void set(RESULT r) {
 		this.result = r;
 	}
 
@@ -729,7 +730,7 @@ public class X<RESULT> {// sharp tools
 	}
 
 	
-	public X<String> toFormatterJson() {
+	public X<String> toFormatJson() {
 		return of(catchExec(() -> JsonUtil.instance(JsonUtil.FORMAT_GSON).toJson(result),this), error);
 	}
 
@@ -743,11 +744,21 @@ public class X<RESULT> {// sharp tools
 	}
 
 	public static X<Gson> formatterJsonKitS() {
-		return of(JsonUtil.instance(JsonUtil.FORMAT_GSON));
+		
+		X<Gson> gsonX = of();
+		gsonX.set(
+				catchExec(()->JsonUtil.instance(JsonUtil.FORMAT_GSON),
+						gsonX));
+		
+		return gsonX;
 	}
 
 	public static X<Gson> jsonKitS() {
-		return of(JsonUtil.instance());
+		X<Gson> gsonX = of();
+		gsonX.set(
+				catchExec(()->JsonUtil.instance(),
+						gsonX));
+		return gsonX;
 	}
 
 	public X<Gson> formatterJsonKit() {
@@ -770,5 +781,8 @@ public class X<RESULT> {// sharp tools
 	public static <R, E extends Throwable> X<R> x(R r, E error) {
 		return resolve(r, error);
 	}
+	
+	
+	
 	
 }
