@@ -3,8 +3,6 @@ package com.xiuye.util.graph;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import com.xiuye.sharp.X;
-import com.xiuye.util.cls.XType;
 
 public class LazyPrimMST {
 
