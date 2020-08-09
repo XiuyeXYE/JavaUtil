@@ -37,8 +37,12 @@ public class ClassInfo implements GenImportPackages, GenModifier, GenField, GenF
 		fields = XType.list();
 		functions = XType.list();
 	}
-
 	public ClassInfo() {
+		
+	}
+
+	public ClassInfo(String simpleClassName) {
+		this(null,simpleClassName);
 	}
 
 	public ClassInfo(String packageName, String simpleClassName) {
@@ -50,10 +54,16 @@ public class ClassInfo implements GenImportPackages, GenModifier, GenField, GenF
 	}
 
 	public String getFullName() {
-		return packageName + "." + name;
+		if(Objects.nonNull(packageName)&&!packageName.isEmpty()) {
+			return packageName + "." + name;
+		}
+		else {
+			return name;
+		}
+		
 	}
 
-	public void addField(String type, String name) {
+	public FieldInfo addField(String type, String name) {
 		FieldInfo fi = new FieldInfo();
 		fi.setAccess(FieldInfo.ACCESS_PRIVATE);
 //		fi.addModifier(FieldInfo.STATIC_MODIFIER);
@@ -61,9 +71,11 @@ public class ClassInfo implements GenImportPackages, GenModifier, GenField, GenF
 		fi.setType(type);
 		fi.setName(name);
 		this.addField(fi);
+		return fi;
 	}
 
-	public void addField(String type, String name, String value) {
+	//default private
+	public FieldInfo addField(String type, String name, String value) {
 		FieldInfo fi = new FieldInfo();
 		fi.setAccess(FieldInfo.ACCESS_PRIVATE);
 //		fi.addModifier(FieldInfo.STATIC_MODIFIER);
@@ -75,10 +87,11 @@ public class ClassInfo implements GenImportPackages, GenModifier, GenField, GenF
 		String bName = XType.firstUpperCase(name);
 		addMethod("void", "set" + bName, "this." + name + "=" + name + ";", type, name);
 		addMethod(type, "get" + bName, "return this." + name + ";");
+		return fi;
 	}
 
-	public void addConstructor(String methodBody, String... params) {
-		addMethod(null, name, methodBody, params);
+	public FunctionInfo addConstructor(String methodBody, String... params) {
+		return addMethod(null, name, methodBody, params);
 	}
 
 	public void ext(String... superClasses) {
@@ -96,7 +109,7 @@ public class ClassInfo implements GenImportPackages, GenModifier, GenField, GenF
 		this.interfaces = Arrays.asList(interfaces);
 	}
 
-	public void addMethod(String returnType, String name, String methodBody, String... params) {
+	public FunctionInfo addMethod(String returnType, String name, String methodBody, String... params) {
 
 		if (params.length % 2 != 0) {
 			throw new RuntimeException("Input params's number must be even!");
@@ -113,6 +126,7 @@ public class ClassInfo implements GenImportPackages, GenModifier, GenField, GenF
 
 		fi.setFunctionBody(methodBody);
 		this.addFunction(fi);
+		return fi;
 	}
 
 	public String getPackageName() {
