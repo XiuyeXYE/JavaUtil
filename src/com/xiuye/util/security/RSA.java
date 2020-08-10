@@ -273,7 +273,7 @@ public class RSA {
 //		X.lnS(new String(rsa.decryptByPriKey(data)));
 //		65537 574744487 54 
 //		-136072447 574744487 1
-		X.lnS()
+//		X.lnS()
 	}
 	
 }
