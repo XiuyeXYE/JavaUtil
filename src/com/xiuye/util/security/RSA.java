@@ -123,6 +123,7 @@ public class RSA {
 //	若整数 a，ba，b 互质，则存在整数解 x，yx，y 满足 ax+by=1
 	//扩展欧几里得算法
 	private BigInteger extendEuclidGCD(BigInteger a,BigInteger b,XY xy) {
+		
 		//b == 0
 		if(BigInteger.ZERO.equals(b)) {
 			xy.x = BigInteger.ONE;//x = 1
@@ -131,12 +132,16 @@ public class RSA {
 		}
 //		X.lnS(a,b);
 		BigInteger r = extendEuclidGCD(b, a.mod(b), xy);
+		
 		//t = x
 		BigInteger t = xy.x;
 //		x = y
 		xy.x = xy.y;
 		//y = t - a/b*y;
 		xy.y = t.subtract(a.divide(b).multiply(xy.y));
+		
+		X.lnS(a,b,xy.x,xy.y);
+		
 		return r;		
 	}
 	
@@ -189,7 +194,7 @@ public class RSA {
 	public RSA() {
 	}
 	
-	private BigInteger pow(BigInteger num,BigInteger n) {
+	private static BigInteger pow(BigInteger num,BigInteger n) {
 		BigInteger sum = BigInteger.ONE;
 		for(BigInteger i=BigInteger.ZERO;i.compareTo(n)<0;i=i.add(BigInteger.ONE)) {
 			sum = sum.multiply(num);
@@ -205,7 +210,7 @@ public class RSA {
 		//每一个数据都是 byteMemNum 个 byte 为单元存储的!
 		if(Objects.nonNull(data)) {
 			for(int i=0;i<data.length;i++) {
-				X.lnS(pubK.pubKey,pubK.N,data[i]);
+//				X.lnS(pubK.pubKey,pubK.N,data[i]);
 				BigInteger encodeInt = pow(BigInteger.valueOf(data[i]),pubK.pubKey).mod(pubK.N);
 				byte [] encodeBytes = encodeInt.toByteArray();
 				//填充余下空间 0
@@ -218,7 +223,7 @@ public class RSA {
 				for(byte d : encodeBytes) {
 					ret.add(d);
 				}
-				X.lnS(crtBigInt(encodeBytes));
+//				X.lnS(crtBigInt(encodeBytes));
 				
 			}
 		}	
@@ -239,7 +244,7 @@ public class RSA {
 				}
 //				X.lnS(crtBigInt(decodeBytes));
 				BigInteger decodeInt = pow(crtBigInt(decodeBytes),priK.priKey).mod(priK.N);
-				X.lnS(priK.priKey,priK.N,decodeInt);
+//				X.lnS(priK.priKey,priK.N,decodeInt);
 				for(byte b:decodeInt.toByteArray()) {
 //					X.lnS(b);
 					ret.add(b);
@@ -273,7 +278,9 @@ public class RSA {
 //		X.lnS(new String(rsa.decryptByPriKey(data)));
 //		65537 574744487 54 
 //		-136072447 574744487 1
-//		X.lnS()
+//		302847963
+//		X.lnS(pow(crtBigInt("54"),crtBigInt("65537")).mod(crtBigInt("574744487")));
+//		X.lnS(pow(crtBigInt("302847963"),crtBigInt("1121606477")).mod(crtBigInt("574744487")));
 	}
 	
 }
