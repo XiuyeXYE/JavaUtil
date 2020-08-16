@@ -54,6 +54,7 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.github.abel533</groupId>
@@ -75,12 +76,7 @@
 			<artifactId>netty-all</artifactId>
 			<version>4.1.51.Final</version>
 		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>RELEASE</version>
-			<scope>test</scope>
-		</dependency>
+
 
 	</dependencies>
 
