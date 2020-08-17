@@ -1,10 +1,7 @@
 package com.xiuye.test;
 
 import com.xiuye.sharp.X;
-import org.apache.zookeeper.CreateMode;
-import org.apache.zookeeper.Watcher;
-import org.apache.zookeeper.ZooDefs;
-import org.apache.zookeeper.ZooKeeper;
+import org.apache.zookeeper.*;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -77,6 +74,42 @@ public class TestZookeeper {
             String path2 = zk.create("/zk-test-ephemeral-","".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
 
             X.lnS(path2);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void addNodeAsync(){
+        try {
+
+            CountDownLatch connectedSemphore = new CountDownLatch(1);
+            Watcher w = e->{
+                X.lnS("Received watched event:",e);
+                if(Watcher.Event.KeeperState.SyncConnected == e.getState()){
+                    connectedSemphore.countDown();
+                }
+            };
+            AsyncCallback.StringCallback c= (rc,path,ctx,name)->{
+                X.lnS("create path result:",rc,",",path,",",ctx,",real path name:",name);
+            };
+
+            ZooKeeper zk = new ZooKeeper("106.13.163.111:2181", 5000, w);
+            connectedSemphore.await();
+            zk.create("/zk-test-ephemeral-","".getBytes(),
+                    ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL,
+                    c,
+                    "I am context."
+                    );
+            zk.create("/zk-test-ephemeral-","".getBytes(),
+                    ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL,
+                    c,
+                    "I am context."
+                    );
+
+            Thread.sleep(Integer.MAX_VALUE);
+
 
         }catch (Exception e){
             e.printStackTrace();
