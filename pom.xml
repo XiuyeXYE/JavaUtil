@@ -92,6 +92,21 @@
 <!--			<version>29.0-android</version>-->
 		</dependency>
 
+<!--		<dependency>-->
+<!--			<groupId>org.j-im</groupId>-->
+<!--			<artifactId>jim-server</artifactId>-->
+<!--			<version>3.0.0.v20200501-RELEASE</version>-->
+<!--		</dependency>-->
+
+<!--		<dependency>-->
+<!--			<groupId>org.j-im</groupId>-->
+<!--			<artifactId>jim-client</artifactId>-->
+<!--			<version>3.0.0.v20200501-RELEASE</version>-->
+<!--		</dependency>-->
+<!--			<dependency>-->
+<!--				<groupId>org.apache.activemq</groupId>-->
+<!--				<artifactId>activemq-all</artifactId>-->
+<!--			</dependency>-->
 
 	</dependencies>
 
