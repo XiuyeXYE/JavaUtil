@@ -10,7 +10,7 @@ import java.util.concurrent.CountDownLatch;
 public class TestZookeeper {
 
 
-    @Test
+//    @Test
     public void test1(){
         CountDownLatch connectedSemphore = new CountDownLatch(1);
 
@@ -34,7 +34,7 @@ public class TestZookeeper {
 
     }
 
-    @Test
+//    @Test
     public void testSessionPasswd(){
         try {
             CountDownLatch connectedSemphore = new CountDownLatch(1);
@@ -56,7 +56,7 @@ public class TestZookeeper {
         }
     }
 
-    @Test
+//    @Test
     public void addNode(){
         try {
 
@@ -80,7 +80,7 @@ public class TestZookeeper {
         }
     }
 
-    @Test
+//    @Test
     public void addNodeAsync(){
         try {
 
