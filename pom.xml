@@ -56,45 +56,40 @@
 			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.github.abel533</groupId>
 			<artifactId>ECharts</artifactId>
 			<version>3.0.0.6</version>
 			<scope>provided</scope>
-		</dependency>
+		</dependency> -->
 
 		<!-- https://mvnrepository.com/artifact/org.apache.zookeeper/zookeeper -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.apache.zookeeper</groupId>
 			<artifactId>zookeeper</artifactId>
 			<version>3.6.1</version>
 			<scope>provided</scope>
-		</dependency>
+		</dependency> -->
 
 
 		<!-- https://mvnrepository.com/artifact/io.netty/netty-all -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-all</artifactId>
 			<version>4.1.51.Final</version>
 			<scope>provided</scope>
-		</dependency>
+		</dependency> -->
 
-		<!-- https://mvnrepository.com/artifact/org.apache.zookeeper/zookeeper -->
-		<dependency>
-			<groupId>org.apache.zookeeper</groupId>
-			<artifactId>zookeeper</artifactId>
-			<version>3.6.1</version>
-		</dependency>
+	
 
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>29.0-jre</version>
 			<scope>provided</scope>
-			<!-- or, for Android: -->
-<!--			<version>29.0-android</version>-->
-		</dependency>
+			or, for Android:
+			<version>29.0-android</version>
+		</dependency> -->
 
 <!--		<dependency>-->
 <!--			<groupId>org.j-im</groupId>-->

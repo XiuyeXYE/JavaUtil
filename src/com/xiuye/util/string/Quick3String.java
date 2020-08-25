@@ -32,7 +32,7 @@ public class Quick3String {
                 i++;
             }
         }
-        sort((a,lo,lt-1,d));
+        sort(a,lo,lt-1,d);
         if(v>=0){
             sort(a,lt,gt,d+1);
         }
