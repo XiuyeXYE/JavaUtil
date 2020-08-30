@@ -25,7 +25,7 @@ public class Quick3String {
             int t = charAt(a[i],d);
             if(t<v){
                 exch(a,lt++,i++);
-            }else if(t<v){
+            }else if(t>v){
                 exch(a,i,gt--);
             }
             else{

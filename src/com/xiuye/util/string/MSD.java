@@ -27,7 +27,7 @@ public class MSD {
             count[charAt(a[i],d)+2]++;
         }
         for(int r=0;r<R+1;r++){//频率转化为索引
-            count[r+1] = count[r];
+            count[r+1] += count[r];
         }
         for(int i=lo;i<=hi;i++){//数据分类
             aux[count[charAt(a[i],d)+1]++] = a[i];
