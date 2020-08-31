@@ -1,7 +1,5 @@
 package com.xiuye.sharp;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-
 import java.util.List;
 
 import com.xiuye.util.cls.XType;

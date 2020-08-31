@@ -286,8 +286,8 @@ public class X2<R> {
 	 * 
 	 * @return
 	 */
-	public Promise<R> end() {
-		return Promise.OF(result);
+	public X<R> end() {
+		return X.of(result);
 	}
 
 }

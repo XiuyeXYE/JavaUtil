@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.xiuyexye</groupId>
 	<artifactId>xyjava</artifactId>
-	<version>0.0.16</version>
+	<version>0.0.20</version>
 	<description>java lib for me</description>
 
 	<parent>
@@ -54,20 +54,59 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
+			<scope>test</scope>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.github.abel533</groupId>
 			<artifactId>ECharts</artifactId>
 			<version>3.0.0.6</version>
-		</dependency>
-		
+			<scope>provided</scope>
+		</dependency> -->
+
 		<!-- https://mvnrepository.com/artifact/org.apache.zookeeper/zookeeper -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.apache.zookeeper</groupId>
 			<artifactId>zookeeper</artifactId>
 			<version>3.6.1</version>
-		</dependency>
-		
+			<scope>provided</scope>
+		</dependency> -->
+
+
+		<!-- https://mvnrepository.com/artifact/io.netty/netty-all -->
+		<!-- <dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-all</artifactId>
+			<version>4.1.51.Final</version>
+			<scope>provided</scope>
+		</dependency> -->
+
+	
+
+		<!-- <dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>29.0-jre</version>
+			<scope>provided</scope>
+			or, for Android:
+			<version>29.0-android</version>
+		</dependency> -->
+
+<!--		<dependency>-->
+<!--			<groupId>org.j-im</groupId>-->
+<!--			<artifactId>jim-server</artifactId>-->
+<!--			<version>3.0.0.v20200501-RELEASE</version>-->
+<!--		</dependency>-->
+
+<!--		<dependency>-->
+<!--			<groupId>org.j-im</groupId>-->
+<!--			<artifactId>jim-client</artifactId>-->
+<!--			<version>3.0.0.v20200501-RELEASE</version>-->
+<!--		</dependency>-->
+<!--			<dependency>-->
+<!--				<groupId>org.apache.activemq</groupId>-->
+<!--				<artifactId>activemq-all</artifactId>-->
+<!--			</dependency>-->
+
 	</dependencies>
 
 	<licenses>

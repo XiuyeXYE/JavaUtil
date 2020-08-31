@@ -615,6 +615,14 @@ public class X<RESULT> {// sharp tools
 	public static <R> X2<R> beanS(String name, Class<R> clazz, R r, boolean replace) {
 		return new X2<>(name, clazz, r, replace);
 	}
+	
+	public static <R> X2<R> beanS( Class<R> clazz,String name,R r) {
+		return beanS(clazz,name,r,false);
+	}
+	
+	public static <R> X2<R> beanS( Class<R> clazz,String name,R r, boolean replace) {
+		return new X2<>(name, clazz, r, replace);
+	}
 
 	public static <R> X2<R> beanS(Class<R> clazz) {
 		return new X2<>(clazz);
@@ -664,6 +672,10 @@ public class X<RESULT> {// sharp tools
 		return beanS(clazz, r, replace);
 	}
 
+	public X2<RESULT> bean(){		
+		return beanS("X",result,true);
+	}
+	
 	public void set(RESULT r) {
 		this.result = r;
 	}

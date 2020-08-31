@@ -83,6 +83,12 @@ public class TestX {
 		X.beanS(String.class,"ABC").register().getBean().end().ln();
 		X.beanS(String.class,"C++",true).register().getBean().end().ln();
 		X.beanS(String.class).getBean().end().ln();
+		X.beanS("KEY",String.class,"ABC",true).register().getBean().end().ln();
+		X x = X.beanS(String.class,"ABC","BBB",true).register().getBean().end().ln()
+		.bean().register().getBean().end().ln();
+		;
+		X.lnS(x.get());
+		X.beanS("X").getBean().end().ln();
 	}
 	
 	public static void main(String[] args) {
