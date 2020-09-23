@@ -540,6 +540,14 @@ public class X1 <RESULT>{
         tokens = null;
         return X.of(result, error);
     }
+    
+	public X<RESULT> end(boolean te) {
+
+		analyzeTokensAndExec();
+//        clear tokens!
+		tokens = null;
+		return X.of(result, error, te);
+	}
 
 	
 }

@@ -93,6 +93,20 @@ public class TestX {
 	
 	public static void main(String[] args) {
 //		X.ignoreException(false);
+		X.of(123,false).THEN(d->{
+			if(true) {				
+				throw new RuntimeException(""+d);
+			}
+		}).THEN(e->{
+			X.lnS(e);
+			
+		}).
+		EX(d->{
+			X.lnS(d);
+			d.printStackTrace();
+		}).
+		throwException().ln()
+		;
 		X.of(123).THEN(d->{
 			if(true) {				
 				throw new RuntimeException(""+d);

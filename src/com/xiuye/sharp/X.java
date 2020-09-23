@@ -5,6 +5,7 @@ import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Objects;
 
 import com.google.gson.Gson;
 import com.xiuye.util.cls.XType;
@@ -60,11 +61,11 @@ public class X<RESULT> {// sharp tools
 		this.throwException = te;
 	}
 
-	public boolean getThrowException() {
+	public boolean isThrowException() {
 		return throwException;
 	}
 
-	public X<RESULT> setThrowException(boolean te) {
+	public X<RESULT> throwException(boolean te) {
 		this.throwException = te;
 		return this;
 	}
@@ -513,6 +514,48 @@ public class X<RESULT> {// sharp tools
 
 	}
 
+	public static <R, I> X<AbstractPromiseTask<VoidCallbackNoParam, R, I>> taskS(VoidCallbackNoParam callback,
+			boolean te) {
+		AbstractPromiseTask<VoidCallbackNoParam, R, I> taskObj = new PromiseTaskVCV<>(callback);
+		taskObj.start();
+		return of(taskObj, te);
+	}
+
+	public static <R, I> X<AbstractPromiseTask<VoidCallbackWithParam<I>, R, I>> taskS(VoidCallbackWithParam<I> callback,
+			boolean te) {
+		AbstractPromiseTask<VoidCallbackWithParam<I>, R, I> taskObj = new PromiseTaskVCI<>(callback);
+		taskObj.start();
+		return of(taskObj, te);
+	}
+
+	public static <R, I> X<AbstractPromiseTask<VoidCallbackWithParam<I>, R, I>> taskS(VoidCallbackWithParam<I> callback,
+			I input, boolean te) {
+		AbstractPromiseTask<VoidCallbackWithParam<I>, R, I> taskObj = new PromiseTaskVCI<>(callback, input);
+		taskObj.start();
+		return of(taskObj, te);
+	}
+
+	public static <R, I> X<AbstractPromiseTask<ReturnCallbackNoParam<R>, R, I>> taskS(ReturnCallbackNoParam<R> callback,
+			boolean te) {
+		AbstractPromiseTask<ReturnCallbackNoParam<R>, R, I> taskObj = new PromiseTaskRCV<>(callback);
+		taskObj.start();
+		return of(taskObj, te);
+	}
+
+	public static <R, I> X<AbstractPromiseTask<ReturnCallbackWithParam<R, I>, R, I>> taskS(
+			ReturnCallbackWithParam<R, I> callback, boolean te) {
+		AbstractPromiseTask<ReturnCallbackWithParam<R, I>, R, I> taskObj = new PromiseTaskRCI<>(callback);
+		taskObj.start();
+		return of(taskObj, te);
+	}
+
+	public static <R, I> X<AbstractPromiseTask<ReturnCallbackWithParam<R, I>, R, I>> taskS(
+			ReturnCallbackWithParam<R, I> callback, I input, boolean te) {
+		AbstractPromiseTask<ReturnCallbackWithParam<R, I>, R, I> taskObj = new PromiseTaskRCI<>(callback, input);
+		taskObj.start();
+		return of(taskObj, te);
+	}
+
 	public static <R, I> X<AbstractPromiseTask<VoidCallbackNoParam, R, I>> taskS(VoidCallbackNoParam callback) {
 		AbstractPromiseTask<VoidCallbackNoParam, R, I> taskObj = new PromiseTaskVCV<>(callback);
 		taskObj.start();
@@ -756,12 +799,35 @@ public class X<RESULT> {// sharp tools
 		return x;
 	}
 
+	public static X<ServerSocket> tcpS(int port, boolean te) {
+
+		X<ServerSocket> x = of(te);
+		try {
+			x.set(new ServerSocket(port));
+		} catch (IOException e) {
+			x.error = e;
+		}
+		return x;
+	}
+
 	public X<ServerSocket> tcp(int port) {
 		return tcpS(port);
 	}
 
 	public static X<Socket> tcpS(String ip, int port) {
 		X<Socket> x = of();
+		try {
+//			return of(new Socket(ip, port));
+			x.set(new Socket(ip, port));
+		} catch (IOException e) {
+//			e.printStackTrace();
+			x.error = e;
+		}
+		return x;
+	}
+
+	public static X<Socket> tcpS(String ip, int port, boolean te) {
+		X<Socket> x = of(te);
 		try {
 //			return of(new Socket(ip, port));
 			x.set(new Socket(ip, port));
@@ -787,12 +853,34 @@ public class X<RESULT> {// sharp tools
 		return x;
 	}
 
+	public static X<DatagramSocket> udpS(int port, boolean te) {
+		X<DatagramSocket> x = of(te);
+		try {
+//			return of(new DatagramSocket(port));
+			x.set(new DatagramSocket(port));
+		} catch (SocketException e) {
+			x.error = e;
+		}
+		return x;
+	}
+
 	public X<DatagramSocket> udp(int port) {
 		return udpS(port);
 	}
 
 	public static X<DatagramSocket> udpS() {
 		X<DatagramSocket> x = of();
+		try {
+			x.set(new DatagramSocket());
+		} catch (SocketException e) {
+//			e.printStackTrace();
+			x.error = e;
+		}
+		return x;
+	}
+
+	public static X<DatagramSocket> udpS(boolean te) {
+		X<DatagramSocket> x = of(te);
 		try {
 			x.set(new DatagramSocket());
 		} catch (SocketException e) {
@@ -827,8 +915,22 @@ public class X<RESULT> {// sharp tools
 		return gsonX;
 	}
 
+	public static X<Gson> formatterJsonKitS(boolean te) {
+
+		X<Gson> gsonX = of(te);
+		gsonX.set(catchExec(() -> JsonUtil.instance(JsonUtil.FORMAT_GSON), gsonX));
+
+		return gsonX;
+	}
+
 	public static X<Gson> jsonKitS() {
 		X<Gson> gsonX = of();
+		gsonX.set(catchExec(() -> JsonUtil.instance(), gsonX));
+		return gsonX;
+	}
+
+	public static X<Gson> jsonKitS(boolean te) {
+		X<Gson> gsonX = of(te);
 		gsonX.set(catchExec(() -> JsonUtil.instance(), gsonX));
 		return gsonX;
 	}
@@ -863,6 +965,14 @@ public class X<RESULT> {// sharp tools
 
 	public static <R, E extends Throwable> X<R> x(R r, E error, boolean te) {
 		return resolve(r, error, te);
+	}
+	
+	// throw new exception
+	public X<RESULT> throwException() {
+		if (Objects.nonNull(this.error)) {
+			throw new RuntimeException(this.error);
+		}
+		return this; 
 	}
 
 }

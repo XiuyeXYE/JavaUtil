@@ -289,5 +289,9 @@ public class X2<R> {
 	public X<R> end() {
 		return X.of(result);
 	}
+	
+	public X<R> end(boolean b) {
+		return X.of(result, b);
+	}
 
 }
