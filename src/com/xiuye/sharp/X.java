@@ -18,11 +18,17 @@ public class X<RESULT> {// sharp tools
 	// 这步产生的错误
 	private Throwable error;
 
+	private boolean throwException = true;
+
 	// 异常必须处理后才能进行下一步
-	private static boolean ignoreException = true;
+//	private static boolean ignoreException = false;
 
 	public X() {
 
+	}
+
+	public X(boolean te) {
+		this.throwException = te;
 	}
 
 	public X(RESULT result) {
@@ -38,6 +44,31 @@ public class X<RESULT> {// sharp tools
 		this.error = error;
 	}
 
+	public X(RESULT result, boolean te) {
+		this.result = result;
+		this.throwException = te;
+	}
+
+	public X(RESULT result, Throwable error, boolean te) {
+		this.result = result;
+		this.error = error;
+		this.throwException = te;
+	}
+
+	public X(Throwable error, boolean te) {
+		this.error = error;
+		this.throwException = te;
+	}
+
+	public boolean getThrowException() {
+		return throwException;
+	}
+
+	public X<RESULT> setThrowException(boolean te) {
+		this.throwException = te;
+		return this;
+	}
+
 	public Throwable getError() {
 		return error;
 	}
@@ -46,35 +77,41 @@ public class X<RESULT> {// sharp tools
 		return result;
 	}
 
-	private static <R> void ifError(VoidCallbackWithParam<Throwable> callback, X<R> x) {
-		if (!ignoreException && x.error != null) {
-			callback.vci(x.error);
-		}
-	}
+//	private static <R> void ifError(VoidCallbackWithParam<Throwable> callback, X<R> x) {
+//		if (!ignoreException && x.error != null) {
+//			callback.vci(x.error);
+//		}
+//	}
 
-	private static <R> void ifError(X<R> x) {
-		ifError((e) -> {
-			throw new RuntimeException("Some errors occur!" + "Please use \"except\" to handle error next step!", e);
-		}, x);
-	}
-	
-	//有异常都捕获
+//	private static <R> void ifError(X<R> x) {
+//		ifError((e) -> {
+//			throw new RuntimeException("Some errors occur!" + "Please use \"except\" to handle error next step!", e);
+//		}, x);
+//	}
+//	
+	// 有异常都捕获
 	private static <R, T> R catchExec(ReturnCallbackNoParam<R> callback, X<T> x) {
-		ifError(x);
+//		ifError(x);
 		try {
 			return callback.rcv();
 		} catch (Throwable e) {
 			x.error = e;
+			if (x.throwException) {
+				throw e;
+			}
 		}
 		return null;
 	}
 
 	private static <T> T catchExec(VoidCallbackNoParam callback, X<T> x) {
-		ifError(x);
+//		ifError(x);
 		try {
 			callback.vcv();
 		} catch (Throwable e) {
 			x.error = e;
+			if (x.throwException) {
+				throw e;
+			}
 		}
 		// error 的时候 ，result是不存在的！所有返回null是正确的！
 		return x.result;
@@ -129,9 +166,9 @@ public class X<RESULT> {// sharp tools
 		R rcv();
 	}
 
-	public static void ignoreException(boolean ignore) {
-		ignoreException = ignore;
-	}
+//	public static synchronized void ignoreException(boolean ignore) {
+//		ignoreException = ignore;
+//	}
 
 	// static and non-static all can use it
 	private static <I> boolean parseBoolean(I t) {
@@ -158,8 +195,24 @@ public class X<RESULT> {// sharp tools
 		return new X<>(r, error);
 	}
 
+	public static <R> X<R> resolve(boolean te) {
+		return new X<>(te);
+	}
+
+	public static <R> X<R> resolve(R r, boolean te) {
+		return new X<>(r, te);
+	}
+
+	private static <R, E extends Throwable> X<R> resolve(R r, E error, boolean te) {
+		return new X<>(r, error, te);
+	}
+
 	public static <R, E extends Throwable> X<R> reject(E e) {
 		return new X<>(e);
+	}
+
+	public static <R, E extends Throwable> X<R> reject(E e, boolean te) {
+		return new X<>(e, te);
 	}
 
 	public static <R> X<R> of() {
@@ -172,6 +225,18 @@ public class X<RESULT> {// sharp tools
 
 	public static <R, E extends Throwable> X<R> of(R r, E error) {
 		return resolve(r, error);
+	}
+
+	public static <R> X<R> of(boolean te) {
+		return resolve(te);
+	}
+
+	public static <R> X<R> of(R t, boolean te) {
+		return resolve(t, te);
+	}
+
+	public static <R, E extends Throwable> X<R> of(R r, E error, boolean te) {
+		return resolve(r, error, te);
 	}
 
 	public <R> X<R> THEN(ReturnCallbackNoParam<R> callback) {
@@ -615,12 +680,12 @@ public class X<RESULT> {// sharp tools
 	public static <R> X2<R> beanS(String name, Class<R> clazz, R r, boolean replace) {
 		return new X2<>(name, clazz, r, replace);
 	}
-	
-	public static <R> X2<R> beanS( Class<R> clazz,String name,R r) {
-		return beanS(clazz,name,r,false);
+
+	public static <R> X2<R> beanS(Class<R> clazz, String name, R r) {
+		return beanS(clazz, name, r, false);
 	}
-	
-	public static <R> X2<R> beanS( Class<R> clazz,String name,R r, boolean replace) {
+
+	public static <R> X2<R> beanS(Class<R> clazz, String name, R r, boolean replace) {
 		return new X2<>(name, clazz, r, replace);
 	}
 
@@ -672,10 +737,10 @@ public class X<RESULT> {// sharp tools
 		return beanS(clazz, r, replace);
 	}
 
-	public X2<RESULT> bean(){		
-		return beanS("X",result,true);
+	public X2<RESULT> bean() {
+		return beanS("X", result, true);
 	}
-	
+
 	public void set(RESULT r) {
 		this.result = r;
 	}
@@ -741,47 +806,41 @@ public class X<RESULT> {// sharp tools
 		return udpS();
 	}
 
-	
 	public X<String> toFormatJson() {
-		return of(catchExec(() -> JsonUtil.instance(JsonUtil.FORMAT_GSON).toJson(result),this), error);
+		return of(catchExec(() -> JsonUtil.instance(JsonUtil.FORMAT_GSON).toJson(result), this), error);
 	}
 
 	public X<String> toJson() {
-		return of(catchExec(() -> JsonUtil.instance().toJson(result),this));
+		return of(catchExec(() -> JsonUtil.instance().toJson(result), this));
 	}
 
 	public <R> X<R> toObject(Class<R> clazz) {
-		return of(catchExec(() -> JsonUtil.instance().fromJson(result != null ? result.toString() : null, clazz),this),
+		return of(catchExec(() -> JsonUtil.instance().fromJson(result != null ? result.toString() : null, clazz), this),
 				error);
 	}
 
 	public static X<Gson> formatterJsonKitS() {
-		
+
 		X<Gson> gsonX = of();
-		gsonX.set(
-				catchExec(()->JsonUtil.instance(JsonUtil.FORMAT_GSON),
-						gsonX));
-		
+		gsonX.set(catchExec(() -> JsonUtil.instance(JsonUtil.FORMAT_GSON), gsonX));
+
 		return gsonX;
 	}
 
 	public static X<Gson> jsonKitS() {
 		X<Gson> gsonX = of();
-		gsonX.set(
-				catchExec(()->JsonUtil.instance(),
-						gsonX));
+		gsonX.set(catchExec(() -> JsonUtil.instance(), gsonX));
 		return gsonX;
 	}
 
 	public X<Gson> formatterJsonKit() {
-		return of(catchExec(() -> JsonUtil.instance(JsonUtil.FORMAT_GSON),this), error);
+		return of(catchExec(() -> JsonUtil.instance(JsonUtil.FORMAT_GSON), this), error);
 	}
 
 	public X<Gson> jsonKit() {
-		return of(catchExec(() -> JsonUtil.instance(),this), error);
+		return of(catchExec(() -> JsonUtil.instance(), this), error);
 	}
 
-	
 	public static <R> X<R> x() {
 		return resolve();
 	}
@@ -793,8 +852,17 @@ public class X<RESULT> {// sharp tools
 	public static <R, E extends Throwable> X<R> x(R r, E error) {
 		return resolve(r, error);
 	}
-	
-	
-	
-	
+
+	public static <R> X<R> x(boolean te) {
+		return resolve(te);
+	}
+
+	public static <R> X<R> x(R t, boolean te) {
+		return resolve(t, te);
+	}
+
+	public static <R, E extends Throwable> X<R> x(R r, E error, boolean te) {
+		return resolve(r, error, te);
+	}
+
 }

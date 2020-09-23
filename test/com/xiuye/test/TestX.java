@@ -92,7 +92,14 @@ public class TestX {
 	}
 	
 	public static void main(String[] args) {
-
+//		X.ignoreException(false);
+		X.of(123).THEN(d->{
+			if(true) {				
+				throw new RuntimeException(""+d);
+			}
+		}).THEN(e->{
+			X.lnS(e);
+		});
 	}
 
 }
