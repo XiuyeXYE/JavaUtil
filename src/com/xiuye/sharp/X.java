@@ -32,19 +32,6 @@ public class X<RESULT> {// sharp tools
 	public RESULT get() {
 		return result;
 	}
-
-//	private static <R> void ifError(VoidCallbackWithParam<Throwable> callback, X<R> x) {
-//		if (!ignoreException && x.error != null) {
-//			callback.vci(x.error);
-//		}
-//	}
-
-//	private static <R> void ifError(X<R> x) {
-//		ifError((e) -> {
-//			throw new RuntimeException("Some errors occur!" + "Please use \"except\" to handle error next step!", e);
-//		}, x);
-//	}
-//	
 	
 	private static <R, T> R exec(ReturnCallbackNoParam<R> callback, X<T> x) {
 		return callback.rcv();
@@ -275,23 +262,6 @@ public class X<RESULT> {// sharp tools
 			this.input = input;
 		}
 
-//		protected <T> T catchExec(ReturnCallbackNoParam<T> callback) {
-//			try {
-//				return callback.rcv();
-//			} catch (Throwable e) {
-//				error = e;
-//			}
-//			return null;
-//		}
-
-//		protected <T> T catchExec(VoidCallbackNoParam callback) {
-//			try {
-//				callback.vcv();
-//			} catch (Throwable e) {
-//				error = e;
-//			}
-//			return null;
-//		}
 
 		public R get() {
 			try {
@@ -312,13 +282,6 @@ public class X<RESULT> {// sharp tools
 			return result;
 		}
 
-//		public void set(R result) {
-//			this.result = result;
-//		}
-
-//		public Throwable getError() {
-//			return error;
-//		}
 
 		public I getInput() {
 			return input;
@@ -721,7 +684,7 @@ public class X<RESULT> {// sharp tools
 	}
 
 	public <R> X<R> toObject(Class<R> clazz) {
-		return of(exec(() -> JsonUtil.instance().fromJson(result != null ? result.toString() : null, clazz), this));
+		return of(exec(() -> JsonUtil.instance().fromJson(Objects.nonNull(result) ? result.toString() : null, clazz), this));
 	}
 
 	public static X<Gson> formatterJsonKitS() {
