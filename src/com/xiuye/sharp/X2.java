@@ -290,8 +290,5 @@ public class X2<R> {
 		return X.of(result);
 	}
 	
-	public X<R> end(boolean b) {
-		return X.of(result, b);
-	}
 
 }

@@ -14,65 +14,20 @@ import com.xiuye.util.log.XLog;
 
 public class X<RESULT> {// sharp tools
 
-	// 一般是这步的计算结果，传递给下一步
+	//当前结果
 	private RESULT result;
-	// 这步产生的错误
-	private Throwable error;
 
-	private boolean throwException = true;
-
-	// 异常必须处理后才能进行下一步
-//	private static boolean ignoreException = false;
 
 	public X() {
 
 	}
 
-	public X(boolean te) {
-		this.throwException = te;
-	}
 
 	public X(RESULT result) {
 		this.result = result;
 	}
 
-	public X(RESULT result, Throwable error) {
-		this.result = result;
-		this.error = error;
-	}
 
-	public X(Throwable error) {
-		this.error = error;
-	}
-
-	public X(RESULT result, boolean te) {
-		this.result = result;
-		this.throwException = te;
-	}
-
-	public X(RESULT result, Throwable error, boolean te) {
-		this.result = result;
-		this.error = error;
-		this.throwException = te;
-	}
-
-	public X(Throwable error, boolean te) {
-		this.error = error;
-		this.throwException = te;
-	}
-
-	public boolean isThrowException() {
-		return throwException;
-	}
-
-	public X<RESULT> throwException(boolean te) {
-		this.throwException = te;
-		return this;
-	}
-
-	public Throwable getError() {
-		return error;
-	}
 
 	public RESULT get() {
 		return result;
@@ -90,47 +45,38 @@ public class X<RESULT> {// sharp tools
 //		}, x);
 //	}
 //	
-	// 有异常都捕获
-	private static <R, T> R catchExec(ReturnCallbackNoParam<R> callback, X<T> x) {
-//		ifError(x);
-		try {
-			return callback.rcv();
-		} catch (Throwable e) {
-			x.error = e;
-			if (x.throwException) {
-				throw e;
-			}
-		}
-		return null;
+	
+	private static <R, T> R exec(ReturnCallbackNoParam<R> callback, X<T> x) {
+		return callback.rcv();
 	}
 
-	private static <T> T catchExec(VoidCallbackNoParam callback, X<T> x) {
-//		ifError(x);
-		try {
-			callback.vcv();
-		} catch (Throwable e) {
-			x.error = e;
-			if (x.throwException) {
-				throw e;
-			}
-		}
-		// error 的时候 ，result是不存在的！所有返回null是正确的！
+	private static <T> T exec(VoidCallbackNoParam callback, X<T> x) {
+		callback.vcv();
+		return x.result;
+	}
+	
+	private static <R,I> R exec(ReturnCallbackWithParam<R, I> callback, X<I> x) {
+		return callback.rci(x.result);
+	}
+	
+	private static <T> T exec(VoidCallbackWithParam<T> callback, X<T> x) {
+		callback.vci(x.result);
 		return x.result;
 	}
 
-	private static <R> R errorHandler(VoidCallbackNoParam callback, X<R> x) {
-		try {
-			callback.vcv();
-			// 捕获异常后将上一步的异常 清理掉
-			// 能到这一步，表示编译完美无误的处理异常！
-			// error 是 类中局部变量，好处是不会被 final 约束了
-			x.error = null;
-		} catch (Throwable e) {
-			x.error = e;
-		}
-		// error 的时候 ，result是不存在的！所有返回null是正确的！
-		return null;
-	}
+//	private static <R> R errorHandler(VoidCallbackNoParam callback, X<R> x) {
+//		try {
+//			callback.vcv();
+//			// 捕获异常后将上一步的异常 清理掉
+//			// 能到这一步，表示编译完美无误的处理异常！
+//			// error 是 类中局部变量，好处是不会被 final 约束了
+//			x.error = null;
+//		} catch (Throwable e) {
+//			x.error = e;
+//		}
+//		// error 的时候 ，result是不存在的！所有返回null是正确的！
+//		return null;
+//	}
 
 	// 必须自己实现与其他类库无关的接口，哪怕是SDK 标准库
 	// 否则 将面临 传参 的 一些莫名其妙的错误！
@@ -191,30 +137,7 @@ public class X<RESULT> {// sharp tools
 	public static <R> X<R> resolve(R r) {
 		return new X<>(r);
 	}
-
-	private static <R, E extends Throwable> X<R> resolve(R r, E error) {
-		return new X<>(r, error);
-	}
-
-	public static <R> X<R> resolve(boolean te) {
-		return new X<>(te);
-	}
-
-	public static <R> X<R> resolve(R r, boolean te) {
-		return new X<>(r, te);
-	}
-
-	private static <R, E extends Throwable> X<R> resolve(R r, E error, boolean te) {
-		return new X<>(r, error, te);
-	}
-
-	public static <R, E extends Throwable> X<R> reject(E e) {
-		return new X<>(e);
-	}
-
-	public static <R, E extends Throwable> X<R> reject(E e, boolean te) {
-		return new X<>(e, te);
-	}
+	
 
 	public static <R> X<R> of() {
 		return resolve();
@@ -223,37 +146,22 @@ public class X<RESULT> {// sharp tools
 	public static <R> X<R> of(R t) {
 		return resolve(t);
 	}
-
-	public static <R, E extends Throwable> X<R> of(R r, E error) {
-		return resolve(r, error);
-	}
-
-	public static <R> X<R> of(boolean te) {
-		return resolve(te);
-	}
-
-	public static <R> X<R> of(R t, boolean te) {
-		return resolve(t, te);
-	}
-
-	public static <R, E extends Throwable> X<R> of(R r, E error, boolean te) {
-		return resolve(r, error, te);
-	}
+	
 
 	public <R> X<R> THEN(ReturnCallbackNoParam<R> callback) {
-		return of(catchExec(() -> callback.rcv(), this), this.error);
+		return of(exec(callback, this));
 	}
 
 	public <R> X<R> THEN(ReturnCallbackWithParam<R, RESULT> callback) {
-		return of(catchExec(() -> callback.rci(result), this), error);
+		return of(exec(callback, this));
 	}
 
 	public X<RESULT> THEN(VoidCallbackWithParam<RESULT> callback) {
-		return of(catchExec(() -> callback.vci(result), this), error);
+		return of(exec(callback, this));
 	}
 
 	public X<RESULT> THEN(VoidCallbackNoParam callback) {
-		return of(catchExec(() -> callback.vcv(), this), error);
+		return of(exec(callback, this));
 	}
 
 	public <R> X<R> FINALLY(ReturnCallbackNoParam<R> callback) {
@@ -272,27 +180,7 @@ public class X<RESULT> {// sharp tools
 		return THEN(callback);
 	}
 
-	// 传入都是空！所以随便返回什么类型
-
-	private boolean errorExist() {
-		return error != null;
-	}
-
-	public X<RESULT> EX(ReturnCallbackNoParam<RESULT> callback) {
-		return resolve(errorExist() ? errorHandler(() -> callback.rcv(), this) : result, error);
-	}
-
-	public X<RESULT> EX(ReturnCallbackWithParam<RESULT, Throwable> callback) {
-		return resolve(errorExist() ? errorHandler(() -> callback.rci(error), this) : result, error);
-	}
-
-	public X<RESULT> EX(VoidCallbackWithParam<Throwable> callback) {
-		return resolve(errorExist() ? errorHandler(() -> callback.vci(error), this) : result, error);
-	}
-
-	public X<RESULT> EX(VoidCallbackNoParam callback) {
-		return resolve(errorExist() ? errorHandler(() -> callback.vcv(), this) : result, error);
-	}
+	
 
 	private boolean exist() {
 		return result != null;
@@ -300,27 +188,27 @@ public class X<RESULT> {// sharp tools
 
 	// exist
 	public X<Boolean> E() {
-		return of(exist(), error);
+		return of(exist());
 	}
 
 	public <R> X<R> E(ReturnCallbackNoParam<R> callback) {
-		return exist() ? THEN(callback) : reject(error);
+		return exist() ? THEN(callback) : of();
 	}
 
 	public <R> X<R> E(ReturnCallbackWithParam<R, RESULT> callback) {
-		return exist() ? THEN(callback) : reject(error);
+		return exist() ? THEN(callback) : of();
 	}
 
 	public X<RESULT> E(VoidCallbackWithParam<RESULT> callback) {
-		return exist() ? THEN(callback) : reject(error);
+		return exist() ? THEN(callback) : of();
 	}
 
 	public X<RESULT> E(VoidCallbackNoParam callback) {
-		return exist() ? THEN(callback) : reject(error);
+		return exist() ? THEN(callback) : of();
 	}
 
 	public X1<RESULT> begin() {
-		return new X1<>(result, error);
+		return new X1<>(result);
 	}
 
 	public static <R> X1<R> beginS() {
@@ -328,48 +216,48 @@ public class X<RESULT> {// sharp tools
 	}
 
 	private boolean truely() {
-		return catchExec(() -> parseBoolean(result), this);
+		return parseBoolean(result);
 	}
 
 	// true
 	public X<Boolean> T() {
-		return of(truely(), error);
+		return of(truely());
 	}
 
 	public <R> X<R> T(ReturnCallbackNoParam<R> callback) {
-		return truely() ? THEN(callback) : reject(error);
+		return truely() ? THEN(callback) : of();
 	}
 
 	public <R> X<R> T(ReturnCallbackWithParam<R, RESULT> callback) {
-		return truely() ? THEN(callback) : reject(error);
+		return truely() ? THEN(callback) : of();
 	}
 
 	public X<RESULT> T(VoidCallbackWithParam<RESULT> callback) {
-		return truely() ? THEN(callback) : reject(error);
+		return truely() ? THEN(callback) : of();
 	}
 
 	public X<RESULT> T(VoidCallbackNoParam callback) {
-		return truely() ? THEN(callback) : reject(error);
+		return truely() ? THEN(callback) : of();
 	}
 
 	public X<Boolean> F() {
-		return of(!truely(), error);
+		return of(!truely());
 	}
 
 	public <R> X<R> F(ReturnCallbackNoParam<R> callback) {
-		return !truely() ? THEN(callback) : reject(error);
+		return !truely() ? THEN(callback) : of();
 	}
 
 	public <R> X<R> F(ReturnCallbackWithParam<R, RESULT> callback) {
-		return !truely() ? THEN(callback) : reject(error);
+		return !truely() ? THEN(callback) : of();
 	}
 
 	public X<RESULT> F(VoidCallbackWithParam<RESULT> callback) {
-		return !truely() ? THEN(callback) : reject(error);
+		return !truely() ? THEN(callback) : of();
 	}
 
 	public X<RESULT> F(VoidCallbackNoParam callback) {
-		return !truely() ? THEN(callback) : reject(error);
+		return !truely() ? THEN(callback) : of();
 	}
 
 	public static abstract class AbstractPromiseTask<FUNC, R, I> extends Thread {
@@ -377,7 +265,6 @@ public class X<RESULT> {// sharp tools
 		protected FUNC func;
 		protected R result;
 		protected I input;
-		protected Throwable error;
 
 		public AbstractPromiseTask(FUNC func) {
 			this.func = func;
@@ -388,29 +275,30 @@ public class X<RESULT> {// sharp tools
 			this.input = input;
 		}
 
-		protected <T> T catchExec(ReturnCallbackNoParam<T> callback) {
-			try {
-				return callback.rcv();
-			} catch (Throwable e) {
-				error = e;
-			}
-			return null;
-		}
+//		protected <T> T catchExec(ReturnCallbackNoParam<T> callback) {
+//			try {
+//				return callback.rcv();
+//			} catch (Throwable e) {
+//				error = e;
+//			}
+//			return null;
+//		}
 
-		protected <T> T catchExec(VoidCallbackNoParam callback) {
-			try {
-				callback.vcv();
-			} catch (Throwable e) {
-				error = e;
-			}
-			return null;
-		}
+//		protected <T> T catchExec(VoidCallbackNoParam callback) {
+//			try {
+//				callback.vcv();
+//			} catch (Throwable e) {
+//				error = e;
+//			}
+//			return null;
+//		}
 
 		public R get() {
 			try {
 				this.join();
 			} catch (InterruptedException e) {
-				error = e;
+				e.printStackTrace();
+				
 			}
 			return result;
 		}
@@ -419,7 +307,7 @@ public class X<RESULT> {// sharp tools
 			try {
 				this.join(millis);
 			} catch (InterruptedException e) {
-				error = e;
+				e.printStackTrace();
 			}
 			return result;
 		}
@@ -428,9 +316,9 @@ public class X<RESULT> {// sharp tools
 //			this.result = result;
 //		}
 
-		public Throwable getError() {
-			return error;
-		}
+//		public Throwable getError() {
+//			return error;
+//		}
 
 		public I getInput() {
 			return input;
@@ -439,6 +327,25 @@ public class X<RESULT> {// sharp tools
 		public void setInput(I input) {
 			this.input = input;
 		}
+		
+		protected <T> T exec(ReturnCallbackNoParam<T> callback) {
+			return callback.rcv();
+		}
+
+		protected R exec(VoidCallbackNoParam callback) {
+			callback.vcv();
+			return this.result;
+		}
+		
+		protected R exec(ReturnCallbackWithParam<R, I> callback) {
+			return callback.rci(this.input);
+		}
+		
+		protected R exec(VoidCallbackWithParam<I> callback) {
+			callback.vci(this.input);
+			return this.result;
+		}
+		
 
 	}
 
@@ -455,8 +362,10 @@ public class X<RESULT> {// sharp tools
 		@Override
 		public void run() {
 			super.run();
-			result = catchExec(() -> func.rci(input));
+			result = exec(func);
 		}
+
+	
 
 	}
 
@@ -473,7 +382,7 @@ public class X<RESULT> {// sharp tools
 		@Override
 		public void run() {
 			super.run();
-			result = catchExec(() -> func.rcv());
+			result = exec(func);
 		}
 
 	}
@@ -491,7 +400,7 @@ public class X<RESULT> {// sharp tools
 		@Override
 		public void run() {
 			super.run();
-			result = catchExec(() -> func.vci(input));
+			result = exec(func);
 		}
 
 	}
@@ -509,52 +418,11 @@ public class X<RESULT> {// sharp tools
 		@Override
 		public void run() {
 			super.run();
-			result = catchExec(() -> func.vcv());
+			result = exec(func);
 		}
 
 	}
-
-	public static <R, I> X<AbstractPromiseTask<VoidCallbackNoParam, R, I>> taskS(VoidCallbackNoParam callback,
-			boolean te) {
-		AbstractPromiseTask<VoidCallbackNoParam, R, I> taskObj = new PromiseTaskVCV<>(callback);
-		taskObj.start();
-		return of(taskObj, te);
-	}
-
-	public static <R, I> X<AbstractPromiseTask<VoidCallbackWithParam<I>, R, I>> taskS(VoidCallbackWithParam<I> callback,
-			boolean te) {
-		AbstractPromiseTask<VoidCallbackWithParam<I>, R, I> taskObj = new PromiseTaskVCI<>(callback);
-		taskObj.start();
-		return of(taskObj, te);
-	}
-
-	public static <R, I> X<AbstractPromiseTask<VoidCallbackWithParam<I>, R, I>> taskS(VoidCallbackWithParam<I> callback,
-			I input, boolean te) {
-		AbstractPromiseTask<VoidCallbackWithParam<I>, R, I> taskObj = new PromiseTaskVCI<>(callback, input);
-		taskObj.start();
-		return of(taskObj, te);
-	}
-
-	public static <R, I> X<AbstractPromiseTask<ReturnCallbackNoParam<R>, R, I>> taskS(ReturnCallbackNoParam<R> callback,
-			boolean te) {
-		AbstractPromiseTask<ReturnCallbackNoParam<R>, R, I> taskObj = new PromiseTaskRCV<>(callback);
-		taskObj.start();
-		return of(taskObj, te);
-	}
-
-	public static <R, I> X<AbstractPromiseTask<ReturnCallbackWithParam<R, I>, R, I>> taskS(
-			ReturnCallbackWithParam<R, I> callback, boolean te) {
-		AbstractPromiseTask<ReturnCallbackWithParam<R, I>, R, I> taskObj = new PromiseTaskRCI<>(callback);
-		taskObj.start();
-		return of(taskObj, te);
-	}
-
-	public static <R, I> X<AbstractPromiseTask<ReturnCallbackWithParam<R, I>, R, I>> taskS(
-			ReturnCallbackWithParam<R, I> callback, I input, boolean te) {
-		AbstractPromiseTask<ReturnCallbackWithParam<R, I>, R, I> taskObj = new PromiseTaskRCI<>(callback, input);
-		taskObj.start();
-		return of(taskObj, te);
-	}
+	
 
 	public static <R, I> X<AbstractPromiseTask<VoidCallbackNoParam, R, I>> taskS(VoidCallbackNoParam callback) {
 		AbstractPromiseTask<VoidCallbackNoParam, R, I> taskObj = new PromiseTaskVCV<>(callback);
@@ -600,27 +468,27 @@ public class X<RESULT> {// sharp tools
 	public <R> X<AbstractPromiseTask<VoidCallbackNoParam, R, RESULT>> task(VoidCallbackNoParam callback) {
 		AbstractPromiseTask<VoidCallbackNoParam, R, RESULT> taskObj = new PromiseTaskVCV<>(callback, result);
 		taskObj.start();
-		return of(taskObj, error);
+		return of(taskObj);
 	}
 
 	public <R> X<AbstractPromiseTask<VoidCallbackWithParam<RESULT>, R, RESULT>> task(
 			VoidCallbackWithParam<RESULT> callback) {
 		AbstractPromiseTask<VoidCallbackWithParam<RESULT>, R, RESULT> taskObj = new PromiseTaskVCI<>(callback, result);
 		taskObj.start();
-		return of(taskObj, error);
+		return of(taskObj);
 	}
 
 	public <R, I> X<AbstractPromiseTask<VoidCallbackWithParam<I>, R, I>> task(VoidCallbackWithParam<I> callback,
 			I input) {
 		AbstractPromiseTask<VoidCallbackWithParam<I>, R, I> taskObj = new PromiseTaskVCI<>(callback, input);
 		taskObj.start();
-		return of(taskObj, error);
+		return of(taskObj);
 	}
 
 	public <R> X<AbstractPromiseTask<ReturnCallbackNoParam<R>, R, RESULT>> task(ReturnCallbackNoParam<R> callback) {
 		AbstractPromiseTask<ReturnCallbackNoParam<R>, R, RESULT> taskObj = new PromiseTaskRCV<>(callback, result);
 		taskObj.start();
-		return of(taskObj, error);
+		return of(taskObj);
 	}
 
 	public <R> X<AbstractPromiseTask<ReturnCallbackWithParam<R, RESULT>, R, RESULT>> task(
@@ -628,14 +496,14 @@ public class X<RESULT> {// sharp tools
 		AbstractPromiseTask<ReturnCallbackWithParam<R, RESULT>, R, RESULT> taskObj = new PromiseTaskRCI<>(callback,
 				result);
 		taskObj.start();
-		return of(taskObj, error);
+		return of(taskObj);
 	}
 
 	public <R, I> X<AbstractPromiseTask<ReturnCallbackWithParam<R, I>, R, I>> task(
 			ReturnCallbackWithParam<R, I> callback, I input) {
 		AbstractPromiseTask<ReturnCallbackWithParam<R, I>, R, I> taskObj = new PromiseTaskRCI<>(callback, input);
 		taskObj.start();
-		return of(taskObj, error);
+		return of(taskObj);
 	}
 
 	@SafeVarargs
@@ -650,32 +518,29 @@ public class X<RESULT> {// sharp tools
 	}
 
 	@SafeVarargs
+	private static <R> void printLine(R...in) {
+		XLog.attach(2);
+		XLog.line(in);
+		XLog.dettach(2);
+	}
+	
+	@SafeVarargs
 	public static <R> X<R[]> lineS(R... in) {
 		X<R[]> pro = of(in);
-		catchExec(() -> {
-			XLog.attach(3);
-			XLog.line(in);
-			XLog.dettach(3);
-		}, pro);
-
+		printLine(in);
 		return pro;
 	}
 
 	@SafeVarargs
 	public static <R> X<R[]> lnS(R... in) {
 		X<R[]> pro = of(in);
-		catchExec(() -> {
-			XLog.attach(3);
-			XLog.line(in);
-			XLog.dettach(3);
-		}, pro);
-
+		printLine(in);
 		return pro;
 	}
 
 	public X<RESULT> log() {
 		XLog.lg(result);
-		return of(result, error);
+		return of(result);
 	}
 
 	public X<RESULT> lg() {
@@ -683,21 +548,13 @@ public class X<RESULT> {// sharp tools
 	}
 
 	public X<RESULT> line() {
-		catchExec(() -> {
-			XLog.attach(3);
-			XLog.line(result);
-			XLog.dettach(3);
-		}, this);
-		return of(result, error);
+		printLine(result);
+		return of(result);
 	}
 
 	public X<RESULT> ln() {
-		catchExec(() -> {
-			XLog.attach(3);
-			XLog.ln(result);
-			XLog.dettach(3);
-		}, this);
-		return of(result, error);
+		printLine(result);
+		return of(result);
 	}
 
 	public static <R> X2<R> beanS(String name) {
@@ -794,21 +651,12 @@ public class X<RESULT> {// sharp tools
 		try {
 			x.set(new ServerSocket(port));
 		} catch (IOException e) {
-			x.error = e;
+			e.printStackTrace();
 		}
 		return x;
 	}
 
-	public static X<ServerSocket> tcpS(int port, boolean te) {
-
-		X<ServerSocket> x = of(te);
-		try {
-			x.set(new ServerSocket(port));
-		} catch (IOException e) {
-			x.error = e;
-		}
-		return x;
-	}
+	
 
 	public X<ServerSocket> tcp(int port) {
 		return tcpS(port);
@@ -820,23 +668,12 @@ public class X<RESULT> {// sharp tools
 //			return of(new Socket(ip, port));
 			x.set(new Socket(ip, port));
 		} catch (IOException e) {
-//			e.printStackTrace();
-			x.error = e;
+			e.printStackTrace();
 		}
 		return x;
 	}
 
-	public static X<Socket> tcpS(String ip, int port, boolean te) {
-		X<Socket> x = of(te);
-		try {
-//			return of(new Socket(ip, port));
-			x.set(new Socket(ip, port));
-		} catch (IOException e) {
-//			e.printStackTrace();
-			x.error = e;
-		}
-		return x;
-	}
+	
 
 	public X<Socket> tcp(String ip, int port) {
 		return tcp(ip, port);
@@ -848,21 +685,12 @@ public class X<RESULT> {// sharp tools
 //			return of(new DatagramSocket(port));
 			x.set(new DatagramSocket(port));
 		} catch (SocketException e) {
-			x.error = e;
+			e.printStackTrace();
 		}
 		return x;
 	}
 
-	public static X<DatagramSocket> udpS(int port, boolean te) {
-		X<DatagramSocket> x = of(te);
-		try {
-//			return of(new DatagramSocket(port));
-			x.set(new DatagramSocket(port));
-		} catch (SocketException e) {
-			x.error = e;
-		}
-		return x;
-	}
+	
 
 	public X<DatagramSocket> udp(int port) {
 		return udpS(port);
@@ -873,74 +701,53 @@ public class X<RESULT> {// sharp tools
 		try {
 			x.set(new DatagramSocket());
 		} catch (SocketException e) {
-//			e.printStackTrace();
-			x.error = e;
+			e.printStackTrace();
 		}
 		return x;
 	}
 
-	public static X<DatagramSocket> udpS(boolean te) {
-		X<DatagramSocket> x = of(te);
-		try {
-			x.set(new DatagramSocket());
-		} catch (SocketException e) {
-//			e.printStackTrace();
-			x.error = e;
-		}
-		return x;
-	}
+	
 
 	public X<DatagramSocket> udp() {
 		return udpS();
 	}
 
 	public X<String> toFormatJson() {
-		return of(catchExec(() -> JsonUtil.instance(JsonUtil.FORMAT_GSON).toJson(result), this), error);
+		return of(exec(() -> JsonUtil.instance(JsonUtil.FORMAT_GSON).toJson(result), this));
 	}
 
 	public X<String> toJson() {
-		return of(catchExec(() -> JsonUtil.instance().toJson(result), this));
+		return of(exec(() -> JsonUtil.instance().toJson(result), this));
 	}
 
 	public <R> X<R> toObject(Class<R> clazz) {
-		return of(catchExec(() -> JsonUtil.instance().fromJson(result != null ? result.toString() : null, clazz), this),
-				error);
+		return of(exec(() -> JsonUtil.instance().fromJson(result != null ? result.toString() : null, clazz), this));
 	}
 
 	public static X<Gson> formatterJsonKitS() {
 
 		X<Gson> gsonX = of();
-		gsonX.set(catchExec(() -> JsonUtil.instance(JsonUtil.FORMAT_GSON), gsonX));
+		gsonX.set(exec(() -> JsonUtil.instance(JsonUtil.FORMAT_GSON), gsonX));
 
 		return gsonX;
 	}
 
-	public static X<Gson> formatterJsonKitS(boolean te) {
-
-		X<Gson> gsonX = of(te);
-		gsonX.set(catchExec(() -> JsonUtil.instance(JsonUtil.FORMAT_GSON), gsonX));
-
-		return gsonX;
-	}
+	
 
 	public static X<Gson> jsonKitS() {
 		X<Gson> gsonX = of();
-		gsonX.set(catchExec(() -> JsonUtil.instance(), gsonX));
+		gsonX.set(exec(() -> JsonUtil.instance(), gsonX));
 		return gsonX;
 	}
 
-	public static X<Gson> jsonKitS(boolean te) {
-		X<Gson> gsonX = of(te);
-		gsonX.set(catchExec(() -> JsonUtil.instance(), gsonX));
-		return gsonX;
-	}
+	
 
 	public X<Gson> formatterJsonKit() {
-		return of(catchExec(() -> JsonUtil.instance(JsonUtil.FORMAT_GSON), this), error);
+		return of(exec(() -> JsonUtil.instance(JsonUtil.FORMAT_GSON), this));
 	}
 
 	public X<Gson> jsonKit() {
-		return of(catchExec(() -> JsonUtil.instance(), this), error);
+		return of(exec(() -> JsonUtil.instance(), this));
 	}
 
 	public static <R> X<R> x() {
@@ -951,28 +758,6 @@ public class X<RESULT> {// sharp tools
 		return resolve(t);
 	}
 
-	public static <R, E extends Throwable> X<R> x(R r, E error) {
-		return resolve(r, error);
-	}
-
-	public static <R> X<R> x(boolean te) {
-		return resolve(te);
-	}
-
-	public static <R> X<R> x(R t, boolean te) {
-		return resolve(t, te);
-	}
-
-	public static <R, E extends Throwable> X<R> x(R r, E error, boolean te) {
-		return resolve(r, error, te);
-	}
 	
-	// throw new exception
-	public X<RESULT> throwException() {
-		if (Objects.nonNull(this.error)) {
-			throw new RuntimeException(this.error);
-		}
-		return this; 
-	}
 
 }

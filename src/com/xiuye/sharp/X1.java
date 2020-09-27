@@ -46,17 +46,16 @@ public class X1 <RESULT>{
     //Promise的结果，在end后仍然传给 新的Promise
     //error同
     private RESULT result;
-    private Throwable error;
+//    private Throwable error;
 
 
     protected X1() {
         this.tokens = XType.list();
     }
 
-    protected X1(RESULT r, Throwable error) {
+    protected X1(RESULT r) {
         this();
         this.result = r;
-        this.error = error;
 
     }
 
@@ -538,16 +537,9 @@ public class X1 <RESULT>{
         analyzeTokensAndExec();
 //        clear tokens!
         tokens = null;
-        return X.of(result, error);
+        return X.of(result);
     }
     
-	public X<RESULT> end(boolean te) {
-
-		analyzeTokensAndExec();
-//        clear tokens!
-		tokens = null;
-		return X.of(result, error, te);
-	}
 
 	
 }

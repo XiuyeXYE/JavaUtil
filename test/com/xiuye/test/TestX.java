@@ -14,8 +14,6 @@ public class TestX {
 			XLog.ln(d);
 		}).FINALLY(d->{
 			XLog.ln(d);
-		}).EX(d->{
-			XLog.ln(d);
 		}).THEN(d->{
 			XLog.ln("skip exception hander");
 		}).E().THEN(d->{
@@ -92,28 +90,12 @@ public class TestX {
 	}
 	
 	public static void main(String[] args) {
-//		X.ignoreException(false);
-		X.of(123,false).THEN(d->{
-			if(true) {				
-				throw new RuntimeException(""+d);
-			}
-		}).THEN(e->{
-			X.lnS(e);
-			
-		}).
-		EX(d->{
-			X.lnS(d);
-			d.printStackTrace();
-		}).
-		throwException().ln()
-		;
-		X.of(123).THEN(d->{
-			if(true) {				
-				throw new RuntimeException(""+d);
-			}
-		}).THEN(e->{
-			X.lnS(e);
-		});
+		
+		X.lnS(123);
+		X.of(123).ln();
+		X.lineS(999);
+		X.of(123).line();
+		
 	}
 
 }
