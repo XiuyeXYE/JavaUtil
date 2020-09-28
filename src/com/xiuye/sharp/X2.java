@@ -254,7 +254,7 @@ public class X2<R> {
 			R r1 = clazz.cast(nameMappingBeans.get(name));
 			R r2 = clazz.cast(classMappingBeans.get(clazz));
 
-			if (r1 == null && r1 == null) {
+			if (Objects.isNull(r1) && Objects.isNull(r2)) {
 				return null;
 			} else if (Objects.nonNull(r1) && Objects.nonNull(r2) && r1.equals(r2)) {
 				return r1;
