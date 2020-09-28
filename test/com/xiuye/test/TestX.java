@@ -1,5 +1,7 @@
 package com.xiuye.test;
 
+import java.util.Arrays;
+
 import org.junit.Test;
 
 import com.xiuye.sharp.X;
@@ -11,8 +13,6 @@ public class TestX {
 	@Test
 	public void testBasicFunctions() {
 		X.of(123).THEN(d->{
-			XLog.ln(d);
-		}).FINALLY(d->{
 			XLog.ln(d);
 		}).THEN(d->{
 			XLog.ln("skip exception hander");
@@ -82,7 +82,7 @@ public class TestX {
 		X.beanS(String.class,"C++",true).register().getBean().end().ln();
 		X.beanS(String.class).getBean().end().ln();
 		X.beanS("KEY",String.class,"ABC",true).register().getBean().end().ln();
-		X x = X.beanS(String.class,"ABC","BBB",true).register().getBean().end().ln()
+		X<String> x = X.beanS(String.class,"ABC","BBB",true).register().getBean().end().ln()
 		.bean().register().getBean().end().ln();
 		;
 		X.lnS(x.get());
@@ -95,6 +95,39 @@ public class TestX {
 		X.of(123).ln();
 		X.lineS(999);
 		X.of(123).line();
+		
+		X.taskS(()->{
+			X.lnS("WHAT?");
+			return 100;
+		}).THEN(d->{
+			for(;;) {
+				if(!d.isAlive()) {
+					X.lnS(d);
+					X.lnS(d.getClass());
+					X.lnS(d.get());
+					X.lnS(d.get());
+					X.lnS(d.get());
+					X.lnS(d.get());
+					X.lnS(d.get());
+					return d;
+				}
+			}			
+		});
+		
+		
+		X.toByteS(123).THEN(d->{
+			for(byte s : d) {
+				XLog.ln(s);
+			}
+		}).toByte(99L).THEN(d->{
+			for(byte b :d) {
+				X.lnS(b);
+			}
+		}).toByte(99.99).THEN(d->{
+			for(byte b :d) {
+				X.lnS(b);
+			}
+		});
 		
 	}
 

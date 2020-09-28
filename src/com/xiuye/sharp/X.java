@@ -1,11 +1,14 @@
 package com.xiuye.sharp;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import com.google.gson.Gson;
 import com.xiuye.util.cls.XType;
@@ -151,21 +154,21 @@ public class X<RESULT> {// sharp tools
 		return of(exec(callback, this));
 	}
 
-	public <R> X<R> FINALLY(ReturnCallbackNoParam<R> callback) {
-		return THEN(callback);
-	}
-
-	public <R> X<R> FINALLY(ReturnCallbackWithParam<R, RESULT> callback) {
-		return THEN(callback);
-	}
-
-	public X<RESULT> FINALLY(VoidCallbackWithParam<RESULT> callback) {
-		return THEN(callback);
-	}
-
-	public X<RESULT> FINALLY(VoidCallbackNoParam callback) {
-		return THEN(callback);
-	}
+//	public <R> X<R> FINALLY(ReturnCallbackNoParam<R> callback) {
+//		return THEN(callback);
+//	}
+//
+//	public <R> X<R> FINALLY(ReturnCallbackWithParam<R, RESULT> callback) {
+//		return THEN(callback);
+//	}
+//
+//	public X<RESULT> FINALLY(VoidCallbackWithParam<RESULT> callback) {
+//		return THEN(callback);
+//	}
+//
+//	public X<RESULT> FINALLY(VoidCallbackNoParam callback) {
+//		return THEN(callback);
+//	}
 
 	
 
@@ -687,6 +690,42 @@ public class X<RESULT> {// sharp tools
 		return of(exec(() -> JsonUtil.instance().fromJson(Objects.nonNull(result) ? result.toString() : null, clazz), this));
 	}
 
+	public static <T> X<T[]> toAarrayS(List<T> list,T []arr){		
+		return of(list.toArray(arr));
+	}
+	
+	public <T> X<T[]> toAarray(List<T> list,T []arr){		
+		return toAarrayS(list, arr);
+	}
+	
+	public static <T> X<List<T>> toListS(T[]arr){
+		List<T> list = XType.list();
+		for(T a : arr) {
+			list.add(a);
+		}
+		return of(list);
+	}
+	
+	public <T> X<List<T>> toList(T[]arr){
+		return toListS(arr);
+	}
+	
+	
+	
+	public static <T> X<Set<T>> toSetS(T[]arr){
+		Set<T> set = XType.set();
+		for(T a : arr) {
+			set.add(a);
+		}
+		return of(set);
+	}
+	
+	public <T> X<Set<T>> toSet(T[]arr){
+		
+		return toSetS(arr);
+	}
+	
+	
 	public static X<Gson> formatterJsonKitS() {
 
 		X<Gson> gsonX = of();
@@ -721,6 +760,92 @@ public class X<RESULT> {// sharp tools
 		return resolve(t);
 	}
 
+	
+	public static X<String> toStringS(byte []data){
+		return of(new String(data));
+	}
+	
+	public static X<String> toStringS(byte[] data, String charset) {
+		try {
+			return of(new String(data, charset));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return of();
+	}
+	
+	public X<String> toString(byte []data){
+		return toString(data);
+	}
+	
+	public X<String> toString(byte []data,String charset){
+		return toString(data,charset);
+	}
+	
+	public static X<byte[]> toByteS(String s){
+		return of(s.getBytes());
+	}
+	
+	public static X<byte[]> toByteS(String s,String charset){
+		try {
+			return of(s.getBytes(charset));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return of();
+	}
+	
+	public X<byte[]> toByte(String s){
+		return toByteS(s);
+	}
+	
+	public X<byte[]> toByte(String s,String charset){
+		return toByteS(s,charset);
+	}
+	
+	
+	public static X<byte[]> toByteS(int n){
+		byte [] data = XType.newInstance(byte[]::new,4);
+		for(int i=0;i<data.length;i++) {
+			   data[i] = (byte) ((n >>> (8*i)) & 0xff);
+		}
+		return of(data);
+	}
+	
+	public static X<byte[]> toByteS(long n){
+		byte [] data = XType.newInstance(byte[]::new,8);
+		for(int i=0;i<data.length;i++) {
+			data[i] = (byte) ((n >>> (8*i)) & 0xff);
+		}
+		return of(data);
+	}
+	
+	public static X<byte[]> toByteS(float n){
+		return toByteS(Float.floatToRawIntBits(n));
+	}
+	
+	public static X<byte[]> toByteS(double n){
+		return toByteS(Double.doubleToRawLongBits(n));
+	}
+	
+	
+	public X<byte[]> toByte(int s){
+		return toByteS(s);
+	}
+	
+	public X<byte[]> toByte(long s){
+		return toByteS(s);
+	}
+	
+	public X<byte[]> toByte(float s){
+		return toByteS(s);
+	}
+	
+	public X<byte[]> toByte(double s){
+		return toByteS(s);
+	}
+	
+	
 	
 
 }
