@@ -669,13 +669,28 @@ public class X<RESULT> {// sharp tools
 				this));
 	}
 
-	public static <T> X<T[]> toAarrayS(List<T> list, T[] arr) {
+	public static <T> X<T[]> toArrayS(List<T> list, T[] arr) {
 		return of(list.toArray(arr));
 	}
 
-	public <T> X<T[]> toAarray(List<T> list, T[] arr) {
-		return toAarrayS(list, arr);
+	public <T> X<T[]> toArray(List<T> list, T[] arr) {
+		return toArrayS(list, arr);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> X<T[]> toArray(T[] arr){
+		if(result instanceof List) {
+			return toArrayS((List<T>)result,arr);
+		}else if(result instanceof Set) {
+			int i=0;
+			for(T t:(Set<T>) result) {
+				arr[i++] = t;
+			}
+			i = 0;
+		}
+		return of();
+	}
+	
 
 	public static <T> X<List<T>> toListS(T[] arr) {
 		List<T> list = XType.list();
@@ -688,6 +703,8 @@ public class X<RESULT> {// sharp tools
 	public <T> X<List<T>> toList(T[] arr) {
 		return toListS(arr);
 	}
+	
+	
 
 	public static <T> X<Set<T>> toSetS(T[] arr) {
 		Set<T> set = XType.set();
@@ -814,6 +831,7 @@ public class X<RESULT> {// sharp tools
 		return toByteS(s);
 	}
 
+	@SuppressWarnings("unchecked")
 	public X<byte[]> toByte() {
 		if (result instanceof String) {
 			return toByteS((String) result);
@@ -825,6 +843,8 @@ public class X<RESULT> {// sharp tools
 			return toByteS((Integer) result);
 		} else if (result instanceof Long) {
 			return toByteS((Long) result);
+		} else if(result instanceof To) {
+			return of(((To<byte[]>)result).get());
 		}
 		return of();
 	}
@@ -887,6 +907,7 @@ public class X<RESULT> {// sharp tools
 		return of(Double.longBitsToDouble(d));
 	}
 
+	@SuppressWarnings("unchecked")
 	public X<Double> toDouble() {
 
 		if (result instanceof byte[]) {
@@ -895,12 +916,15 @@ public class X<RESULT> {// sharp tools
 			return toDoubleS((Long) result);
 		} else if (result instanceof Double) {
 			return of((Double) result);
+		} else if(result instanceof To) {
+			return of(((To<Double>)result).get());
 		}
 
 		return of();
 
 	}
 
+	@SuppressWarnings("unchecked")
 	public X<Float> toFloat() {
 
 		if (result instanceof byte[]) {
@@ -909,6 +933,8 @@ public class X<RESULT> {// sharp tools
 			return toFloatS((Integer) result);
 		} else if (result instanceof Float) {
 			return of((Float) result);
+		}else if(result instanceof To) {
+			return of(((To<Float>)result).get());
 		}
 
 		return of();
@@ -923,6 +949,7 @@ public class X<RESULT> {// sharp tools
 		return toFloatS(d);
 	}
 
+	@SuppressWarnings("unchecked")
 	public X<Integer> toInt() {
 		if (result instanceof byte[]) {
 			return toIntS((byte[]) result);
@@ -930,10 +957,13 @@ public class X<RESULT> {// sharp tools
 			return toIntS((Float) result);
 		} else if (result instanceof Integer) {
 			return of((Integer) result);
+		}else if(result instanceof To) {
+			return of(((To<Integer>)result).get());
 		}
 		return of();
 	}
 
+	@SuppressWarnings("unchecked")
 	public X<Long> toLong() {
 		if (result instanceof byte[]) {
 			return toLongS((byte[]) result);
@@ -941,17 +971,22 @@ public class X<RESULT> {// sharp tools
 			return toLongS((Double) result);
 		} else if (result instanceof Long) {
 			return of((Long) result);
+		} else if (result instanceof To) {
+			return of(((To<Long>) result).get());
 		}
 		return of();
 	}
 
+	@SuppressWarnings("unchecked")
 	public X<String> toStr() {
 		
 		if(result instanceof byte[]) {
 			return toStringS((byte[])result);
+		}else if(result instanceof To) {
+			return of(((To<String>)result).get());
 		}
 		
-		return of();
+		return of(Objects.isNull(result)?null:result.toString());
 	}
 	
 	public X<String> toStr(String charSet) {
@@ -960,7 +995,9 @@ public class X<RESULT> {// sharp tools
 			return toStringS((byte[])result,charSet);
 		}
 		
-		return of();
+		return of(Objects.isNull(result)?null:result.toString());
 	}
+	
+	
 
 }

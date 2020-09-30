@@ -1,9 +1,13 @@
 package com.xiuye.test;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Test;
 
+import com.xiuye.sharp.To;
 import com.xiuye.sharp.X;
 import com.xiuye.util.cls.XType;
 import com.xiuye.util.log.XLog;
@@ -207,6 +211,39 @@ public class TestX {
 		X.of(36).toByte().ln().toStr().ln();
 		X.of("达克赛德放假快乐").toByte().ln().toStr("UTF-8").ln();
 		X.of("达克赛德放假快乐").toByte().ln().toStr("GBK").ln();
+		
+		
+		try {
+			X.of(MessageDigest.getInstance("md5").digest("ABC".getBytes())).THEN(d->{
+				for(byte b :d) {
+					X.lnS(Integer.toHexString(b&0xff));
+				}
+			});
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+//		List<String> list = XType.list();
+		
+		X.of("123").toLong().ln();
+		X.of(new StringToLong("123")).toLong().ln();
+		
+		
+	}
+	static class StringToLong implements To<Long>{
+
+		String s;
+		
+		public StringToLong(String str) {
+			this.s = str;
+		}
+		
+		@Override
+		public Long get() {
+			return Long.parseLong(s);
+		}
+		
 	}
 
 }
