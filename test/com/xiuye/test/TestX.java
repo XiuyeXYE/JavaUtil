@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.junit.Test;
 
 import com.xiuye.sharp.X;
+import com.xiuye.util.cls.XType;
 import com.xiuye.util.log.XLog;
 
 public class TestX {
@@ -129,6 +130,67 @@ public class TestX {
 			}
 		});
 		
+		X.toByteS(9.9).THEN(d->{
+			for(byte b :d) {
+				X.lnS(b);
+			}
+			return d;
+		}).THEN(d->{
+			X.toLongS(d).THEN(g->{
+				X.lnS(g);
+				return g;
+			}).THEN(g->{
+				X.toDoubleS(d).ln();
+				X.toDoubleS(g).ln();
+//				X.toFloatS(d).ln();
+			});
+		});
+		
+		X.toLongS(9.9).ln();
+		X.toDoubleS(4621762822593629389L).ln();
+		
+		X.toByteS(4621762822593629389L).THEN(d->{
+			for(byte b :d) {
+				X.lnS(b);
+			}
+			return d;
+		}).THEN(d->{
+			X.toLongS(d).ln();
+		});
+		
+		X.toByteS(9.9f).THEN(d->{
+			X.toIntS(d).THEN(g->{
+				X.toFloatS(g).ln();
+			});
+			X.toFloatS(d).ln();
+			X.toIntS(d).ln();
+		});
+		
+//		long n = 99999999998L;
+//		
+//		byte []data = XType.newInstance(byte[]::new,8);
+//		
+//		for(int i=0;i<data.length;i++) {
+//			data[i] = (byte) ((n>>>8*i) & 0xff);
+//			X.lnS(data[i]);
+//		}
+//		
+//		long m = 0L;
+//		
+//		for(int i=0;i<data.length;i++) {
+//		
+//			long t = data[i]&0xff;
+//			long j = (t<<(8*i));
+//			 m = m | j;
+//			 X.lnS(i,data[i],m,t,j,t<<(8*i));
+//		}
+//		
+//		X.lnS(m);
+		
+		
+//		X.lnS(1L<<33);
+//		X.lnS(1<<32);
+//		X.lnS(1<<33);
 	}
 
 }

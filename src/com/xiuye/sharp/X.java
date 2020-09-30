@@ -604,7 +604,7 @@ public class X<RESULT> {// sharp tools
 	}
 
 	public X2<RESULT> bean() {
-		return beanS("X", result, true);
+		return beanS("$X", result, true);
 	}
 
 	public void set(RESULT r) {
@@ -821,11 +821,11 @@ public class X<RESULT> {// sharp tools
 	}
 	
 	public static X<byte[]> toByteS(float n){
-		return toByteS(Float.floatToRawIntBits(n));
+		return toByteS(toIntS(n).get());
 	}
 	
 	public static X<byte[]> toByteS(double n){
-		return toByteS(Double.doubleToRawLongBits(n));
+		return toByteS(toLongS(n).get());
 	}
 	
 	
@@ -844,8 +844,76 @@ public class X<RESULT> {// sharp tools
 	public X<byte[]> toByte(double s){
 		return toByteS(s);
 	}
+			
+	
+	public static X<Integer> toIntS(byte[]data){
+		int d = 0;
+		for(int i=0;i<data.length;i++) {
+			int t = data[i] & 0xff;
+			d |= (t<<(8*i));
+		}
+		return of(d);
+	}
+	
+	public static X<Long> toLongS(byte[]data){
+		long d = 0;
+		for(int i=0;i<data.length;i++) {
+			long t = data[i] & 0xff;			
+			d |= (t<<(8*i));
+		}
+		return of(d);
+	}
+	
+	public static X<Long> toLongS(double d){
+		return of(Double.doubleToLongBits(d));
+	}
+	
+	public static X<Integer> toIntS(float d){
+		return of(Float.floatToIntBits(d));
+	}
+	
+	public X<Integer> toInt(byte[]data){		
+		return toIntS(data);
+	}
+	
+	public X<Long> toLong(byte[]data){		
+		return toLongS(data);
+	}
 	
 	
+	public static X<Double> toDoubleS(byte[]data){
+		return toDoubleS(toLongS(data).get());
+	}
+	
+	public static X<Double> toDoubleS(long d){
+		return of(Double.longBitsToDouble(d));
+	}
+	
+	public static X<Float> toFloatS(byte[]data){
+		return toFloatS(toIntS(data).get());
+	}
+	
+	public static X<Float> toFloatS(int d){
+		return of(Float.intBitsToFloat(d));
+	}
+	
+	
+	public X<Double> toDouble(byte[]data){
+		return toDoubleS(data);
+	}
+	
+	public X<Double> toDouble(long d){
+		return of(Double.longBitsToDouble(d));
+	}
+	
+	
+	public X<Float> toFloat(byte[]data){
+		return toFloatS(data);
+	}
+	
+	public X<Float> toFloat(int d){
+		return toFloatS(d);
+	}
 	
 
 }
