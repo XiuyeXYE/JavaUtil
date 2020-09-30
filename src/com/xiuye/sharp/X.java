@@ -948,7 +948,7 @@ public class X<RESULT> {// sharp tools
 	public X<String> toStr() {
 		
 		if(result instanceof byte[]) {
-			return toString((byte[])result);
+			return toStringS((byte[])result);
 		}
 		
 		return of();
@@ -957,7 +957,7 @@ public class X<RESULT> {// sharp tools
 	public X<String> toStr(String charSet) {
 		
 		if(result instanceof byte[]) {
-			return toString((byte[])result,charSet);
+			return toStringS((byte[])result,charSet);
 		}
 		
 		return of();
