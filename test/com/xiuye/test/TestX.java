@@ -191,6 +191,22 @@ public class TestX {
 //		X.lnS(1L<<33);
 //		X.lnS(1<<32);
 //		X.lnS(1<<33);
+		
+		X.lnS(String.valueOf("123".getBytes()));
+		Integer a = 100;
+		X.lnS(a instanceof Integer);
+		
+		X.of(9.9f).toInt().ln().toFloat().ln();
+		X.of(9.9).toLong().ln().toDouble().ln();
+		
+		X.of().toByte().ln();
+		
+		X.of(null instanceof String).ln();
+		
+		X.of("ABC").toByte().ln().toStr().ln();
+		X.of(36).toByte().ln().toStr().ln();
+		X.of("达克赛德放假快乐").toByte().ln().toStr("UTF-8").ln();
+		X.of("达克赛德放假快乐").toByte().ln().toStr("GBK").ln();
 	}
 
 }

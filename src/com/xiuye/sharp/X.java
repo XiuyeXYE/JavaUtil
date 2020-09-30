@@ -17,25 +17,21 @@ import com.xiuye.util.log.XLog;
 
 public class X<RESULT> {// sharp tools
 
-	//当前结果
+	// 当前结果
 	private RESULT result;
-
 
 	public X() {
 
 	}
 
-
 	public X(RESULT result) {
 		this.result = result;
 	}
 
-
-
 	public RESULT get() {
 		return result;
 	}
-	
+
 	private static <R, T> R exec(ReturnCallbackNoParam<R> callback, X<T> x) {
 		return callback.rcv();
 	}
@@ -44,11 +40,11 @@ public class X<RESULT> {// sharp tools
 		callback.vcv();
 		return x.result;
 	}
-	
-	private static <R,I> R exec(ReturnCallbackWithParam<R, I> callback, X<I> x) {
+
+	private static <R, I> R exec(ReturnCallbackWithParam<R, I> callback, X<I> x) {
 		return callback.rci(x.result);
 	}
-	
+
 	private static <T> T exec(VoidCallbackWithParam<T> callback, X<T> x) {
 		callback.vci(x.result);
 		return x.result;
@@ -127,7 +123,6 @@ public class X<RESULT> {// sharp tools
 	public static <R> X<R> resolve(R r) {
 		return new X<>(r);
 	}
-	
 
 	public static <R> X<R> of() {
 		return resolve();
@@ -136,7 +131,6 @@ public class X<RESULT> {// sharp tools
 	public static <R> X<R> of(R t) {
 		return resolve(t);
 	}
-	
 
 	public <R> X<R> THEN(ReturnCallbackNoParam<R> callback) {
 		return of(exec(callback, this));
@@ -169,8 +163,6 @@ public class X<RESULT> {// sharp tools
 //	public X<RESULT> FINALLY(VoidCallbackNoParam callback) {
 //		return THEN(callback);
 //	}
-
-	
 
 	private boolean exist() {
 		return result != null;
@@ -265,13 +257,12 @@ public class X<RESULT> {// sharp tools
 			this.input = input;
 		}
 
-
 		public R get() {
 			try {
 				this.join();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-				
+
 			}
 			return result;
 		}
@@ -285,7 +276,6 @@ public class X<RESULT> {// sharp tools
 			return result;
 		}
 
-
 		public I getInput() {
 			return input;
 		}
@@ -293,7 +283,7 @@ public class X<RESULT> {// sharp tools
 		public void setInput(I input) {
 			this.input = input;
 		}
-		
+
 		protected <T> T exec(ReturnCallbackNoParam<T> callback) {
 			return callback.rcv();
 		}
@@ -302,16 +292,15 @@ public class X<RESULT> {// sharp tools
 			callback.vcv();
 			return this.result;
 		}
-		
+
 		protected R exec(ReturnCallbackWithParam<R, I> callback) {
 			return callback.rci(this.input);
 		}
-		
+
 		protected R exec(VoidCallbackWithParam<I> callback) {
 			callback.vci(this.input);
 			return this.result;
 		}
-		
 
 	}
 
@@ -330,8 +319,6 @@ public class X<RESULT> {// sharp tools
 			super.run();
 			result = exec(func);
 		}
-
-	
 
 	}
 
@@ -388,7 +375,6 @@ public class X<RESULT> {// sharp tools
 		}
 
 	}
-	
 
 	public static <R, I> X<AbstractPromiseTask<VoidCallbackNoParam, R, I>> taskS(VoidCallbackNoParam callback) {
 		AbstractPromiseTask<VoidCallbackNoParam, R, I> taskObj = new PromiseTaskVCV<>(callback);
@@ -484,12 +470,12 @@ public class X<RESULT> {// sharp tools
 	}
 
 	@SafeVarargs
-	private static <R> void printLine(R...in) {
+	private static <R> void printLine(R... in) {
 		XLog.attach(2);
 		XLog.line(in);
 		XLog.dettach(2);
 	}
-	
+
 	@SafeVarargs
 	public static <R> X<R[]> lineS(R... in) {
 		X<R[]> pro = of(in);
@@ -622,8 +608,6 @@ public class X<RESULT> {// sharp tools
 		return x;
 	}
 
-	
-
 	public X<ServerSocket> tcp(int port) {
 		return tcpS(port);
 	}
@@ -638,8 +622,6 @@ public class X<RESULT> {// sharp tools
 		}
 		return x;
 	}
-
-	
 
 	public X<Socket> tcp(String ip, int port) {
 		return tcp(ip, port);
@@ -656,8 +638,6 @@ public class X<RESULT> {// sharp tools
 		return x;
 	}
 
-	
-
 	public X<DatagramSocket> udp(int port) {
 		return udpS(port);
 	}
@@ -672,8 +652,6 @@ public class X<RESULT> {// sharp tools
 		return x;
 	}
 
-	
-
 	public X<DatagramSocket> udp() {
 		return udpS();
 	}
@@ -687,45 +665,43 @@ public class X<RESULT> {// sharp tools
 	}
 
 	public <R> X<R> toObject(Class<R> clazz) {
-		return of(exec(() -> JsonUtil.instance().fromJson(Objects.nonNull(result) ? result.toString() : null, clazz), this));
+		return of(exec(() -> JsonUtil.instance().fromJson(Objects.nonNull(result) ? result.toString() : null, clazz),
+				this));
 	}
 
-	public static <T> X<T[]> toAarrayS(List<T> list,T []arr){		
+	public static <T> X<T[]> toAarrayS(List<T> list, T[] arr) {
 		return of(list.toArray(arr));
 	}
-	
-	public <T> X<T[]> toAarray(List<T> list,T []arr){		
+
+	public <T> X<T[]> toAarray(List<T> list, T[] arr) {
 		return toAarrayS(list, arr);
 	}
-	
-	public static <T> X<List<T>> toListS(T[]arr){
+
+	public static <T> X<List<T>> toListS(T[] arr) {
 		List<T> list = XType.list();
-		for(T a : arr) {
+		for (T a : arr) {
 			list.add(a);
 		}
 		return of(list);
 	}
-	
-	public <T> X<List<T>> toList(T[]arr){
+
+	public <T> X<List<T>> toList(T[] arr) {
 		return toListS(arr);
 	}
-	
-	
-	
-	public static <T> X<Set<T>> toSetS(T[]arr){
+
+	public static <T> X<Set<T>> toSetS(T[] arr) {
 		Set<T> set = XType.set();
-		for(T a : arr) {
+		for (T a : arr) {
 			set.add(a);
 		}
 		return of(set);
 	}
-	
-	public <T> X<Set<T>> toSet(T[]arr){
-		
+
+	public <T> X<Set<T>> toSet(T[] arr) {
+
 		return toSetS(arr);
 	}
-	
-	
+
 	public static X<Gson> formatterJsonKitS() {
 
 		X<Gson> gsonX = of();
@@ -734,15 +710,11 @@ public class X<RESULT> {// sharp tools
 		return gsonX;
 	}
 
-	
-
 	public static X<Gson> jsonKitS() {
 		X<Gson> gsonX = of();
 		gsonX.set(exec(() -> JsonUtil.instance(), gsonX));
 		return gsonX;
 	}
-
-	
 
 	public X<Gson> formatterJsonKit() {
 		return of(exec(() -> JsonUtil.instance(JsonUtil.FORMAT_GSON), this));
@@ -760,11 +732,10 @@ public class X<RESULT> {// sharp tools
 		return resolve(t);
 	}
 
-	
-	public static X<String> toStringS(byte []data){
+	public static X<String> toStringS(byte[] data) {
 		return of(new String(data));
 	}
-	
+
 	public static X<String> toStringS(byte[] data, String charset) {
 		try {
 			return of(new String(data, charset));
@@ -773,20 +744,20 @@ public class X<RESULT> {// sharp tools
 		}
 		return of();
 	}
-	
-	public X<String> toString(byte []data){
-		return toString(data);
+
+	public X<String> toString(byte[] data) {
+		return toStringS(data);
 	}
-	
-	public X<String> toString(byte []data,String charset){
-		return toString(data,charset);
+
+	public X<String> toString(byte[] data, String charset) {
+		return toStringS(data, charset);
 	}
-	
-	public static X<byte[]> toByteS(String s){
+
+	public static X<byte[]> toByteS(String s) {
 		return of(s.getBytes());
 	}
-	
-	public static X<byte[]> toByteS(String s,String charset){
+
+	public static X<byte[]> toByteS(String s, String charset) {
 		try {
 			return of(s.getBytes(charset));
 		} catch (UnsupportedEncodingException e) {
@@ -794,126 +765,202 @@ public class X<RESULT> {// sharp tools
 		}
 		return of();
 	}
-	
-	public X<byte[]> toByte(String s){
+
+	public X<byte[]> toByte(String s) {
 		return toByteS(s);
 	}
-	
-	public X<byte[]> toByte(String s,String charset){
-		return toByteS(s,charset);
+
+	public X<byte[]> toByte(String s, String charset) {
+		return toByteS(s, charset);
 	}
-	
-	
-	public static X<byte[]> toByteS(int n){
-		byte [] data = XType.newInstance(byte[]::new,4);
-		for(int i=0;i<data.length;i++) {
-			   data[i] = (byte) ((n >>> (8*i)) & 0xff);
+
+	public static X<byte[]> toByteS(int n) {
+		byte[] data = XType.newInstance(byte[]::new, 4);
+		for (int i = 0; i < data.length; i++) {
+			data[i] = (byte) ((n >>> (8 * i)) & 0xff);
 		}
 		return of(data);
 	}
-	
-	public static X<byte[]> toByteS(long n){
-		byte [] data = XType.newInstance(byte[]::new,8);
-		for(int i=0;i<data.length;i++) {
-			data[i] = (byte) ((n >>> (8*i)) & 0xff);
+
+	public static X<byte[]> toByteS(long n) {
+		byte[] data = XType.newInstance(byte[]::new, 8);
+		for (int i = 0; i < data.length; i++) {
+			data[i] = (byte) ((n >>> (8 * i)) & 0xff);
 		}
 		return of(data);
 	}
-	
-	public static X<byte[]> toByteS(float n){
+
+	public static X<byte[]> toByteS(float n) {
 		return toByteS(toIntS(n).get());
 	}
-	
-	public static X<byte[]> toByteS(double n){
+
+	public static X<byte[]> toByteS(double n) {
 		return toByteS(toLongS(n).get());
 	}
-	
-	
-	public X<byte[]> toByte(int s){
+
+	public X<byte[]> toByte(int s) {
 		return toByteS(s);
 	}
-	
-	public X<byte[]> toByte(long s){
+
+	public X<byte[]> toByte(long s) {
 		return toByteS(s);
 	}
-	
-	public X<byte[]> toByte(float s){
+
+	public X<byte[]> toByte(float s) {
 		return toByteS(s);
 	}
-	
-	public X<byte[]> toByte(double s){
+
+	public X<byte[]> toByte(double s) {
 		return toByteS(s);
 	}
-			
-	
-	public static X<Integer> toIntS(byte[]data){
+
+	public X<byte[]> toByte() {
+		if (result instanceof String) {
+			return toByteS((String) result);
+		} else if (result instanceof Double) {
+			return toByteS((Double) result);
+		} else if (result instanceof Float) {
+			return toByteS((Float) result);
+		} else if (result instanceof Integer) {
+			return toByteS((Integer) result);
+		} else if (result instanceof Long) {
+			return toByteS((Long) result);
+		}
+		return of();
+	}
+
+	public static X<Integer> toIntS(byte[] data) {
 		int d = 0;
-		for(int i=0;i<data.length;i++) {
+		for (int i = 0; i < data.length; i++) {
 			int t = data[i] & 0xff;
-			d |= (t<<(8*i));
+			d |= (t << (8 * i));
 		}
 		return of(d);
 	}
-	
-	public static X<Long> toLongS(byte[]data){
+
+	public static X<Long> toLongS(byte[] data) {
 		long d = 0;
-		for(int i=0;i<data.length;i++) {
-			long t = data[i] & 0xff;			
-			d |= (t<<(8*i));
+		for (int i = 0; i < data.length; i++) {
+			long t = data[i] & 0xff;
+			d |= (t << (8 * i));
 		}
 		return of(d);
 	}
-	
-	public static X<Long> toLongS(double d){
+
+	public static X<Long> toLongS(double d) {
 		return of(Double.doubleToLongBits(d));
 	}
-	
-	public static X<Integer> toIntS(float d){
+
+	public static X<Integer> toIntS(float d) {
 		return of(Float.floatToIntBits(d));
 	}
-	
-	public X<Integer> toInt(byte[]data){		
+
+	public X<Integer> toInt(byte[] data) {
 		return toIntS(data);
 	}
-	
-	public X<Long> toLong(byte[]data){		
+
+	public X<Long> toLong(byte[] data) {
 		return toLongS(data);
 	}
-	
-	
-	public static X<Double> toDoubleS(byte[]data){
+
+	public static X<Double> toDoubleS(byte[] data) {
 		return toDoubleS(toLongS(data).get());
 	}
-	
-	public static X<Double> toDoubleS(long d){
+
+	public static X<Double> toDoubleS(long d) {
 		return of(Double.longBitsToDouble(d));
 	}
-	
-	public static X<Float> toFloatS(byte[]data){
+
+	public static X<Float> toFloatS(byte[] data) {
 		return toFloatS(toIntS(data).get());
 	}
-	
-	public static X<Float> toFloatS(int d){
+
+	public static X<Float> toFloatS(int d) {
 		return of(Float.intBitsToFloat(d));
 	}
-	
-	
-	public X<Double> toDouble(byte[]data){
+
+	public X<Double> toDouble(byte[] data) {
 		return toDoubleS(data);
 	}
-	
-	public X<Double> toDouble(long d){
+
+	public X<Double> toDouble(long d) {
 		return of(Double.longBitsToDouble(d));
 	}
-	
-	
-	public X<Float> toFloat(byte[]data){
+
+	public X<Double> toDouble() {
+
+		if (result instanceof byte[]) {
+			return toDoubleS((byte[]) result);
+		} else if (result instanceof Long) {
+			return toDoubleS((Long) result);
+		} else if (result instanceof Double) {
+			return of((Double) result);
+		}
+
+		return of();
+
+	}
+
+	public X<Float> toFloat() {
+
+		if (result instanceof byte[]) {
+			return toFloatS((byte[]) result);
+		} else if (result instanceof Integer) {
+			return toFloatS((Integer) result);
+		} else if (result instanceof Float) {
+			return of((Float) result);
+		}
+
+		return of();
+
+	}
+
+	public X<Float> toFloat(byte[] data) {
 		return toFloatS(data);
 	}
-	
-	public X<Float> toFloat(int d){
+
+	public X<Float> toFloat(int d) {
 		return toFloatS(d);
 	}
+
+	public X<Integer> toInt() {
+		if (result instanceof byte[]) {
+			return toIntS((byte[]) result);
+		} else if (result instanceof Float) {
+			return toIntS((Float) result);
+		} else if (result instanceof Integer) {
+			return of((Integer) result);
+		}
+		return of();
+	}
+
+	public X<Long> toLong() {
+		if (result instanceof byte[]) {
+			return toLongS((byte[]) result);
+		} else if (result instanceof Double) {
+			return toLongS((Double) result);
+		} else if (result instanceof Long) {
+			return of((Long) result);
+		}
+		return of();
+	}
+
+	public X<String> toStr() {
+		
+		if(result instanceof byte[]) {
+			return toString((byte[])result);
+		}
+		
+		return of();
+	}
 	
+	public X<String> toStr(String charSet) {
+		
+		if(result instanceof byte[]) {
+			return toString((byte[])result,charSet);
+		}
+		
+		return of();
+	}
 
 }
