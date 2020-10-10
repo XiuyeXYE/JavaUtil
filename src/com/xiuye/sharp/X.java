@@ -598,18 +598,18 @@ public class X<RESULT> {// sharp tools
 	public static <T> X<T[]> toArray(List<T> list, T[] arr) {
 		return of(list.toArray(arr));
 	}
+	
+	public static <T> X<T[]> toArray(Set<T> set, T[] arr) {
+		return of(set.toArray(arr));
+	}
 
 	
 	@SuppressWarnings("unchecked")
-	public <T> X<T[]> toArray(T[] arr){
-		if(result instanceof List) {
-			return toArray((List<T>)result,arr);
-		}else if(result instanceof Set) {
-			int i=0;
-			for(T t:(Set<T>) result) {
-				arr[i++] = t;
-			}
-			i = 0;
+	public <T> X<T[]> toArray(T[] arr) {
+		if (result instanceof List) {
+			return toArray((List<T>) result, arr);
+		} else if (result instanceof Set) {
+			return toArray((Set<T>) result, arr);
 		}
 		return of();
 	}
@@ -670,17 +670,12 @@ public class X<RESULT> {// sharp tools
 	}
 	
 	
-	public static X<Gson> formatterJsonKitS() {
-
-		X<Gson> gsonX = of();
-		gsonX.set(JsonUtil.instance(JsonUtil.FORMAT_GSON));
-		return gsonX;
+	public static X<Gson> formatterJsonKit() {
+		return of(JsonUtil.instance(JsonUtil.FORMAT_GSON));
 	}
 
-	public static X<Gson> jsonKitS() {
-		X<Gson> gsonX = of();
-		gsonX.set(JsonUtil.instance());
-		return gsonX;
+	public static X<Gson> jsonKit() {
+		return of(JsonUtil.instance());
 	}
 
 //	public X<Gson> formatterJsonKit() {

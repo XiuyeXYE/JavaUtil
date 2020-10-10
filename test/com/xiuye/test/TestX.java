@@ -1,7 +1,9 @@
 package com.xiuye.test;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.xiuye.sharp.To;
 import com.xiuye.sharp.X;
@@ -53,6 +55,22 @@ public class TestX {
 		X.toList(new Byte[100]).ln();
 		
 //		byte [] d = new byte[10];
+		
+		Set<Byte> set = XType.set();
+		
+		set.add((byte) 1);
+		set.add((byte) 2);
+		
+		X.toArray(set, new Byte[0]).toList(d->{
+			
+			List<Byte> list = XType.list();
+					
+			for(byte b :d) {
+				list.add(b);
+			}
+			
+			return list;
+		}).ln();
 		
 		
 	}
