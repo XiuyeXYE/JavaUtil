@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -611,34 +612,32 @@ public class X<RESULT> {// sharp tools
 		} else if (result instanceof Set) {
 			return toArray((Set<T>) result, arr);
 		}
-		return of();
+		return of((T[])this.result);
 	}
 	
 
 	public static <T> X<List<T>> toList(T[] arr) {
-		List<T> list = XType.list();
-		for (T a : arr) {
-			list.add(a);
-		}
-		return of(list);
+//		List<T> list = XType.list();
+//		for (T a : arr) {
+//			list.add(a);
+//		}
+		return of(Arrays.asList(arr));
 	}
 
-//	public <T> X<List<T>> toList(T[] arr) {
-//		return toListS(arr);
-//	}
-	
+
 	@SuppressWarnings("unchecked")
-	public <T> X<List<T>> toList(){
-		if(result instanceof To) {
-			return of(((To<List<T>>)result).get());
+	public <T> X<List<T>> toList() {
+
+		List<T> list = XType.list();
+		if (this.result instanceof List) {
+			list = (List<T>) this.result;
+		} else if (this.result instanceof Set) {
+			list.addAll((Set<T>) this.result);
+		} else {
+			list = Arrays.asList((T[]) this.result);
 		}
-		
-		return of();
-	}
-	
-	
-	public <T> X<List<T>> toList(ParamTo<List<T>,RESULT> to){
-		return of(to.get(result));
+
+		return of(list);
 	}
 	
 
@@ -650,23 +649,20 @@ public class X<RESULT> {// sharp tools
 		return of(set);
 	}
 
-//	public <T> X<Set<T>> toSet(T[] arr) {
-//
-//		return toSetS(arr);
-//	}
 
 	@SuppressWarnings("unchecked")
-	public <T> X<Set<T>> toSet(){
-		if(result instanceof To) {
-			return of(((To<Set<T>>)result).get());
+	public <T> X<Set<T>> toSet() {
+
+		Set<T> set = XType.set();
+		if (this.result instanceof List) {
+			set.addAll((List<T>) this.result);
+		} else if (this.result instanceof Set) {
+			set = (Set<T>) this.result;
+		} else {
+			set.addAll(Arrays.asList((T[]) this.result));
 		}
-		
-		return of();
-	}
-	
-	
-	public <T> X<Set<T>> toSet(ParamTo<Set<T>,RESULT> to){
-		return of(to.get(result));
+
+		return of(set);
 	}
 	
 	
@@ -678,13 +674,6 @@ public class X<RESULT> {// sharp tools
 		return of(JsonUtil.instance());
 	}
 
-//	public X<Gson> formatterJsonKit() {
-//		return of(exec((d) -> JsonUtil.instance(JsonUtil.FORMAT_GSON), this));
-//	}
-//
-//	public X<Gson> jsonKit() {
-//		return of(exec((d) -> JsonUtil.instance(), this));
-//	}
 
 	public static <R> X<R> x() {
 		return resolve();
@@ -694,11 +683,11 @@ public class X<RESULT> {// sharp tools
 		return resolve(t);
 	}
 
-	public static X<String> toStringS(byte[] data) {
+	public static X<String> toString(byte[] data) {
 		return of(new String(data));
 	}
 
-	public static X<String> toStringS(byte[] data, String charset) {
+	public static X<String> toString(byte[] data, String charset) {
 		try {
 			return of(new String(data, charset));
 		} catch (UnsupportedEncodingException e) {
@@ -706,229 +695,11 @@ public class X<RESULT> {// sharp tools
 		}
 		return of();
 	}
-
-	public X<String> toString(byte[] data) {
-		return toStringS(data);
-	}
-
-	public X<String> toString(byte[] data, String charset) {
-		return toStringS(data, charset);
-	}
-
-	public static X<byte[]> toByteS(String s) {
-		return of(s.getBytes());
-	}
-
-	public static X<byte[]> toByteS(String s, String charset) {
-		try {
-			return of(s.getBytes(charset));
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return of();
-	}
-
-	public X<byte[]> toByte(String s) {
-		return toByteS(s);
-	}
-
-	public X<byte[]> toByte(String s, String charset) {
-		return toByteS(s, charset);
-	}
-
-	public static X<byte[]> toByteS(int n) {
-		byte[] data = XType.newInstance(byte[]::new, 4);
-		for (int i = 0; i < data.length; i++) {
-			data[i] = (byte) ((n >>> (8 * i)) & 0xff);
-		}
-		return of(data);
-	}
-
-	public static X<byte[]> toByteS(long n) {
-		byte[] data = XType.newInstance(byte[]::new, 8);
-		for (int i = 0; i < data.length; i++) {
-			data[i] = (byte) ((n >>> (8 * i)) & 0xff);
-		}
-		return of(data);
-	}
-
-	public static X<byte[]> toByteS(float n) {
-		return toByteS(toIntS(n).get());
-	}
-
-	public static X<byte[]> toByteS(double n) {
-		return toByteS(toLongS(n).get());
-	}
-
-	public X<byte[]> toByte(int s) {
-		return toByteS(s);
-	}
-
-	public X<byte[]> toByte(long s) {
-		return toByteS(s);
-	}
-
-	public X<byte[]> toByte(float s) {
-		return toByteS(s);
-	}
-
-	public X<byte[]> toByte(double s) {
-		return toByteS(s);
-	}
-
-	@SuppressWarnings("unchecked")
-	public X<byte[]> toByte() {
-		if (result instanceof String) {
-			return toByteS((String) result);
-		} else if (result instanceof Double) {
-			return toByteS((Double) result);
-		} else if (result instanceof Float) {
-			return toByteS((Float) result);
-		} else if (result instanceof Integer) {
-			return toByteS((Integer) result);
-		} else if (result instanceof Long) {
-			return toByteS((Long) result);
-		} else if(result instanceof To) {
-			return of(((To<byte[]>)result).get());
-		}
-		return of();
-	}
-
-	public static X<Integer> toIntS(byte[] data) {
-		int d = 0;
-		for (int i = 0; i < data.length; i++) {
-			int t = data[i] & 0xff;
-			d |= (t << (8 * i));
-		}
-		return of(d);
-	}
-
-	public static X<Long> toLongS(byte[] data) {
-		long d = 0;
-		for (int i = 0; i < data.length; i++) {
-			long t = data[i] & 0xff;
-			d |= (t << (8 * i));
-		}
-		return of(d);
-	}
-
-	public static X<Long> toLongS(double d) {
-		return of(Double.doubleToLongBits(d));
-	}
-
-	public static X<Integer> toIntS(float d) {
-		return of(Float.floatToIntBits(d));
-	}
-
-	public X<Integer> toInt(byte[] data) {
-		return toIntS(data);
-	}
-
-	public X<Long> toLong(byte[] data) {
-		return toLongS(data);
-	}
-
-	public static X<Double> toDoubleS(byte[] data) {
-		return toDoubleS(toLongS(data).get());
-	}
-
-	public static X<Double> toDoubleS(long d) {
-		return of(Double.longBitsToDouble(d));
-	}
-
-	public static X<Float> toFloatS(byte[] data) {
-		return toFloatS(toIntS(data).get());
-	}
-
-	public static X<Float> toFloatS(int d) {
-		return of(Float.intBitsToFloat(d));
-	}
-
-	public X<Double> toDouble(byte[] data) {
-		return toDoubleS(data);
-	}
-
-	public X<Double> toDouble(long d) {
-		return of(Double.longBitsToDouble(d));
-	}
-
-	@SuppressWarnings("unchecked")
-	public X<Double> toDouble() {
-
-		if (result instanceof byte[]) {
-			return toDoubleS((byte[]) result);
-		} else if (result instanceof Long) {
-			return toDoubleS((Long) result);
-		} else if (result instanceof Double) {
-			return of((Double) result);
-		} else if(result instanceof To) {
-			return of(((To<Double>)result).get());
-		}
-
-		return of();
-
-	}
-
-	@SuppressWarnings("unchecked")
-	public X<Float> toFloat() {
-
-		if (result instanceof byte[]) {
-			return toFloatS((byte[]) result);
-		} else if (result instanceof Integer) {
-			return toFloatS((Integer) result);
-		} else if (result instanceof Float) {
-			return of((Float) result);
-		}else if(result instanceof To) {
-			return of(((To<Float>)result).get());
-		}
-
-		return of();
-
-	}
-
-	public X<Float> toFloat(byte[] data) {
-		return toFloatS(data);
-	}
-
-	public X<Float> toFloat(int d) {
-		return toFloatS(d);
-	}
-
-	@SuppressWarnings("unchecked")
-	public X<Integer> toInt() {
-		if (result instanceof byte[]) {
-			return toIntS((byte[]) result);
-		} else if (result instanceof Float) {
-			return toIntS((Float) result);
-		} else if (result instanceof Integer) {
-			return of((Integer) result);
-		}else if(result instanceof To) {
-			return of(((To<Integer>)result).get());
-		}
-		return of();
-	}
-
-	@SuppressWarnings("unchecked")
-	public X<Long> toLong() {
-		if (result instanceof byte[]) {
-			return toLongS((byte[]) result);
-		} else if (result instanceof Double) {
-			return toLongS((Double) result);
-		} else if (result instanceof Long) {
-			return of((Long) result);
-		} else if (result instanceof To) {
-			return of(((To<Long>) result).get());
-		}
-		return of();
-	}
-
-	@SuppressWarnings("unchecked")
+	
 	public X<String> toStr() {
 		
 		if(result instanceof byte[]) {
-			return toStringS((byte[])result);
-		}else if(result instanceof To) {
-			return of(((To<String>)result).get());
+			return toString((byte[])result);
 		}
 		
 		return of(Objects.isNull(result)?null:result.toString());
@@ -937,11 +708,164 @@ public class X<RESULT> {// sharp tools
 	public X<String> toStr(String charSet) {
 		
 		if(result instanceof byte[]) {
-			return toStringS((byte[])result,charSet);
+			return toString((byte[])result,charSet);
 		}
 		
 		return of(Objects.isNull(result)?null:result.toString());
 	}
+
+
+	public static X<byte[]> toByte(String s) {
+		return of(s.getBytes());
+	}
+
+	public static X<byte[]> toByte(String s, String charset) {
+		try {
+			return of(s.getBytes(charset));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return of();
+	}
+
+
+	public static X<byte[]> toByte(int n) {
+		byte[] data = XType.newInstance(byte[]::new, 4);
+		for (int i = 0; i < data.length; i++) {
+			data[i] = (byte) ((n >>> (8 * i)) & 0xff);
+		}
+		return of(data);
+	}
+
+	public static X<byte[]> toByte(long n) {
+		byte[] data = XType.newInstance(byte[]::new, 8);
+		for (int i = 0; i < data.length; i++) {
+			data[i] = (byte) ((n >>> (8 * i)) & 0xff);
+		}
+		return of(data);
+	}
+
+	public static X<byte[]> toByte(float n) {
+		return toByte(toInt(n).get());
+	}
+
+	public static X<byte[]> toByte(double n) {
+		return toByte(toLong(n).get());
+	}
+
+
+	public X<byte[]> toByte() {
+		if (result instanceof String) {
+			return toByte((String) result);
+		} else if (result instanceof Double) {
+			return toByte((Double) result);
+		} else if (result instanceof Float) {
+			return toByte((Float) result);
+		} else if (result instanceof Integer) {
+			return toByte((Integer) result);
+		} else if (result instanceof Long) {
+			return toByte((Long) result);
+		} 
+		return of();
+	}
+
+	public static X<Integer> toInt(byte[] data) {
+		int d = 0;
+		for (int i = 0; i < data.length; i++) {
+			int t = data[i] & 0xff;
+			d |= (t << (8 * i));
+		}
+		return of(d);
+	}
+
+	public static X<Long> toLong(byte[] data) {
+		long d = 0;
+		for (int i = 0; i < data.length; i++) {
+			long t = data[i] & 0xff;
+			d |= (t << (8 * i));
+		}
+		return of(d);
+	}
+
+	public static X<Long> toLong(double d) {
+		return of(Double.doubleToLongBits(d));
+	}
+
+	public static X<Integer> toInt(float d) {
+		return of(Float.floatToIntBits(d));
+	}
+
+	
+
+	public static X<Double> toDouble(byte[] data) {
+		return toDouble(toLong(data).get());
+	}
+
+	public static X<Double> toDouble(long d) {
+		return of(Double.longBitsToDouble(d));
+	}
+
+	public static X<Float> toFloat(byte[] data) {
+		return toFloat(toInt(data).get());
+	}
+
+	public static X<Float> toFloat(int d) {
+		return of(Float.intBitsToFloat(d));
+	}
+
+	
+	public X<Double> toDouble() {
+
+		if (result instanceof byte[]) {
+			return toDouble((byte[]) result);
+		} else if (result instanceof Long) {
+			return toDouble((Long) result);
+		} else if (result instanceof Double) {
+			return of((Double) result);
+		} 
+
+		return of();
+
+	}
+
+	public X<Float> toFloat() {
+
+		if (result instanceof byte[]) {
+			return toFloat((byte[]) result);
+		} else if (result instanceof Integer) {
+			return toFloat((Integer) result);
+		} else if (result instanceof Float) {
+			return of((Float) result);
+		}
+
+		return of();
+
+	}
+
+	
+	public X<Integer> toInt() {
+		if (result instanceof byte[]) {
+			return toInt((byte[]) result);
+		} else if (result instanceof Float) {
+			return toInt((Float) result);
+		} else if (result instanceof Integer) {
+			return of((Integer) result);
+		}
+		return of();
+	}
+
+	public X<Long> toLong() {
+		if (result instanceof byte[]) {
+			return toLong((byte[]) result);
+		} else if (result instanceof Double) {
+			return toLong((Double) result);
+		} else if (result instanceof Long) {
+			return of((Long) result);
+		} 
+		return of();
+	}
+
+	
 	
 	
 
