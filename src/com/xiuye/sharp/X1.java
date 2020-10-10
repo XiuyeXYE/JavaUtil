@@ -114,19 +114,19 @@ public class X1 <RESULT>{
         return this;
     }
     
-    public <I> X1<RESULT> DEFAUT(VoidCallbackWithParam<I> callback) {
-    	addToken(DEFAULT, callback);
-    	return this;
-    }
+//    public <I> X1<RESULT> DEFAUT(VoidCallbackWithParam<I> callback) {
+//    	addToken(DEFAULT, callback);
+//    	return this;
+//    }
     
     public <R,I> X1<RESULT> DEFAUT(ReturnCallbackWithParam<R,I> callback) {
     	addToken(DEFAULT, callback);
     	return this;
     }
-    public <R> X1<RESULT> DEFAUT(ReturnCallbackNoParam<R> callback) {
-    	addToken(DEFAULT, callback);
-    	return this;
-    }
+//    public <R> X1<RESULT> DEFAUT(ReturnCallbackNoParam<R> callback) {
+//    	addToken(DEFAULT, callback);
+//    	return this;
+//    }
 
 
     public X1<RESULT> THEN(VoidCallbackNoParam callback) {
@@ -135,19 +135,20 @@ public class X1 <RESULT>{
         return this;
     }
     
-    public <I> X1<RESULT> THEN(VoidCallbackWithParam<I> callback) {
-    	addToken(THEN, callback);
-    	return this;
-    }
+//    public <I> X1<RESULT> THEN(VoidCallbackWithParam<I> callback) {
+//    	addToken(THEN, callback);
+//    	return this;
+//    }
     
     public <R,I> X1<RESULT> THEN(ReturnCallbackWithParam<R,I> callback) {
     	addToken(THEN, callback);
     	return this;
     }
-    public <R> X1<RESULT> THEN(ReturnCallbackNoParam<R> callback) {
-    	addToken(THEN, callback);
-    	return this;
-    }
+    
+//    public <R> X1<RESULT> THEN(ReturnCallbackNoParam<R> callback) {
+//    	addToken(THEN, callback);
+//    	return this;
+//    }
 
 
     public X1<RESULT> ELSE(VoidCallbackNoParam callback) {
@@ -157,19 +158,19 @@ public class X1 <RESULT>{
     }
     
     
-    public <I> X1<RESULT> ELSE(VoidCallbackWithParam<I> callback) {
-    	addToken(ELSE, callback);
-    	return this;
-    }
+//    public <I> X1<RESULT> ELSE(VoidCallbackWithParam<I> callback) {
+//    	addToken(ELSE, callback);
+//    	return this;
+//    }
     
     public <R,I> X1<RESULT> ELSE(ReturnCallbackWithParam<R,I> callback) {
     	addToken(ELSE, callback);
     	return this;
     }
-    public <R> X1<RESULT> ELSE(ReturnCallbackNoParam<R> callback) {
-    	addToken(ELSE, callback);
-    	return this;
-    }
+//    public <R> X1<RESULT> ELSE(ReturnCallbackNoParam<R> callback) {
+//    	addToken(ELSE, callback);
+//    	return this;
+//    }
 
     private void callTokenCallback() {
         if (result_token != null) {
@@ -177,14 +178,14 @@ public class X1 <RESULT>{
                 VoidCallbackNoParam callback = XType.cast(result_token.value);
                 callback.vcv();
             }
-            else if(result_token.value instanceof VoidCallbackWithParam) {
-            	VoidCallbackWithParam<Object> callback = XType.cast(result_token.value);
-            	callback.vci(inputValue);            	
-            }
-            else if(result_token.value instanceof ReturnCallbackNoParam) {
-            	ReturnCallbackNoParam<?> callback = XType.cast(result_token.value);
-            	callback.rcv();
-            }
+//            else if(result_token.value instanceof VoidCallbackWithParam) {
+//            	VoidCallbackWithParam<Object> callback = XType.cast(result_token.value);
+//            	callback.vci(inputValue);            	
+//            }
+//            else if(result_token.value instanceof ReturnCallbackNoParam) {
+//            	ReturnCallbackNoParam<?> callback = XType.cast(result_token.value);
+//            	callback.rcv();
+//            }
             else if(result_token.value instanceof ReturnCallbackWithParam){
             	ReturnCallbackWithParam<RESULT,Object> callback = XType.cast(result_token.value);
             	result = callback.rci(inputValue);
@@ -272,14 +273,14 @@ public class X1 <RESULT>{
         void vcv();
     }
     
-    public interface VoidCallbackWithParam<I>{
-    	void vci(I t);
-    }
+//    public interface VoidCallbackWithParam<I>{
+//    	void vci(I t);
+//    }
+//    
     
-    
-    public interface ReturnCallbackNoParam<R>{
-    	R rcv();
-    }
+//    public interface ReturnCallbackNoParam<R>{
+//    	R rcv();
+//    }
     
     public interface ReturnCallbackWithParam<R,I>{
     	R rci(I i);

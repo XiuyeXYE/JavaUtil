@@ -1,8 +1,10 @@
 package com.xiuye.test;
 
-import java.util.Arrays;
+import java.io.IOException;
+import java.net.SocketException;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import org.junit.Test;
@@ -11,116 +13,148 @@ import com.xiuye.sharp.X;
 import com.xiuye.util.cls.XType;
 import com.xiuye.util.log.XLog;
 
+
 public class TestX {
 	
 	@Test
-	public void testTo() {
-		Set<Byte> set = XType.set();
-		set.add((byte) 1);
-		set.add((byte) 2);
-		X.of(set).toArray(new Byte[0]).ln().toList().ln();
+	public void testObject() {
 		
-		X.toArray(set, new Byte[0]).THEN(d->{
-			
-			List<Byte> list = XType.list();
-					
-			for(byte b :d) {
-				list.add(b);
-			}
-			
-			return list;
-		}).ln();
+		X.of();
+		X.of(123);
+		X.of((byte)99);
 		
-		X.jsonKit().THEN(d->{
-			
-			XLog.ln(d);
-			Byte []bs = new Byte[10];			
-			
-			return bs;
-			
-		}).toArray(new Byte[0]).ln();
-		
-		
-		X.of(123).toStr().ln();
-		
-		byte []d1 = new byte[0];
-		Byte []d2 = new Byte[0];
-		
-		
-		X.of(d1).toStr().ln();
-		X.of(d2).toStr().ln();
-		
-		
-		X.of("ABC").toByte().ln().toStr().ln();
+		X.x();
+		X.x(123);
 		
 	}
+	
+	
+	@Test
+	public void testThen() {
+		X.of(123).THEN(d->{
+			XLog.ln(d);
+			return "";
+		}).THEN(d->{
+			XLog.ln(d);
+			return "";
+		});
+	}
+	
+	
+	@Test
+	public void testJson() {
+		X.of("{a:123}").toObject(Map.class).ln().toFormatJson().ln();	
+	}
+	
+	@Test
+	public void testTo() {
+		byte [] data = X.toByte("ABC").ln().get();
+		X.toString(data).ln();
+		data = X.toByte(123).ln().get();
+		X.toInt(data).ln();
+		data = X.toByte(123L).ln().get();
+		X.toLong(data).ln();
+		data = X.toByte(123.0f).ln().get();
+		X.toFloat(data).ln();
+		data = X.toByte(123.0D).ln().get();
+		X.toDouble(data).ln();
+		
+		long d = X.toLong(123.0).ln().get();
+		X.toDouble(d).ln();
+		
+		int i = X.toInt(123.0f).ln().get();
+		X.toFloat(i).ln();
+		
+		List<Integer> list = XType.list();
+		Random rand = XType.newInstance(Random::new);
+		
+		for(int j=0;j<100;j++) {
+			list.add(rand.nextInt(1000));
+		}
+		
+		Set<Integer> set = XType.set();
+		set.addAll(list);
+		
+		Integer[] is = X.toArray(list, new Integer[0]).ln().get();
+		X.toList(is).ln();
+	
+		is = X.toArray(set, new Integer[0]).ln().get();
+		X.toSet(is).ln();
+		
+		
+		
+		
+	}
+	
+	
+	@Test
+	public void testBean() {
+		
+		X.bean("x",String.class,"ABC").register().getBean().end().ln();
+		X.bean("x").getBean().end().ln();
+		X.bean(String.class).getBean().end().ln();
+	}
+	
+	@Test
+	public void testTask() {
+		
+		X.task(d->{
+			XLog.ln(d);
+			return X.DEFAULT_OBJECT;
+		},123).THEN(d->{
+			XLog.ln(d,d.get());
+			return X.DEFAULT_OBJECT;
+		});
+		
+		X.of(123).task(d->{
+			
+			X.lnS(d);
+			
+			return X.DEFAULT_OBJECT;
+		});
+		
+	}
+	
+	@Test
+	public void testNet() {
+//		X.tcp(8888).THEN(d->{
+//			
+//			XLog.ln(d.getLocalPort(),d.getLocalSocketAddress());
+//			XLog.ln(d.getInetAddress());
+//			try {
+//				XLog.ln(d.getReceiveBufferSize());
+//			} catch (SocketException e) {
+//				e.printStackTrace();
+//			}
+//			
+//			return X.DEFAULT_OBJECT;
+//		});
+//		
+//		X.udp(9999).THEN(d->{
+//			
+//			
+//			try {
+//				XLog.ln(d.getBroadcast());
+//				XLog.ln(d.getLocalAddress(),d.getLocalPort());
+//				XLog.ln(d.getLocalSocketAddress());
+//				XLog.ln(d.getRemoteSocketAddress());
+//				XLog.ln(d.getReceiveBufferSize(),d.getSendBufferSize());
+//			} catch (SocketException e) {
+//				e.printStackTrace();
+//			}
+//			
+//			return X.DEFAULT_OBJECT;
+//		});
+	}
+	
+	
+	
+	
+	
 
 	
 	
 	public static void main(String[] args) {
-		
-		X.of();
-		X.resolve();
-		X.x();
-		X.task(()->{
-			XLog.ln("task");
-		});
-		X.task(d->{
-			XLog.ln(d);
-			return "output";
-		},"input").THEN(d->{
-			
-			XLog.ln(d);
-			
-			return null;
-		});
-		
-		X.bean(String.class,"ABC").register().end().ln();
-		X.bean(String.class).getBean().end().ln();
-		
-		X.tcp(8888).THEN(d->{
-			XLog.ln(d);
-			return null;
-		});
-		
-		X.of("{\"key\":\"value\"}").toObject(Map.class).ln();
-//		X.of(100).toObject(Map.class).ln();
-//		X.of().toObject(String.class).ln();
-		Map<String,Object> m = XType.map();
-		m.put("KEYA","VALUEA");
-		
-		X.of(m).toFormatJson().ln();
-		
-		X.toArray(Arrays.asList(1,2,3,4,6),new Object[10]).ln();
-		X.of(Arrays.asList(1,2,3,4,6)).toArray(new Object[10]).ln();
-		
-		
-		X.toList(new Byte[100]).ln();
-		
-//		byte [] d = new byte[10];
-		
-		Set<Byte> set = XType.set();
-		
-		set.add((byte) 1);
-		set.add((byte) 2);
-		
-		
-		
-		X.of(set).toList().ln().toSet().ln().toList().ln();
-		
-		
-		byte[]d1 = new byte[0];
-		Byte[]d2 = new Byte[0];
-		
-		XLog.ln(d1 instanceof byte[]);
-		XLog.ln(d2 instanceof Byte[]);
-		
-//		X.of(d1).toList().ln();//error
-		X.of(d2).toList().ln();
-		
-//		X.<Byte>toList(d1).ln();//compile error
-		
-		byte [][]arr = new byte[10][10];
 		
 		
 	}

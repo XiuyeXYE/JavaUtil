@@ -8,7 +8,6 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 import com.google.gson.Gson;
@@ -18,8 +17,23 @@ import com.xiuye.util.log.XLog;
 
 public class X<RESULT> {// sharp tools
 
+	public static final byte DEFAULT_BYTE = 0;
+	public static final char DEFAULT_CHAR = 0;
+	public static final boolean DEFAULT_BOOLEAN = false;
+	public static final int DEFAULT_INT = 0;
+	public static final long DEFAULT_LONG = 0;
+	public static final float DEFAULT_FLOAT = 0;
+	public static final double DEFAULT_DOUBLE = 0;
+	public static final short DEFAULT_SHORT = 0;
+	
+	public static final String DEFAULT_STRING = "";
+	public static final Object DEFAULT_OBJECT = new Object();
+	
+	
+	
 	// 当前结果
 	private RESULT result;
+	
 
 	public X() {
 
@@ -32,7 +46,7 @@ public class X<RESULT> {// sharp tools
 	public RESULT get() {
 		return result;
 	}
-	
+
 	public void set(RESULT r) {
 		this.result = r;
 	}
@@ -153,7 +167,6 @@ public class X<RESULT> {// sharp tools
 		return of(exec(callback, this));
 	}
 
-
 	private boolean exist() {
 		return result != null;
 	}
@@ -163,14 +176,12 @@ public class X<RESULT> {// sharp tools
 		return of(exist());
 	}
 
-
 	public <R> X<R> E(ReturnCallbackWithParam<R, RESULT> callback) {
 		return exist() ? THEN(callback) : of();
 	}
 
-
 	public X<RESULT> E(VoidCallbackNoParam callback) {
-		return exist() ? THEN(callback) : of();
+		return exist() ? THEN(callback) : of(this.result);
 	}
 
 	public static <R> X1<R> begin() {
@@ -190,23 +201,20 @@ public class X<RESULT> {// sharp tools
 		return truely() ? THEN(callback) : of();
 	}
 
-
 	public X<RESULT> T(VoidCallbackNoParam callback) {
-		return truely() ? THEN(callback) : of();
+		return truely() ? THEN(callback) : of(this.result);
 	}
 
 	public X<Boolean> F() {
 		return of(!truely());
 	}
 
-
 	public <R> X<R> F(ReturnCallbackWithParam<R, RESULT> callback) {
 		return !truely() ? THEN(callback) : of();
 	}
 
-
 	public X<RESULT> F(VoidCallbackNoParam callback) {
-		return !truely() ? THEN(callback) : of();
+		return !truely() ? THEN(callback) : of(this.result);
 	}
 
 	public static abstract class AbstractPromiseTask<FUNC, R, I> extends Thread {
@@ -519,9 +527,6 @@ public class X<RESULT> {// sharp tools
 	public static <R> X2<R> bean(Class<R> clazz, R r, boolean replace) {
 		return new X2<>(clazz, r, replace);
 	}
-	
-
-	
 
 	public static X<ServerSocket> tcp(int port) {
 
@@ -594,27 +599,24 @@ public class X<RESULT> {// sharp tools
 	public <R> X<R> toObject(Class<R> clazz) {
 		return of(JsonUtil.instance().fromJson((String) this.result, clazz));
 	}
-	
 
 	public static <T> X<T[]> toArray(List<T> list, T[] arr) {
 		return of(list.toArray(arr));
 	}
-	
+
 	public static <T> X<T[]> toArray(Set<T> set, T[] arr) {
 		return of(set.toArray(arr));
 	}
 
-	
-	@SuppressWarnings("unchecked")
-	public <T> X<T[]> toArray(T[] arr) {
-		if (result instanceof List) {
-			return toArray((List<T>) result, arr);
-		} else if (result instanceof Set) {
-			return toArray((Set<T>) result, arr);
-		}
-		return of((T[])this.result);
-	}
-	
+//	@SuppressWarnings("unchecked")
+//	public <T> X<T[]> toArray(T[] arr) {
+//		if (result instanceof List) {
+//			return toArray((List<T>) result, arr);
+//		} else if (result instanceof Set) {
+//			return toArray((Set<T>) result, arr);
+//		}
+//		return of((T[]) this.result);
+//	}
 
 	public static <T> X<List<T>> toList(T[] arr) {
 //		List<T> list = XType.list();
@@ -624,22 +626,20 @@ public class X<RESULT> {// sharp tools
 		return of(Arrays.asList(arr));
 	}
 
-
-	@SuppressWarnings("unchecked")
-	public <T> X<List<T>> toList() {
-
-		List<T> list = XType.list();
-		if (this.result instanceof List) {
-			list = (List<T>) this.result;
-		} else if (this.result instanceof Set) {
-			list.addAll((Set<T>) this.result);
-		} else {
-			list = Arrays.asList((T[]) this.result);
-		}
-
-		return of(list);
-	}
-	
+//	@SuppressWarnings("unchecked")
+//	public <T> X<List<T>> toList() {
+//
+//		List<T> list = XType.list();
+//		if (this.result instanceof List) {
+//			list = (List<T>) this.result;
+//		} else if (this.result instanceof Set) {
+//			list.addAll((Set<T>) this.result);
+//		} else {
+//			list = Arrays.asList((T[]) this.result);
+//		}
+//
+//		return of(list);
+//	}
 
 	public static <T> X<Set<T>> toSet(T[] arr) {
 		Set<T> set = XType.set();
@@ -649,23 +649,21 @@ public class X<RESULT> {// sharp tools
 		return of(set);
 	}
 
+//	@SuppressWarnings("unchecked")
+//	public <T> X<Set<T>> toSet() {
+//
+//		Set<T> set = XType.set();
+//		if (this.result instanceof List) {
+//			set.addAll((List<T>) this.result);
+//		} else if (this.result instanceof Set) {
+//			set = (Set<T>) this.result;
+//		} else {
+//			set.addAll(Arrays.asList((T[]) this.result));
+//		}
+//
+//		return of(set);
+//	}
 
-	@SuppressWarnings("unchecked")
-	public <T> X<Set<T>> toSet() {
-
-		Set<T> set = XType.set();
-		if (this.result instanceof List) {
-			set.addAll((List<T>) this.result);
-		} else if (this.result instanceof Set) {
-			set = (Set<T>) this.result;
-		} else {
-			set.addAll(Arrays.asList((T[]) this.result));
-		}
-
-		return of(set);
-	}
-	
-	
 	public static X<Gson> formatterJsonKit() {
 		return of(JsonUtil.instance(JsonUtil.FORMAT_GSON));
 	}
@@ -673,7 +671,6 @@ public class X<RESULT> {// sharp tools
 	public static X<Gson> jsonKit() {
 		return of(JsonUtil.instance());
 	}
-
 
 	public static <R> X<R> x() {
 		return resolve();
@@ -695,25 +692,24 @@ public class X<RESULT> {// sharp tools
 		}
 		return of();
 	}
-	
-	public X<String> toStr() {
-		
-		if(result instanceof byte[]) {
-			return toString((byte[])result);
-		}
-		
-		return of(Objects.isNull(result)?null:result.toString());
-	}
-	
-	public X<String> toStr(String charSet) {
-		
-		if(result instanceof byte[]) {
-			return toString((byte[])result,charSet);
-		}
-		
-		return of(Objects.isNull(result)?null:result.toString());
-	}
 
+//	public X<String> toStr() {
+//
+//		if (result instanceof byte[]) {
+//			return toString((byte[]) result);
+//		}
+//
+//		return of(Objects.isNull(result) ? null : result.toString());
+//	}
+//
+//	public X<String> toStr(String charSet) {
+//
+//		if (result instanceof byte[]) {
+//			return toString((byte[]) result, charSet);
+//		}
+//
+//		return of(Objects.isNull(result) ? null : result.toString());
+//	}
 
 	public static X<byte[]> toByte(String s) {
 		return of(s.getBytes());
@@ -727,7 +723,6 @@ public class X<RESULT> {// sharp tools
 		}
 		return of();
 	}
-
 
 	public static X<byte[]> toByte(int n) {
 		byte[] data = XType.newInstance(byte[]::new, 4);
@@ -753,21 +748,21 @@ public class X<RESULT> {// sharp tools
 		return toByte(toLong(n).get());
 	}
 
-
-	public X<byte[]> toByte() {
-		if (result instanceof String) {
-			return toByte((String) result);
-		} else if (result instanceof Double) {
-			return toByte((Double) result);
-		} else if (result instanceof Float) {
-			return toByte((Float) result);
-		} else if (result instanceof Integer) {
-			return toByte((Integer) result);
-		} else if (result instanceof Long) {
-			return toByte((Long) result);
-		} 
-		return of();
-	}
+//	public X<byte[]> toByte() {
+//		if (result instanceof String) {
+//			return toByte((String) result);
+//		} else if (result instanceof Double) {
+//			return toByte((Double) result);
+//		} else if (result instanceof Float) {
+//			return toByte((Float) result);
+//		} else if (result instanceof Integer) {
+//			return toByte((Integer) result);
+//		} else if (result instanceof Long) {
+//			return toByte((Long) result);
+//		} else {
+//			return of((byte[]) this.result);
+//		}
+//	}
 
 	public static X<Integer> toInt(byte[] data) {
 		int d = 0;
@@ -795,8 +790,6 @@ public class X<RESULT> {// sharp tools
 		return of(Float.floatToIntBits(d));
 	}
 
-	
-
 	public static X<Double> toDouble(byte[] data) {
 		return toDouble(toLong(data).get());
 	}
@@ -813,59 +806,75 @@ public class X<RESULT> {// sharp tools
 		return of(Float.intBitsToFloat(d));
 	}
 
-	
-	public X<Double> toDouble() {
+//	public X<Double> toDouble() {
+//
+//		if (result instanceof byte[]) {
+//			return toDouble((byte[]) result);
+//		} else if (result instanceof Long) {
+//			return toDouble((Long) result);
+//		} else {
+//			return of((Double) result);
+//		}
+//
+//	}
 
-		if (result instanceof byte[]) {
-			return toDouble((byte[]) result);
-		} else if (result instanceof Long) {
-			return toDouble((Long) result);
-		} else if (result instanceof Double) {
-			return of((Double) result);
-		} 
+//	public X<Float> toFloat() {
+//
+//		if (result instanceof byte[]) {
+//			return toFloat((byte[]) result);
+//		} else if (result instanceof Integer) {
+//			return toFloat((Integer) result);
+//		} else {
+//			return of((Float) result);
+//		}
+//
+//	}
 
-		return of();
+//	public X<Integer> toInt() {
+//		if (result instanceof byte[]) {
+//			return toInt((byte[]) result);
+//		} 
+//		else if (result instanceof Float) {
+//			return toInt((Float) result);
+//		} 		
+//		else if (result instanceof List) {
+//			List<Byte> list = XType.cast(this.result);
+//			byte [] bs = XType.newInstance(byte[]::new,list.size());
+//			for(int i=0;i<bs.length;i++) {
+//				bs[i] = list.get(i);
+//			}
+//			return toInt(bs);
+//		} 			
+//		else {
+//			return of((Integer) result);
+//		}
+//	}
 
-	}
+//	public X<Long> toLong() {
+//		if (result instanceof byte[]) {
+//			return toLong((byte[]) result);
+//		} else if (result instanceof Double) {
+//			return toLong((Double) result);
+//		} else {
+//			return of((Long) result);
+//		}
+//	}
 
-	public X<Float> toFloat() {
-
-		if (result instanceof byte[]) {
-			return toFloat((byte[]) result);
-		} else if (result instanceof Integer) {
-			return toFloat((Integer) result);
-		} else if (result instanceof Float) {
-			return of((Float) result);
-		}
-
-		return of();
-
-	}
-
-	
-	public X<Integer> toInt() {
-		if (result instanceof byte[]) {
-			return toInt((byte[]) result);
-		} else if (result instanceof Float) {
-			return toInt((Float) result);
-		} else if (result instanceof Integer) {
-			return of((Integer) result);
-		}
-		return of();
-	}
-
-	public X<Long> toLong() {
-		if (result instanceof byte[]) {
-			return toLong((byte[]) result);
-		} else if (result instanceof Double) {
-			return toLong((Double) result);
-		} else if (result instanceof Long) {
-			return of((Long) result);
-		} 
-		return of();
-	}
-
-	
+//	public X<RESULT> ifNull(VoidCallbackNoParam callback) {
+//		return !exist() ? THEN(callback) : of(this.result);
+//	}
+//	
+//	public <R> X<R> ifNull(ReturnCallbackWithParam<R, RESULT> callback) {
+//		return !exist() ? THEN(callback) : of();
+//	}
+//	
+//	public X<RESULT> ifNonNull(VoidCallbackNoParam callback) {
+//		return E(callback);
+//	}
+//	
+//	public <R> X<R> ifNonNull(ReturnCallbackWithParam<R, RESULT> callback) {
+//		return E(callback);
+//	}
 	
 	
 
