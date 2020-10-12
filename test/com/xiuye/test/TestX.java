@@ -1,11 +1,22 @@
 package com.xiuye.test;
 
-import java.io.IOException;
-import java.net.SocketException;
+import java.awt.print.PrinterJob;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+
+import javax.print.Doc;
+import javax.print.DocFlavor;
+import javax.print.PrintException;
+import javax.print.PrintService;
+import javax.print.SimpleDoc;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.standard.Copies;
+import javax.print.attribute.standard.Sides;
 
 import org.junit.Test;
 
@@ -13,42 +24,39 @@ import com.xiuye.sharp.X;
 import com.xiuye.util.cls.XType;
 import com.xiuye.util.log.XLog;
 
-
 public class TestX {
-	
+
 	@Test
 	public void testObject() {
-		
+
 		X.of();
 		X.of(123);
-		X.of((byte)99);
-		
+		X.of((byte) 99);
+
 		X.x();
 		X.x(123);
-		
+
 	}
-	
-	
+
 	@Test
 	public void testThen() {
-		X.of(123).THEN(d->{
+		X.of(123).THEN(d -> {
 			XLog.ln(d);
 			return "";
-		}).THEN(d->{
+		}).THEN(d -> {
 			XLog.ln(d);
 			return "";
 		});
 	}
-	
-	
+
 	@Test
 	public void testJson() {
-		X.of("{a:123}").toObject(Map.class).ln().toFormatJson().ln();	
+		X.of("{a:123}").toObject(Map.class).ln().toFormatJson().ln();
 	}
-	
+
 	@Test
 	public void testTo() {
-		byte [] data = X.toByte("ABC").ln().get();
+		byte[] data = X.toByte("ABC").ln().get();
 		X.toString(data).ln();
 		data = X.toByte(123).ln().get();
 		X.toInt(data).ln();
@@ -58,63 +66,59 @@ public class TestX {
 		X.toFloat(data).ln();
 		data = X.toByte(123.0D).ln().get();
 		X.toDouble(data).ln();
-		
+
 		long d = X.toLong(123.0).ln().get();
 		X.toDouble(d).ln();
-		
+
 		int i = X.toInt(123.0f).ln().get();
 		X.toFloat(i).ln();
-		
+
 		List<Integer> list = XType.list();
 		Random rand = XType.newInstance(Random::new);
-		
-		for(int j=0;j<100;j++) {
+
+		for (int j = 0; j < 100; j++) {
 			list.add(rand.nextInt(1000));
 		}
-		
+
 		Set<Integer> set = XType.set();
 		set.addAll(list);
-		
+
 		Integer[] is = X.toArray(list, new Integer[0]).ln().get();
 		X.toList(is).ln();
-	
+
 		is = X.toArray(set, new Integer[0]).ln().get();
 		X.toSet(is).ln();
-		
-		
-		
-		
+
 	}
-	
-	
+
 	@Test
 	public void testBean() {
-		
-		X.bean("x",String.class,"ABC").register().getBean().end().ln();
+
+		X.bean("x", String.class, "ABC").register().getBean().end().ln();
 		X.bean("x").getBean().end().ln();
 		X.bean(String.class).getBean().end().ln();
 	}
-	
+
 	@Test
 	public void testTask() {
-		
-		X.task(d->{
+
+		X.task(d -> {
 			XLog.ln(d);
 			return X.DEFAULT_OBJECT;
-		},123).THEN(d->{
-			XLog.ln(d,d.get());
+		}, 123).THEN(d -> {
+			XLog.ln(d, d.get());
 			return X.DEFAULT_OBJECT;
 		});
-		
-		X.of(123).task(d->{
-			
+
+		X.of(123).task(d -> {
+
 			X.lnS(d);
-			
+
 			return X.DEFAULT_OBJECT;
 		});
-		
+
 	}
-	
+
 	@Test
 	public void testNet() {
 //		X.tcp(8888).THEN(d->{
@@ -146,17 +150,41 @@ public class TestX {
 //			return X.DEFAULT_OBJECT;
 //		});
 	}
-	
-	
-	
-	
-	
 
-	
-	
+	@Test
+	public void testPrint() {
+//		X.of(PrinterJob.lookupPrintServices()).E(d -> {
+//
+//			for (PrintService ps : d) {
+//				XLog.ln(ps);
+//				if ("HPF9574A (HP Color LaserJet Pro M479)".equals(ps.toString())) {
+//					try {
+//						PrintRequestAttributeSet aset = new HashPrintRequestAttributeSet();
+//						aset.add(new Copies(1)); // 份数
+//						// aset.add(MediaSize.ISO.A4); //纸张
+//						// aset.add(Finishings.STAPLE);//装订
+//						aset.add(Sides.DUPLEX);// 单双面
+//						Doc doc = XType.newInstance(SimpleDoc::new,
+//								new FileInputStream("C:\\Users\\Administrator.DESKTOP-GR4M9SM" + "\\Desktop\\pic"
+//										+ "\\TNK4034Gallery01-1920x1080-dcb57f63235216d1d4c9f583ff53c6be.jpg"),
+//								DocFlavor.INPUT_STREAM.JPEG, null);
+//						ps.createPrintJob().print(doc, aset);
+//					} catch (PrintException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					} catch (FileNotFoundException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//				}
+//			}
+//
+//			return d;
+//		});
+	}
+
 	public static void main(String[] args) {
-		
-		
+
 	}
 
 }
