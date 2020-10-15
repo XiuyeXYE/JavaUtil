@@ -806,6 +806,40 @@ public class X<RESULT> {// sharp tools
 		return of(Float.intBitsToFloat(d));
 	}
 
+	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.result == null) ? 0 : this.result.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		X other = (X) obj;
+		if (result == null) {
+			if (other.result != null)
+				return false;
+		} else if (!result.equals(other.result))
+			return false;
+		return true;
+	}
+	
+	
+	@Override
+	public String toString() {
+		return "X [result=" + result + "]";
+	}
+	
+
 //	public X<Double> toDouble() {
 //
 //		if (result instanceof byte[]) {
