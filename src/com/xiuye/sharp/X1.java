@@ -458,7 +458,7 @@ public class X1 <RESULT>{
             TwoTuple as_token = getNextToken();
             if (AS.equals(as_token.token)) {
                 if (result_token == null //说明还没有匹配的有!
-                        && !matched //本次 as 的匹配 已经匹配过的话 matched = true!
+//                        && !matched //本次 as 的匹配 已经匹配过的话 matched = true!
                         //,可以加快速度(小优化)
                         && matchValue != null
 //						&& as_token.value != null
@@ -468,7 +468,9 @@ public class X1 <RESULT>{
                 ) {
                     matched = true;
                 }
-                matched = matched || A_token(matchValue);
+                matched =  A_token(matchValue) || matched;
+                //matched is true,should skip as
+                //...
             } else {
                 //多取一次未处理的话，应该回溯一个
                 //也是递归终止条件

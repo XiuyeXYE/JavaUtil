@@ -185,6 +185,11 @@ public class TestX {
 
 	public static void main(String[] args) {
 
+		X.begin().MATCH(123).AS(99).AS(123).AS(87).THEN(d->{
+			XLog.ln("matched",d);
+			return d;
+		}).end().ln();
+		
 	}
 
 }
