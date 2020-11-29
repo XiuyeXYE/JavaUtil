@@ -1,28 +1,14 @@
 package com.xiuye.test;
 
-import java.awt.print.PrinterJob;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import com.xiuye.sharp.X;
+import com.xiuye.util.cls.XType;
+import com.xiuye.util.log.XLog;
+import org.junit.Test;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-
-import javax.print.Doc;
-import javax.print.DocFlavor;
-import javax.print.PrintException;
-import javax.print.PrintService;
-import javax.print.SimpleDoc;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
-import javax.print.attribute.standard.Copies;
-import javax.print.attribute.standard.Sides;
-
-import org.junit.Test;
-
-import com.xiuye.sharp.X;
-import com.xiuye.util.cls.XType;
-import com.xiuye.util.log.XLog;
 
 public class TestX {
 

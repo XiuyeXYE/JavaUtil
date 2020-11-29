@@ -1,9 +1,6 @@
 package com.xiuye.util.string;
 
 import com.xiuye.sharp.X;
-import com.xiuye.util.log.XLog;
-
-import java.util.Arrays;
 
 public class LSD {
 
