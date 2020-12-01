@@ -262,6 +262,16 @@ public class Sqrt {
         return x;
     }
 
+    //泰勒公式 这个幂级数是发散的，不收敛，所以是错误的算法！
+    public static double sqrt8(double c) {
+
+
+//        return 1.0+(1.0/2)*c-(1.0/8)*c*c;
+        return 1.0 + (1.0 / 2) * (c - 1) - (1.0 / 8) * (c - 1) * (c - 1) + (3.0 / 48) * (c - 1) * (c - 1) * (c - 1)
+                - (15.0 / 324) * (c - 1) * (c - 1) * (c - 1) * (c - 1) + (105.0 / 2840) * (c - 1) * (c - 1) * (c - 1) * (c - 1) * (c - 1);
+
+    }
+
 
     public static void main(String[] args) {
         X.lg(sqrt1(2));//4次循环
@@ -303,6 +313,12 @@ public class Sqrt {
         X.lg(sqrt5(1));
         X.lg(sqrt6(1));
         X.lg(sqrt7(1));
+
+        X.lg(sqrt8(0));
+        X.lg(sqrt8(1));
+        X.lg(sqrt8(2));
+        X.lg(sqrt8(3));
+        X.lg(sqrt8(5));
 //        X.lg(Math.abs(Double.NaN));
 //        X.lg(Double.NaN);
 //        X.lg(1d/0.0d);
