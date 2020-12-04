@@ -60,6 +60,14 @@ public final class X<T> {
         return new ArrayList<>();
     }
 
+    public static <U> X<List<U>> list(Class<U> uClass) {
+        return of(list());
+    }
+
+    public static <U> X<Set<U>> set(Class<U> uClass) {
+        return of(set());
+    }
+
     public static <U> Set<U> set() {
         return new HashSet<>();
     }
