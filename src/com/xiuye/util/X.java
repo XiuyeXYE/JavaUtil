@@ -7,6 +7,7 @@ import com.google.gson.JsonElement;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.lang.reflect.Method;
+import java.time.DateTimeException;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -997,6 +998,159 @@ public final class X<T> {
     // \n eof
     public static int readInt() {
         return scanner.nextInt();
+    }
+
+}
+
+class Time {
+    private long mSec;
+    private long sec;
+    private long min;
+    private long hour;
+    private long daysOfMon;
+    private long mon;
+    private long year;
+
+
+    public static boolean isLeap(long year) {
+//        能被4整除，但不能被100整除；
+//        能被400整除。
+        return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
+    }
+
+    /**
+     * The number of days in a 400 year cycle.
+     * 公式口诀:4年一闰，百年不闰，4百年又闰
+     * 400*365 + 100 - 4 + 1 = 146097
+     * 四百年的总天数
+     * <p>
+     * 400年的总天数 也是可以从3月1日开始！
+     */
+    private static final int DAYS_PER_CYCLE = 146097;
+    /**
+     * The number of days from year zero to year 1970.
+     * There are five 400 year cycles from year zero to 2000.
+     * There are 7 leap years from 1970 to 2000.
+     * 从0000年到1970年的总天数：
+     * 2000年的总天数减去30年的总天数，就是0000~1970年01,01,00:00:00的总天数
+     */
+    private static final long DAYS_0000_TO_1970 = (DAYS_PER_CYCLE * 5L) - (30L * 365L + 7L);
+
+    public void calcTime(long milliSeconds) {
+        //从1970年1月1日0时0分0秒到现在的毫秒数
+        long mSecTotal = System.currentTimeMillis();
+//        X.lg(mSecTotal);
+        //计算时分秒
+        //余下的毫秒数
+        mSec = mSecTotal % 1000;
+        //总秒数
+        long secTotal = mSecTotal / 1000;
+        //秒
+        sec = secTotal % 60;
+        //总分钟数
+        long minTotal = secTotal / 60;
+        //分
+        min = minTotal % 60;
+        //总小时数
+        long hourTotal = minTotal / 60;
+        //时
+        hour = hourTotal % 24;
+
+        //计算年月日
+        //总天数
+        long days = hourTotal / 24;
+
+
+//        计算年月日
+        /**
+         * 从0000年到1970,01,01,00:00:00的总天数 + 1970,01,01,00:00:00到如今的总天数
+         * =从0000~now的总天数
+         */
+        long zeroDay = days + DAYS_0000_TO_1970;
+        /**
+         * 第0000年是闰年？所以1月31天，2月19天，所以60天
+         * 从0000年03月01日起到现在的总天数
+         * 所以 -60,
+         * 为什么要这么做呢？
+         * 每四年循环，闰日(不是闰年)都是最后一天？
+         * zeroDay:是从0000年03月01日起到现在的总天数
+         */
+        // find the march-based year
+        zeroDay -= 60;  // adjust to 0000-03-01 so leap day is at end of four year cycle
+        /**
+         * ?
+         */
+        long adjust = 0;
+        /**
+         * 负的天数 公元前？
+         */
+        if (zeroDay < 0) {
+
+            // adjust negative years to positive for calculation
+            long adjustCycles = (zeroDay + 1) / DAYS_PER_CYCLE - 1;
+            //adjust 调整的年数 负的！
+            adjust = adjustCycles * 400;
+
+            zeroDay += -adjustCycles * DAYS_PER_CYCLE;
+        }
+
+        long yearEst = (400 * zeroDay + 591) / DAYS_PER_CYCLE;
+
+        long doyEst = zeroDay - (365 * yearEst + yearEst / 4 /*4 闰年*/ - yearEst / 100/*100 不闰年*/ + yearEst / 400/*400 闰年*/);
+
+        if (doyEst < 0) {
+            // fix estimate
+            yearEst--;
+            doyEst = zeroDay - (365 * yearEst + yearEst / 4 - yearEst / 100 + yearEst / 400);
+        }
+        yearEst += adjust;  // reset any negative year
+        //剩余天数 注意总天数zeroDay 是从0000年3月1日开始的！
+        //剩余天数也是从3月1日开始的?
+        int marchDoy0 = (int) doyEst;
+
+        /**
+         * 除开1月份，2月份，剩下的月份（5个月份）半年天数是一样的！！！
+         * 3    4   5   6   7
+         * 31   30  31  30  31
+         *
+         * 12   11  10  9   8
+         * 31   30  31  30  31
+         *
+         * 31+30+31+30+31 = 153！！！
+         *
+         * marchDoy0是从3月1日开始的年内的度过天数，如3月1日至8月X日的天数
+         * 如果不是整除，也就是浮点数除法,
+         * marchDoy0/半年（5个月）天数*5 = 实际月份！！！
+         * marchDay0/(153*2)*10 = 实际月份！！！
+         * 为什么+2?
+         */
+        // convert march-based values back to january-based
+        int marchMonth0 = (marchDoy0 * 5 + 2) / 153;
+        /**
+         * 前面的计算都是 从 0000,03,01,00:00:00开始的，算的都是400的闰年整数倍
+         * 所以必须算的月份加上2个月
+         * 因为月份只有12个月，所以要模运算，取余运算
+         * marchMonth0算的1年的后10月的月份，所以要+2
+         */
+        mon = (marchMonth0 + 2) % 12 + 1;
+        /**
+         * 半年（5个月）153
+         * 306=153+153
+         * 也就是3,4,5,6,7加上8,9,10,11,12 月份的天数.
+         * 1年内从3月1日开始的度过天数(1年内后10个月内)marchDoy0 - 1年后10个月的月份第marchMonth0月 / 10 * 306的天数 = 下个月内度过的天数
+         * 1年内从3月1日开始的度过天数 如yearEst 是 1969，那marchDoy0就是1970从3月1日开始的度过天数，当然后yearEst会被adjust,月份计算纠正为1970年的！
+         * 下个月内度过的天数 就是 就是月内的天数 daysOfMon!!!
+         */
+        daysOfMon = marchDoy0 - (marchMonth0 * 306 + 5) / 10 + 1;
+        //大于等于10 就得 +1年(具体以计算为准)，也就是下一年了！
+        yearEst += marchMonth0 / 10;
+
+        // check year now we are certain it is correct
+//        year = YEAR.checkValidIntValue(yearEst);
+        if (yearEst < -999999999 || yearEst > 999999999) {
+            throw new DateTimeException("Invalid value for year (valid values " + this + "): " + yearEst);
+        }
+        year = yearEst;
     }
 
 }
