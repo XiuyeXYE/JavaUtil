@@ -52,6 +52,7 @@ public class Time {
      * There are 7 leap years from 1970 to 2000.
      * 从0000年到1970年的总天数：
      * 2000年的总天数减去30年的总天数，就是0000~1970年01,01,00:00:00的总天数
+     * 1970~2000 8 个闰年?除开2000年?
      */
     static final long DAYS_0000_TO_1970 = (DAYS_PER_CYCLE * 5L) - (30L * 365L + 7L);
 
