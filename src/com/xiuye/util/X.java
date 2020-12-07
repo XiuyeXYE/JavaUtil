@@ -1038,13 +1038,13 @@ class Time {
 
     public void calcTime(long milliSeconds) {
         //从1970年1月1日0时0分0秒到现在的毫秒数
-        long mSecTotal = System.currentTimeMillis();
+//        long mSecTotal = System.currentTimeMillis();
 //        X.lg(mSecTotal);
         //计算时分秒
         //余下的毫秒数
-        mSec = mSecTotal % 1000;
+        mSec = milliSeconds % 1000;
         //总秒数
-        long secTotal = mSecTotal / 1000;
+        long secTotal = milliSeconds / 1000;
         //秒
         sec = secTotal % 60;
         //总分钟数

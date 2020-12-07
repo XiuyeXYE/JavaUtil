@@ -64,10 +64,21 @@ public class Time {
      */
     public void time() {
 
+        /**
+         * 计算负的时间
+         * 60s+T;
+         * 60min+T;59s+T?
+         * 24h+T;23+T?
+         * 利用周期
+         * f(x+T)=f(x)
+         *
+         */
 
-        long beginYear = 1970;
+
+//        long beginYear = 1970;
         //从1970年1月1日0时0分0秒到现在的毫秒数
         long mSecTotal = System.currentTimeMillis();
+//        long mSecTotal= -10000000;
 //        X.lg(mSecTotal);
         //计算时分秒
         //余下的毫秒数
@@ -93,7 +104,7 @@ public class Time {
 //        day = dayTotal % 30;
 //        long yearTotal = dayTotal / 30;
 //        year = dayTotal / 365 + beginYear;
-//        days = 0;
+        days = 0;
 //        计算年月日
         /**
          * 从0000年到1970,01,01,00:00:00的总天数 + 1970,01,01,00:00:00到如今的总天数
@@ -122,17 +133,22 @@ public class Time {
              * 调整负的年份 到 正的年份
              * DAYS_PER_CYCLE：四百年的总天数
              * adjustCycles：几个（倍）四百年
+             * 公元年的起点是公元1年，没有“公元0年”。
+             * 格里历与儒略历大致一样，但格里历特别规定，除非能被400整除，所有的世纪年（能被100整除）都不设闰日；
              */
             // adjust negative years to positive for calculation
             long adjustCycles = (zeroDay + 1) / DAYS_PER_CYCLE - 1;
             //adjust 调整的年数 负的！
-            adjust = adjustCycles * 400;
+            adjust = adjustCycles * 400;//-800年
             /**
              * 举例:
              * 公元前-1年12月31日，那zeroDay就是-1天，转化为正数就是400年总天数少一天，然后就可以正向计算月份日期，年份后面可以纠正的
              * zeroDay是-1天，adjust是-400年，正算是399，相加就是-1年，但是天数还是正向计算日期!
+             * f(x+2T)=f(x)?
+             * 变成正向年计算,也方便计算年月日！
+             *
              */
-            zeroDay += -adjustCycles * DAYS_PER_CYCLE;
+            zeroDay += -adjustCycles * DAYS_PER_CYCLE;//
         }
         /**
          * zeroDay:是从0000年03月01日起到现在的总天数
@@ -147,7 +163,7 @@ public class Time {
          * 4.不知道为什么要 +591 ，原因不明！
          *  591=400+191
          *  zeroDay + 1天多点
-         *  实在不明白为什么是591?
+         *  实在不明白为什么+591?
          * 5.400年一个周期
          *
          *  另外这个年，算的是从3月1日到来年2月最后一天的 400年 的整数倍
@@ -164,7 +180,7 @@ public class Time {
          * 剩余天数 = 总天数 - 从0000至上一年的总天数
          * 1.总天数zeroDay 是从0000年3月1日开始的，一定要注意！
          *
-         * 根据公式算出0000年到该年份的总天数，包括闰年的闰日         *
+         * 根据公式算出0000年到该年份的总天数，包括闰年的闰日
          * 然后zeroDay - 它
          * yearEst实际算出的年份可能要少一年，比如days=0，yearEst本该是1970，但是yearEst=1969
          * 所以根据yearEst算出的天数要比zeroDay实际天数少
@@ -197,8 +213,8 @@ public class Time {
          *
          * marchDoy0是从3月1日开始的年内的度过天数，如3月1日至8月X日的天数
          * 如果不是整除，也就是浮点数除法,
-         * marchDoy0/半年（5个月）天数*5 = 实际月份！！！
-         * marchDay0/(153*2)*10 = 实际月份！！！
+         * marchDoy0/半年（5个月）天数*5 = 实际月份???
+         * marchDay0/(153*2)*10 = 实际月份???
          * 为什么+2?
          * 从3月1日开始 则 一年月份 是 3,4,5,6,7,8,9,10,11,12,1,2
          */
