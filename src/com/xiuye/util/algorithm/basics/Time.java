@@ -4,6 +4,7 @@ import com.xiuye.util.X;
 
 import java.text.SimpleDateFormat;
 import java.time.DateTimeException;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.TimeZone;
@@ -17,6 +18,7 @@ public class Time {
     private long daysOfMon;
     private long mon;
     private long year;
+    private long dayOfWeek;
 
 
     public static boolean isLeap(long year) {
@@ -105,8 +107,9 @@ public class Time {
 //        day = dayTotal % 30;
 //        long yearTotal = dayTotal / 30;
 //        year = dayTotal / 365 + beginYear;
-        days = 0;
+//        days = 0;
 //        计算年月日
+        dayOfWeek = (4 + days) % 7; /* 今儿是星期几？注意，1970年1年1日为星期四 */
         /**
          * 从0000年到1970,01,01,00:00:00的总天数 + 1970,01,01,00:00:00到如今的总天数
          * =从0000~now的总天数
@@ -269,7 +272,7 @@ public class Time {
         X.lg(year, mon, daysOfMon, days, hour, min, sec, mSec);
         X.lg(format1.format(new Date()), format1.toLocalizedPattern());
         X.lg(format2.format(new Date()), format1.toLocalizedPattern());
-        X.lg(year, mon, daysOfMon, hour + 8, min, sec, mSec);
+        X.lg(year, mon, daysOfMon, hour + 8, min, sec, mSec, dayOfWeek);
 //        LocalDateTime now = LocalDateTime.now();
 //        X.lg(now.format(df), df.toString());
 
@@ -277,6 +280,7 @@ public class Time {
 
     public static void main(String[] args) {
         new Time().time();
+        LocalDateTime.now().getDayOfWeek();
 //        X.lg(1970,isLeap(1970));
 //        X.lg(1971,isLeap(1971));
 //        X.lg(1972,isLeap(1972));
