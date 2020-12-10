@@ -25,7 +25,7 @@ import java.util.stream.Stream;
  */
 public final class X<T> {
     private static final X<?> EMPTY = new X<>();
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private final T value;
 
@@ -41,7 +41,9 @@ public final class X<T> {
 
 
     private X(T value) {
+
 //        this.value = Objects.requireNonNull(value);
+
         this.value = value;
     }
 
@@ -77,7 +79,7 @@ public final class X<T> {
         return new HashMap<>();
     }
 
-    public static void throwREx(String msg) {
+    public static void throwEx(String msg) {
         throw new RuntimeException(msg);
     }
 
@@ -115,7 +117,7 @@ public final class X<T> {
         return empty();
     }
 
-    public static <U, E extends Collection<U>, R> X<R> nonEmptyV(E collection, Function<E, R> function) {
+    public static <U, E extends Collection<U>, R> X<R> nonEmptyR(E collection, Function<E, R> function) {
         if (nonEmpty(collection)) {
             return ofNullable(function.apply(collection));
         }
@@ -199,6 +201,7 @@ public final class X<T> {
             throw new RuntimeException("not have isEmpty function");
         }
     }
+
 
     public boolean nonEmpty() {
         if (nonNull()) {
@@ -423,30 +426,30 @@ public final class X<T> {
     }
 
     public X<String> toJson() {
-        return ofNullable(gson.toJson(Objects.requireNonNull(value)));
+        return ofNullable(GSON.toJson(Objects.requireNonNull(value)));
     }
 
     public <U> X<U> toObject(Class<U> clazz) {
         Objects.requireNonNull(value);
         if (value instanceof Reader) {
             Reader json = cast(value);
-            return ofNullable(gson.fromJson(json, clazz));
+            return ofNullable(GSON.fromJson(json, clazz));
         } else if (value instanceof JsonElement) {
             Reader json = cast(value);
-            return ofNullable(gson.fromJson(json, clazz));
+            return ofNullable(GSON.fromJson(json, clazz));
         }
         //default string
         String json = cast(value);
 
-        return ofNullable(gson.fromJson(json, clazz));
+        return ofNullable(GSON.fromJson(json, clazz));
     }
 
 
     @SafeVarargs
     public static <N> X<N[]> log(N... t) {
-        if (t.length == 0)
+        if (t.length == 0) {
             System.out.println();
-        else {
+        } else {
             for (int i = 0; i < t.length - 1; i++) {
                 System.out.print(t[i] + " ");
             }
@@ -458,9 +461,9 @@ public final class X<T> {
 
     @SafeVarargs
     public static <N> X<N[]> err(N... t) {
-        if (t.length == 0)
+        if (t.length == 0) {
             System.err.println();
-        else {
+        } else {
             for (int i = 0; i < t.length - 1; i++) {
                 System.err.print(t[i] + " ");
             }
@@ -1011,6 +1014,9 @@ class Time {
     private long mon;
     private long year;
 
+    private static final long MIN_YEAR = -999999999L;
+    private static final long MAX_YEAR = 999999999L;
+
 
     public static boolean isLeap(long year) {
 //        能被4整除，但不能被100整除；
@@ -1040,7 +1046,9 @@ class Time {
         //从1970年1月1日0时0分0秒到现在的毫秒数
 //        long mSecTotal = System.currentTimeMillis();
 //        X.lg(mSecTotal);
+
         //计算时分秒
+
         //余下的毫秒数
         mSec = milliSeconds % 1000;
         //总秒数
@@ -1146,8 +1154,7 @@ class Time {
         yearEst += marchMonth0 / 10;
 
         // check year now we are certain it is correct
-//        year = YEAR.checkValidIntValue(yearEst);
-        if (yearEst < -999999999 || yearEst > 999999999) {
+        if (yearEst < MIN_YEAR || yearEst > MAX_YEAR) {
             throw new DateTimeException("Invalid value for year (valid values " + this + "): " + yearEst);
         }
         year = yearEst;
