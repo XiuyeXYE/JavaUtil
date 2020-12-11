@@ -1,7 +1,7 @@
 package com.xiuye.util.algorithm.basics;
 
 
-import com.xiuye.util.X;
+import com.xiuye.util.Pointer;
 
 public class GCD {
 
@@ -15,6 +15,6 @@ public class GCD {
     }
 
     public static void main(String[] args) {
-        X.lg(gcd(3, 5), gcd(100, 50));
+        Pointer.lg(gcd(3, 5), gcd(100, 50));
     }
 }

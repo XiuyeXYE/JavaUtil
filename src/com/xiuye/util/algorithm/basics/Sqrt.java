@@ -1,12 +1,12 @@
 package com.xiuye.util.algorithm.basics;
 
-import com.xiuye.util.X;
+import com.xiuye.util.Pointer;
 
 public class Sqrt {
 
     //牛顿迭代法
     public static double sqrt1(double c) {
-        X.lg("sqrt1:", c);
+        Pointer.lg("sqrt1:", c);
         if (c < 0) return Double.NaN;
         double err = 1e-15;
         double t = c;
@@ -26,13 +26,13 @@ public class Sqrt {
 //            X.lg("cc:",t);
             cnt++;
         }
-        X.lg("sqrt1.cnt=", cnt);
+        Pointer.lg("sqrt1.cnt=", cnt);
         return t;
     }
 
     //牛顿迭代法
     public static double sqrt2(double c) {
-        X.lg("sqrt2:", c);
+        Pointer.lg("sqrt2:", c);
         if (c < 0) return Double.NaN;
         double err = 1e-15;
         double t = c;
@@ -72,13 +72,13 @@ public class Sqrt {
 //            X.lg("cc:",t);
             cnt++;
         }
-        X.lg("sqrt2.cnt=", cnt);
+        Pointer.lg("sqrt2.cnt=", cnt);
         return t;
     }
 
     //牛顿迭代法
     public static double sqrt3(double c) {
-        X.lg("sqrt3:", c);
+        Pointer.lg("sqrt3:", c);
         if (c < 0) return Double.NaN;
         double err = 1e-15;
         double t = c;
@@ -100,14 +100,14 @@ public class Sqrt {
 //            X.lg("cc:",t);
             cnt++;
         }
-        X.lg("sqrt3.cnt=", cnt);
+        Pointer.lg("sqrt3.cnt=", cnt);
         return t;
     }
 
 
     //牛顿迭代法
     public static double sqrt4(double c) {
-        X.lg("sqrt4:", c);
+        Pointer.lg("sqrt4:", c);
         if (c < 0) return Double.NaN;
         double t = c;
         int cnt = 0;
@@ -117,7 +117,7 @@ public class Sqrt {
             t = (t * t + c) / (2 * t);
             cnt++;
         }
-        X.lg("sqrt4.cnt=", cnt);
+        Pointer.lg("sqrt4.cnt=", cnt);
         return t;
     }
 
@@ -143,7 +143,7 @@ public class Sqrt {
      * @return
      */
     public static double sqrt5(double c) {
-        X.lg("sqrt5:", c);
+        Pointer.lg("sqrt5:", c);
         double x1 = 0;//固定设置x1 为 0;
 //        double x2 = c;//固定设置X2 为 c;起始点不能为x小于1的点，否则小数算的是错误的结果
         double x2 = c + 1;//固定设置X2 为 c;起始点不能为x小于1的点，否则小数算的是错误的结果，所以+1
@@ -167,7 +167,7 @@ public class Sqrt {
 
         x = (x1 + x2) / 2;
         cnt++;
-        X.lg("sqrt5.cnt=", cnt);
+        Pointer.lg("sqrt5.cnt=", cnt);
         return x;
 
     }
@@ -188,7 +188,7 @@ public class Sqrt {
      * @return
      */
     public static double sqrt6(double c) {
-        X.lg("sqrt6:", c);
+        Pointer.lg("sqrt6:", c);
         int cnt = 0;
         double err = 1e-15;
         double x1 = 0;
@@ -223,7 +223,7 @@ public class Sqrt {
 
         x = (x1 * x2 + c) / (x2 + x1);
         cnt++;
-        X.lg("sqrt6.cnt=", cnt);
+        Pointer.lg("sqrt6.cnt=", cnt);
         return x;
 
     }
@@ -237,7 +237,7 @@ public class Sqrt {
     //y=sqrt(x) => y^2=x
     //利用 x^2 - c = 0 加 中点来计算
     public static double sqrt7(double c) {
-        X.lg("sqrt7:", c);
+        Pointer.lg("sqrt7:", c);
         int cnt = 0;
         //一定要选取合适的初值
         double lo = 0;
@@ -258,7 +258,7 @@ public class Sqrt {
         }
         x = (lo + hi) / 2;
         cnt++;
-        X.lg("sqrt7.cnt=", cnt);
+        Pointer.lg("sqrt7.cnt=", cnt);
         return x;
     }
 
@@ -274,51 +274,51 @@ public class Sqrt {
 
 
     public static void main(String[] args) {
-        X.lg(sqrt1(2));//4次循环
-        X.lg(sqrt1(0));
-        X.lg(sqrt1(5));//6次循环
-        X.lg(sqrt2(2));//4次循环
-        X.lg(sqrt2(0));
-        X.lg(sqrt2(5));//6次循环
-        X.lg(sqrt3(2));//4次循环
-        X.lg(sqrt3(0));
-        X.lg(sqrt3(5));//6次循环
-        X.lg(sqrt4(2));//1000次循环
-        X.lg(sqrt4(0));//计算0是错误的 NaN
-        X.lg(sqrt4(5));//1000次循环
-        X.lg(sqrt5(2));
-        X.lg(sqrt5(0));
-        X.lg(sqrt5(5));
-        X.lg(sqrt6(2));
-        X.lg(sqrt6(0));
-        X.lg(sqrt6(5));
+        Pointer.lg(sqrt1(2));//4次循环
+        Pointer.lg(sqrt1(0));
+        Pointer.lg(sqrt1(5));//6次循环
+        Pointer.lg(sqrt2(2));//4次循环
+        Pointer.lg(sqrt2(0));
+        Pointer.lg(sqrt2(5));//6次循环
+        Pointer.lg(sqrt3(2));//4次循环
+        Pointer.lg(sqrt3(0));
+        Pointer.lg(sqrt3(5));//6次循环
+        Pointer.lg(sqrt4(2));//1000次循环
+        Pointer.lg(sqrt4(0));//计算0是错误的 NaN
+        Pointer.lg(sqrt4(5));//1000次循环
+        Pointer.lg(sqrt5(2));
+        Pointer.lg(sqrt5(0));
+        Pointer.lg(sqrt5(5));
+        Pointer.lg(sqrt6(2));
+        Pointer.lg(sqrt6(0));
+        Pointer.lg(sqrt6(5));
 
         //测试小数
-        X.lg(sqrt1(0.25));
-        X.lg(sqrt2(0.25));
-        X.lg(sqrt3(0.25));
-        X.lg(sqrt4(0.25));
-        X.lg(sqrt5(0.25));
-        X.lg(sqrt6(0.25));
+        Pointer.lg(sqrt1(0.25));
+        Pointer.lg(sqrt2(0.25));
+        Pointer.lg(sqrt3(0.25));
+        Pointer.lg(sqrt4(0.25));
+        Pointer.lg(sqrt5(0.25));
+        Pointer.lg(sqrt6(0.25));
 
-        X.lg(sqrt7(0));
-        X.lg(sqrt7(2));
-        X.lg(sqrt7(5));
-        X.lg(sqrt7(0.25));
+        Pointer.lg(sqrt7(0));
+        Pointer.lg(sqrt7(2));
+        Pointer.lg(sqrt7(5));
+        Pointer.lg(sqrt7(0.25));
 
-        X.lg(sqrt1(1));
-        X.lg(sqrt2(1));
-        X.lg(sqrt3(1));
-        X.lg(sqrt4(1));
-        X.lg(sqrt5(1));
-        X.lg(sqrt6(1));
-        X.lg(sqrt7(1));
+        Pointer.lg(sqrt1(1));
+        Pointer.lg(sqrt2(1));
+        Pointer.lg(sqrt3(1));
+        Pointer.lg(sqrt4(1));
+        Pointer.lg(sqrt5(1));
+        Pointer.lg(sqrt6(1));
+        Pointer.lg(sqrt7(1));
 
-        X.lg(sqrt8(0));
-        X.lg(sqrt8(1));
-        X.lg(sqrt8(2));
-        X.lg(sqrt8(3));
-        X.lg(sqrt8(5));
+        Pointer.lg(sqrt8(0));
+        Pointer.lg(sqrt8(1));
+        Pointer.lg(sqrt8(2));
+        Pointer.lg(sqrt8(3));
+        Pointer.lg(sqrt8(5));
 //        X.lg(Math.abs(Double.NaN));
 //        X.lg(Double.NaN);
 //        X.lg(1d/0.0d);

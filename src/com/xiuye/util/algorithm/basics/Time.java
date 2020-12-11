@@ -1,6 +1,6 @@
 package com.xiuye.util.algorithm.basics;
 
-import com.xiuye.util.X;
+import com.xiuye.util.Pointer;
 
 import java.text.SimpleDateFormat;
 import java.time.DateTimeException;
@@ -269,10 +269,10 @@ public class Time {
         DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         //下面hour +8 就是 本地时区的时间了
-        X.lg(year, mon, daysOfMon, days, hour, min, sec, mSec);
-        X.lg(format1.format(new Date()), format1.toLocalizedPattern());
-        X.lg(format2.format(new Date()), format1.toLocalizedPattern());
-        X.lg(year, mon, daysOfMon, hour + 8, min, sec, mSec, dayOfWeek);
+        Pointer.lg(year, mon, daysOfMon, days, hour, min, sec, mSec);
+        Pointer.lg(format1.format(new Date()), format1.toLocalizedPattern());
+        Pointer.lg(format2.format(new Date()), format1.toLocalizedPattern());
+        Pointer.lg(year, mon, daysOfMon, hour + 8, min, sec, mSec, dayOfWeek);
 //        LocalDateTime now = LocalDateTime.now();
 //        X.lg(now.format(df), df.toString());
 

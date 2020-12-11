@@ -1,6 +1,6 @@
 package com.xiuye.util.algorithm.basics;
 
-import com.xiuye.util.X;
+import com.xiuye.util.Pointer;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -16,7 +16,7 @@ public class Sin {
      * @return
      */
     public static double sin1(double cn) {
-        X.lg("sin1:", cn);
+        Pointer.lg("sin1:", cn);
         double a = 0.987862;
         double b = 0.155271;
         double c = 0.00564312;
@@ -39,7 +39,7 @@ public class Sin {
         x %= 2 * Math.PI;
         // >
 
-        X.lg("sin2:", x);
+        Pointer.lg("sin2:", x);
         int cnt = 0;
         double derr = 1e-15;
 
@@ -65,7 +65,7 @@ public class Sin {
 
 
         }
-        X.lg("sin2.cnt:", cnt);
+        Pointer.lg("sin2.cnt:", cnt);
         return rSign * r;
 
     }
@@ -89,7 +89,7 @@ public class Sin {
 //        x %= 2 * Math.PI;
         // >
 
-        X.lg("sin3:", x);
+        Pointer.lg("sin3:", x);
         int cnt = 0;
 //        double derr = 1e-15;
 
@@ -124,7 +124,7 @@ public class Sin {
 
 
         }
-        X.lg("sin3.cnt:", cnt);
+        Pointer.lg("sin3.cnt:", cnt);
         r = rSign.multiply(r);
 
 //        BigDecimal complement = bigDecimal("1e-40");
@@ -148,7 +148,7 @@ public class Sin {
         x %= 2 * Math.PI;
         // >
 
-        X.lg("cos2:", x);
+        Pointer.lg("cos2:", x);
         int cnt = 0;
         double derr = 1e-15;
 
@@ -174,53 +174,53 @@ public class Sin {
 
 
         }
-        X.lg("cos2.cnt:", cnt);
+        Pointer.lg("cos2.cnt:", cnt);
         return rSign * r;
 
     }
 
 
     public static void main(String[] args) {
-        X.lg("PI/2", sin1(Math.PI / 2));
-        X.lg("PI/6", sin1(Math.PI / 6));
-        X.lg("PI/4", sin1(Math.PI / 4));
-        X.lg(1 / Math.sqrt(2));
-        X.lg("PI/2", sin2(Math.PI / 2));
-        X.lg("PI/2+2PI", sin2(Math.PI / 2 + Math.PI * 2));//有精度损失
-        X.lg("PI/6", sin2(Math.PI / 6));
-        X.lg("PI/6+2PI", sin2(Math.PI / 6 + Math.PI * 2));//有精度损失
-        X.lg("PI/4", sin2(Math.PI / 4));
-        X.lg("PI/4+2PI", sin2(Math.PI / 4 + Math.PI * 2));//有精度损失
-        X.lg("-PI/6", sin2(-Math.PI / 6 + Math.PI * 2));//有精度损失
-        X.lg("-PI/6+2PI", sin2(-Math.PI / 6 + Math.PI * 2));//有精度损失
-        X.lg("2PI", sin2(Math.PI * 2));//有精度损失
-        X.lg("-2PI", sin2(Math.PI * 2));//有精度损失
+        Pointer.lg("PI/2", sin1(Math.PI / 2));
+        Pointer.lg("PI/6", sin1(Math.PI / 6));
+        Pointer.lg("PI/4", sin1(Math.PI / 4));
+        Pointer.lg(1 / Math.sqrt(2));
+        Pointer.lg("PI/2", sin2(Math.PI / 2));
+        Pointer.lg("PI/2+2PI", sin2(Math.PI / 2 + Math.PI * 2));//有精度损失
+        Pointer.lg("PI/6", sin2(Math.PI / 6));
+        Pointer.lg("PI/6+2PI", sin2(Math.PI / 6 + Math.PI * 2));//有精度损失
+        Pointer.lg("PI/4", sin2(Math.PI / 4));
+        Pointer.lg("PI/4+2PI", sin2(Math.PI / 4 + Math.PI * 2));//有精度损失
+        Pointer.lg("-PI/6", sin2(-Math.PI / 6 + Math.PI * 2));//有精度损失
+        Pointer.lg("-PI/6+2PI", sin2(-Math.PI / 6 + Math.PI * 2));//有精度损失
+        Pointer.lg("2PI", sin2(Math.PI * 2));//有精度损失
+        Pointer.lg("-2PI", sin2(Math.PI * 2));//有精度损失
 
-        X.lg(11.0 % 88);
-        X.lg(11.0 / 88);
-        X.lg(11.0 / 88 * 88);
-        X.lg(Math.PI / Math.PI);
-        X.lg(2 * Math.PI / (2 * Math.PI));
-        X.lg(-Math.PI / Math.PI);
-        X.lg(-2 * Math.PI / (2 * Math.PI));
+        Pointer.lg(11.0 % 88);
+        Pointer.lg(11.0 / 88);
+        Pointer.lg(11.0 / 88 * 88);
+        Pointer.lg(Math.PI / Math.PI);
+        Pointer.lg(2 * Math.PI / (2 * Math.PI));
+        Pointer.lg(-Math.PI / Math.PI);
+        Pointer.lg(-2 * Math.PI / (2 * Math.PI));
 
-        X.lg("PI/2", cos2(Math.PI / 2));
-        X.lg("PI", cos2(Math.PI));
-        X.lg("-PI", cos2(-Math.PI));
-        X.lg("PI/6", cos2(Math.PI / 6));
-        X.lg("PI/3", cos2(Math.PI / 3));
-        X.lg("PI/4", cos2(Math.PI / 4));
-        X.lg("2PI", cos2(2 * Math.PI));
-        X.lg("0", cos2(0));
+        Pointer.lg("PI/2", cos2(Math.PI / 2));
+        Pointer.lg("PI", cos2(Math.PI));
+        Pointer.lg("-PI", cos2(-Math.PI));
+        Pointer.lg("PI/6", cos2(Math.PI / 6));
+        Pointer.lg("PI/3", cos2(Math.PI / 3));
+        Pointer.lg("PI/4", cos2(Math.PI / 4));
+        Pointer.lg("2PI", cos2(2 * Math.PI));
+        Pointer.lg("0", cos2(0));
 
-        X.lg(Double.toString(98.00001), 98.00001);
+        Pointer.lg(Double.toString(98.00001), 98.00001);
 
 
-        X.lg(sin3(PI.divide(bigDecimal("2"), 100, BigDecimal.ROUND_HALF_UP)));
-        X.lg(sin3(PI.divide(bigDecimal("2"), 100, BigDecimal.ROUND_HALF_UP).multiply(bigDecimal("-1"))));
-        X.lg(sin3(PI.divide(bigDecimal("3"), 100, BigDecimal.ROUND_HALF_UP)));
-        X.lg(sin3(PI.divide(bigDecimal("4"), 100, BigDecimal.ROUND_HALF_UP)));
-        X.lg(sin3(PI));
+        Pointer.lg(sin3(PI.divide(bigDecimal("2"), 100, BigDecimal.ROUND_HALF_UP)));
+        Pointer.lg(sin3(PI.divide(bigDecimal("2"), 100, BigDecimal.ROUND_HALF_UP).multiply(bigDecimal("-1"))));
+        Pointer.lg(sin3(PI.divide(bigDecimal("3"), 100, BigDecimal.ROUND_HALF_UP)));
+        Pointer.lg(sin3(PI.divide(bigDecimal("4"), 100, BigDecimal.ROUND_HALF_UP)));
+        Pointer.lg(sin3(PI));
 //        BigInteger bigInteger = BigInteger.valueOf(2432902008176640000L);
 //        X.lg(bigInteger.multiply(BigInteger.valueOf(2432902008176640000L)));
 //        X.lg(bigInteger.multiply(BigInteger.valueOf(2432902008176640000L)).doubleValue());

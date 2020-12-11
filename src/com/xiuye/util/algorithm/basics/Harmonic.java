@@ -1,6 +1,6 @@
 package com.xiuye.util.algorithm.basics;
 
-import com.xiuye.util.X;
+import com.xiuye.util.Pointer;
 
 public class Harmonic {
     /**
@@ -18,11 +18,11 @@ public class Harmonic {
     }
 
     public static void main(String[] args) {
-        X.lg(h(100));
-        X.lg(h(101));
-        X.lg(h(102));
-        X.lg(h(103));
-        X.lg(h(104));
-        X.lg(h(105));
+        Pointer.lg(h(100));
+        Pointer.lg(h(101));
+        Pointer.lg(h(102));
+        Pointer.lg(h(103));
+        Pointer.lg(h(104));
+        Pointer.lg(h(105));
     }
 }

@@ -1,12 +1,12 @@
 package com.xiuye.util.algorithm.basics;
 
-import com.xiuye.util.X;
+import com.xiuye.util.Pointer;
 
 public class Max {
 
     public static int max(int[] arr) {
-        if (X.isEmpty(arr)) {
-            X.throwREx("传入数组不能为空");
+        if (Pointer.isEmpty(arr)) {
+            Pointer.throwREx("传入数组不能为空");
         }
         int max = arr[0];
         for (int i = 1; i < arr.length; i++) {
@@ -16,6 +16,6 @@ public class Max {
     }
 
     public static void main(String[] args) {
-        X.lg(max(new int[]{99123, 34, 4532, 2345, 623623, 98787612, 12412}));
+        Pointer.lg(max(new int[]{99123, 34, 4532, 2345, 623623, 98787612, 12412}));
     }
 }

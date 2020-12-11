@@ -1,6 +1,6 @@
 package com.xiuye.util.algorithm.basics;
 
-import com.xiuye.util.X;
+import com.xiuye.util.Pointer;
 
 public class Abs {
     public static int abs(int i) {
@@ -9,6 +9,6 @@ public class Abs {
     }
 
     public static void main(String[] args) {
-        X.lg(abs(-199));
+        Pointer.lg(abs(-199));
     }
 }

@@ -22,36 +22,43 @@ import java.util.stream.Stream;
  * R 返回 新对象X
  *
  * @param <T>
+ * @author Dell
  */
-public final class X<T> {
-    private static final X<?> EMPTY = new X<>();
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+public final class Pointer<T> {
+    private static final Pointer<?> EMPTY = new Pointer<>();
+    private static final Gson GSON = new Gson();
+    private static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
+
+    public static Gson getGson() {
+        return GSON;
+    }
+
+    public static Gson getPrettyGson() {
+        return PRETTY_GSON;
+    }
 
     private final T value;
 
-    private X() {
+    private Pointer() {
         this.value = null;
     }
 
-    public static <T> X<T> empty() {
+    public static <T> Pointer<T> empty() {
         @SuppressWarnings("unchecked")
-        X<T> t = (X<T>) EMPTY;
+        Pointer<T> t = (Pointer<T>) EMPTY;
         return t;
     }
 
 
-    private X(T value) {
-
-//        this.value = Objects.requireNonNull(value);
-
+    private Pointer(T value) {
         this.value = value;
     }
 
-    public static <T> X<T> of(T value) {
-        return new X<>(value);
+    public static <T> Pointer<T> of(T value) {
+        return new Pointer<>(value);
     }
 
-    public static <T> X<T> ofNullable(T value) {
+    public static <T> Pointer<T> ofNullable(T value) {
         return value == null ? empty() : of(value);
     }
 
@@ -63,11 +70,11 @@ public final class X<T> {
         return new ArrayList<>();
     }
 
-    public static <U> X<List<U>> list(Class<U> uClass) {
+    public static <U> Pointer<List<U>> list(Class<U> uClass) {
         return of(list());
     }
 
-    public static <U> X<Set<U>> set(Class<U> uClass) {
+    public static <U> Pointer<Set<U>> set(Class<U> uClass) {
         return of(set());
     }
 
@@ -76,7 +83,7 @@ public final class X<T> {
     }
 
     public static <K, V> Map<K, V> map() {
-        return new HashMap<>();
+        return new HashMap<>(16);
     }
 
     public static void throwEx(String msg) {
@@ -110,28 +117,28 @@ public final class X<T> {
         return nonNull(collection) && !collection.isEmpty();
     }
 
-    public static <U, E extends Collection<U>> X<U> nonEmptyV(E collection, Consumer<E> consumer) {
+    public static <U, E extends Collection<U>> Pointer<U> nonEmptyV(E collection, Consumer<E> consumer) {
         if (nonEmpty(collection)) {
             consumer.accept(collection);
         }
         return empty();
     }
 
-    public static <U, E extends Collection<U>, R> X<R> nonEmptyR(E collection, Function<E, R> function) {
+    public static <U, E extends Collection<U>, R> Pointer<R> nonEmptyR(E collection, Function<E, R> function) {
         if (nonEmpty(collection)) {
             return ofNullable(function.apply(collection));
         }
         return empty();
     }
 
-    public static <U, E extends Collection<U>> X<E> isEmptyV(E collection, Runnable runnable) {
+    public static <U, E extends Collection<U>> Pointer<E> isEmptyV(E collection, Runnable runnable) {
         if (isEmpty(collection)) {
             runnable.run();
         }
         return ofNullable(collection);
     }
 
-    public static <U, E extends Collection<U>> X<E> isEmptyR(E collection, Supplier<E> supplier) {
+    public static <U, E extends Collection<U>> Pointer<E> isEmptyR(E collection, Supplier<E> supplier) {
         if (isEmpty(collection)) {
             return ofNullable(supplier.get());
         }
@@ -218,35 +225,35 @@ public final class X<T> {
     }
 
 
-    public X<T> ifPresentV(Consumer<? super T> action) {
+    public Pointer<T> ifPresentV(Consumer<? super T> action) {
         if (isPresent()) {
             action.accept(value);
         }
         return this;
     }
 
-    public <U> X<U> ifPresentR(Function<? super T, ? extends U> mapper) {
+    public <U> Pointer<U> ifPresentR(Function<? super T, ? extends U> mapper) {
         if (isPresent()) {
             return ofNullable(mapper.apply(value));
         }
         return empty();
     }
 
-    public X<T> ifAbsentV(Runnable runnable) {
+    public Pointer<T> ifAbsentV(Runnable runnable) {
         if (isAbsent()) {
             runnable.run();
         }
         return this;
     }
 
-    public X<T> ifAbsentR(Supplier<? extends T> supplier) {
+    public Pointer<T> ifAbsentR(Supplier<? extends T> supplier) {
         if (isAbsent()) {
             return ofNullable(supplier.get());
         }
         return this;
     }
 
-    public X<T> ifPresentOrElseV(Consumer<? super T> action, Runnable emptyAction) {
+    public Pointer<T> ifPresentOrElseV(Consumer<? super T> action, Runnable emptyAction) {
         if (isPresent()) {
             action.accept(value);
         } else {
@@ -255,7 +262,7 @@ public final class X<T> {
         return this;
     }
 
-    public <U> X<U> ifPresentOrElseR(Function<? super T, ? extends U> mapper, Supplier<U> emptyAction) {
+    public <U> Pointer<U> ifPresentOrElseR(Function<? super T, ? extends U> mapper, Supplier<U> emptyAction) {
         if (isPresent()) {
             return ofNullable(mapper.apply(value));
         } else {
@@ -263,7 +270,7 @@ public final class X<T> {
         }
     }
 
-    public X<T> ifAbsentOrElseV(Runnable emptyAction, Consumer<? super T> action) {
+    public Pointer<T> ifAbsentOrElseV(Runnable emptyAction, Consumer<? super T> action) {
         if (isAbsent()) {
             emptyAction.run();
         } else {
@@ -272,7 +279,7 @@ public final class X<T> {
         return this;
     }
 
-    public <U> X<U> ifAbsentOrElseR(Supplier<U> emptyAction, Function<? super T, ? extends U> mapper) {
+    public <U> Pointer<U> ifAbsentOrElseR(Supplier<U> emptyAction, Function<? super T, ? extends U> mapper) {
         if (isAbsent()) {
             return ofNullable(emptyAction.get());
         } else {
@@ -280,7 +287,7 @@ public final class X<T> {
         }
     }
 
-    public X<T> filter(Predicate<? super T> predicate) {
+    public Pointer<T> filter(Predicate<? super T> predicate) {
         Objects.requireNonNull(predicate);
         if (!isPresent()) {
             return this;
@@ -289,33 +296,33 @@ public final class X<T> {
         }
     }
 
-    public <U> X<U> map(Function<? super T, ? extends U> mapper) {
+    public <U> Pointer<U> map(Function<? super T, ? extends U> mapper) {
         Objects.requireNonNull(mapper);
         if (!isPresent()) {
             return empty();
         } else {
-            return X.ofNullable(mapper.apply(value));
+            return Pointer.ofNullable(mapper.apply(value));
         }
     }
 
-    public <U> X<U> flatMap(Function<? super T, ? extends X<? extends U>> mapper) {
+    public <U> Pointer<U> flatMap(Function<? super T, ? extends Pointer<? extends U>> mapper) {
         Objects.requireNonNull(mapper);
         if (!isPresent()) {
             return empty();
         } else {
             @SuppressWarnings("unchecked")
-            X<U> r = (X<U>) mapper.apply(value);
+            Pointer<U> r = (Pointer<U>) mapper.apply(value);
             return Objects.requireNonNull(r);
         }
     }
 
-    public X<T> or(Supplier<? extends X<? extends T>> supplier) {
+    public Pointer<T> or(Supplier<? extends Pointer<? extends T>> supplier) {
         Objects.requireNonNull(supplier);
         if (isPresent()) {
             return this;
         } else {
             @SuppressWarnings("unchecked")
-            X<T> r = (X<T>) supplier.get();
+            Pointer<T> r = (Pointer<T>) supplier.get();
             return Objects.requireNonNull(r);
         }
     }
@@ -357,11 +364,11 @@ public final class X<T> {
             return true;
         }
 
-        if (!(obj instanceof X)) {
+        if (!(obj instanceof Pointer)) {
             return false;
         }
 
-        X<?> other = (X<?>) obj;
+        Pointer<?> other = (Pointer<?>) obj;
         return Objects.equals(value, other.value);
     }
 
@@ -373,11 +380,10 @@ public final class X<T> {
     @Override
     public String toString() {
         return isPresent()
-                ? String.format("X[%s]", value)
-                : "X.empty";
+                ? String.format("Pointer[%s]", value)
+                : "Pointer.empty";
     }
 
-    //this my code
     public static PrintStream setOut(PrintStream out) {
         PrintStream oldOut = System.out;
         System.setOut(out);
@@ -398,38 +404,42 @@ public final class X<T> {
         return System.err;
     }
 
-    public X<T> logItself() {
+    public Pointer<T> logItself() {
         log(value);
         return this;
     }
 
-    public X<T> errItself() {
+    public Pointer<T> errItself() {
         err(value);
         return this;
     }
 
 
-    public X<T> printItself() {
+    public Pointer<T> printItself() {
         print(value);
         return this;
     }
 
 
-    public X<T> printlnItself() {
+    public Pointer<T> printlnItself() {
         println(value);
         return this;
     }
 
-    public X<T> lgItself() {
+    public Pointer<T> lgItself() {
         lg(value);
         return this;
     }
 
-    public X<String> toJson() {
+    public Pointer<String> toJson() {
         return ofNullable(GSON.toJson(Objects.requireNonNull(value)));
     }
 
-    public <U> X<U> toObject(Class<U> clazz) {
+    public Pointer<String> toPrettyJson() {
+        return ofNullable(PRETTY_GSON.toJson(Objects.requireNonNull(value)));
+    }
+
+    public <U> Pointer<U> toObject(Class<U> clazz) {
         Objects.requireNonNull(value);
         if (value instanceof Reader) {
             Reader json = cast(value);
@@ -446,7 +456,7 @@ public final class X<T> {
 
 
     @SafeVarargs
-    public static <N> X<N[]> log(N... t) {
+    public static <N> Pointer<N[]> log(N... t) {
         if (t.length == 0) {
             System.out.println();
         } else {
@@ -460,7 +470,7 @@ public final class X<T> {
 
 
     @SafeVarargs
-    public static <N> X<N[]> err(N... t) {
+    public static <N> Pointer<N[]> err(N... t) {
         if (t.length == 0) {
             System.err.println();
         } else {
@@ -474,7 +484,7 @@ public final class X<T> {
 
 
     @SafeVarargs
-    public static <N> X<N[]> print(N... ts) {
+    public static <N> Pointer<N[]> print(N... ts) {
         if (ts.length > 0) {
             for (int i = 0; i < ts.length - 1; i++) {
                 System.out.print(ts[i] + " ");
@@ -486,22 +496,22 @@ public final class X<T> {
 
 
     @SafeVarargs
-    public static <N> X<N[]> println(N... t) {
+    public static <N> Pointer<N[]> println(N... t) {
         return log(t);
     }
 
     @SafeVarargs
-    public static <N> X<N[]> lg(N... t) {
+    public static <N> Pointer<N[]> lg(N... t) {
         return log(t);
     }
 
 
-    public <U> X<U> thenR(Function<? super T, ? extends U> thenPhase) {
+    public <U> Pointer<U> thenR(Function<? super T, ? extends U> thenPhase) {
         Objects.requireNonNull(thenPhase);
         return ofNullable(thenPhase.apply(value));
     }
 
-    public X<T> thenV(Consumer<? super T> thenPhase) {
+    public Pointer<T> thenV(Consumer<? super T> thenPhase) {
         Objects.requireNonNull(thenPhase);
         thenPhase.accept(value);
         return this;
@@ -532,6 +542,11 @@ public final class X<T> {
      * @author xiuye
      */
     public interface DefaultConstructor<R> {
+        /**
+         * c
+         *
+         * @return
+         */
         R construct();
     }
 
@@ -543,6 +558,12 @@ public final class X<T> {
      * @author xiuye
      */
     public interface ConstructorWithParam<R, T> {
+        /**
+         * c
+         *
+         * @param t
+         * @return
+         */
         R construct(T t);
     }
 
@@ -555,6 +576,13 @@ public final class X<T> {
      * @author xiuye
      */
     public interface ConstructorWithTwoParams<R, T1, T2> {
+        /**
+         * c
+         *
+         * @param t1
+         * @param t2
+         * @return
+         */
         R construct(T1 t1, T2 t2);
     }
 
@@ -568,6 +596,14 @@ public final class X<T> {
      * @author xiuye
      */
     public interface ConstructorWithThreeParams<R, T1, T2, T3> {
+        /**
+         * c
+         *
+         * @param t1
+         * @param t2
+         * @param t3
+         * @return
+         */
         R construct(T1 t1, T2 t2, T3 t3);
     }
 
@@ -582,6 +618,15 @@ public final class X<T> {
      * @author xiuye
      */
     public interface ConstructorWithFourParams<R, T1, T2, T3, T4> {
+        /**
+         * c
+         *
+         * @param t1
+         * @param t2
+         * @param t3
+         * @param t4
+         * @return
+         */
         R construct(T1 t1, T2 t2, T3 t3, T4 t4);
     }
 
@@ -597,6 +642,16 @@ public final class X<T> {
      * @author xiuye
      */
     public interface ConstructorWithFiveParams<R, T1, T2, T3, T4, T5> {
+        /**
+         * c
+         *
+         * @param t1
+         * @param t2
+         * @param t3
+         * @param t4
+         * @param t5
+         * @return
+         */
         R construct(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5);
     }
 
@@ -613,6 +668,17 @@ public final class X<T> {
      * @author xiuye
      */
     public interface ConstructorWithSixParams<R, T1, T2, T3, T4, T5, T6> {
+        /**
+         * c
+         *
+         * @param t1
+         * @param t2
+         * @param t3
+         * @param t4
+         * @param t5
+         * @param t6
+         * @return
+         */
         R construct(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6);
     }
 
@@ -630,6 +696,18 @@ public final class X<T> {
      * @author xiuye
      */
     public interface ConstructorWithSevenParams<R, T1, T2, T3, T4, T5, T6, T7> {
+        /**
+         * c
+         *
+         * @param t1
+         * @param t2
+         * @param t3
+         * @param t4
+         * @param t5
+         * @param t6
+         * @param t7
+         * @return
+         */
         R construct(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7);
     }
 
@@ -648,6 +726,19 @@ public final class X<T> {
      * @author xiuye
      */
     public interface ConstructorWithEightParams<R, T1, T2, T3, T4, T5, T6, T7, T8> {
+        /**
+         * c
+         *
+         * @param t1
+         * @param t2
+         * @param t3
+         * @param t4
+         * @param t5
+         * @param t6
+         * @param t7
+         * @param t8
+         * @return
+         */
         R construct(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8);
     }
 
@@ -667,6 +758,20 @@ public final class X<T> {
      * @author xiuye
      */
     public interface ConstructorWithNineParams<R, T1, T2, T3, T4, T5, T6, T7, T8, T9> {
+        /**
+         * c
+         *
+         * @param t1
+         * @param t2
+         * @param t3
+         * @param t4
+         * @param t5
+         * @param t6
+         * @param t7
+         * @param t8
+         * @param t9
+         * @return
+         */
         R construct(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9);
     }
 
@@ -687,6 +792,21 @@ public final class X<T> {
      * @author xiuye
      */
     public interface ConstructorWithTenParams<R, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> {
+        /**
+         * c
+         *
+         * @param t1
+         * @param t2
+         * @param t3
+         * @param t4
+         * @param t5
+         * @param t6
+         * @param t7
+         * @param t8
+         * @param t9
+         * @param t10
+         * @return
+         */
         R construct(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9, T10 t10);
     }
 
@@ -698,6 +818,12 @@ public final class X<T> {
      * @author xiuye
      */
     public interface ConstructorWithParams<R, T> {
+        /**
+         * c
+         *
+         * @param t
+         * @return
+         */
         @SuppressWarnings("unchecked")
         R construct(T... t);
     }
@@ -713,6 +839,10 @@ public final class X<T> {
         return c.construct();
     }
 
+    public static <R> Pointer<R> of(DefaultConstructor<R> c) {
+        return of(newInstance(c));
+    }
+
     /**
      * instantiate object by parameters-ed constructor
      *
@@ -724,6 +854,10 @@ public final class X<T> {
      */
     public static <R, T> R newInstance(ConstructorWithParam<R, T> c, T t) {
         return c.construct(t);
+    }
+
+    public static <R, T> Pointer<R> of(ConstructorWithParam<R, T> c, T t) {
+        return of(newInstance(c, t));
     }
 
     /**
@@ -741,6 +875,10 @@ public final class X<T> {
         return c.construct(t1, t2);
     }
 
+    public static <R, T1, T2> Pointer<R> of(ConstructorWithTwoParams<R, T1, T2> c, T1 t1, T2 t2) {
+        return of(newInstance(c, t1, t2));
+    }
+
     /**
      * instantiate object by parameters-ed constructor
      *
@@ -756,6 +894,10 @@ public final class X<T> {
      */
     public static <R, T1, T2, T3> R newInstance(ConstructorWithThreeParams<R, T1, T2, T3> c, T1 t1, T2 t2, T3 t3) {
         return c.construct(t1, t2, t3);
+    }
+
+    public static <R, T1, T2, T3> Pointer<R> of(ConstructorWithThreeParams<R, T1, T2, T3> c, T1 t1, T2 t2, T3 t3) {
+        return of(newInstance(c, t1, t2, t3));
     }
 
     /**
@@ -776,6 +918,11 @@ public final class X<T> {
     public static <R, T1, T2, T3, T4> R newInstance(ConstructorWithFourParams<R, T1, T2, T3, T4> c, T1 t1, T2 t2, T3 t3,
                                                     T4 t4) {
         return c.construct(t1, t2, t3, t4);
+    }
+
+    public static <R, T1, T2, T3, T4> Pointer<R> of(ConstructorWithFourParams<R, T1, T2, T3, T4> c, T1 t1, T2 t2, T3 t3,
+                                                    T4 t4) {
+        return of(newInstance(c, t1, t2, t3, t4));
     }
 
     /**
@@ -800,6 +947,11 @@ public final class X<T> {
         return c.construct(t1, t2, t3, t4, t5);
     }
 
+    public static <R, T1, T2, T3, T4, T5> Pointer<R> of(ConstructorWithFiveParams<R, T1, T2, T3, T4, T5> c, T1 t1,
+                                                        T2 t2, T3 t3, T4 t4, T5 t5) {
+        return of(newInstance(c, t1, t2, t3, t4, t5));
+    }
+
     /**
      * instantiate object by parameters-ed constructor
      *
@@ -822,6 +974,11 @@ public final class X<T> {
     public static <R, T1, T2, T3, T4, T5, T6> R newInstance(ConstructorWithSixParams<R, T1, T2, T3, T4, T5, T6> c,
                                                             T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6) {
         return c.construct(t1, t2, t3, t4, t5, t6);
+    }
+
+    public static <R, T1, T2, T3, T4, T5, T6> Pointer<R> of(ConstructorWithSixParams<R, T1, T2, T3, T4, T5, T6> c,
+                                                            T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6) {
+        return of(newInstance(c, t1, t2, t3, t4, t5, t6));
     }
 
     /**
@@ -849,6 +1006,12 @@ public final class X<T> {
             ConstructorWithSevenParams<R, T1, T2, T3, T4, T5, T6, T7> c, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6,
             T7 t7) {
         return c.construct(t1, t2, t3, t4, t5, t6, t7);
+    }
+
+    public static <R, T1, T2, T3, T4, T5, T6, T7> Pointer<R> of(
+            ConstructorWithSevenParams<R, T1, T2, T3, T4, T5, T6, T7> c, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6,
+            T7 t7) {
+        return of(newInstance(c, t1, t2, t3, t4, t5, t6, t7));
     }
 
     /**
@@ -880,6 +1043,12 @@ public final class X<T> {
         return c.construct(t1, t2, t3, t4, t5, t6, t7, t8);
     }
 
+    public static <R, T1, T2, T3, T4, T5, T6, T7, T8> Pointer<R> of(
+            ConstructorWithEightParams<R, T1, T2, T3, T4, T5, T6, T7, T8> c, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6,
+            T7 t7, T8 t8) {
+        return of(newInstance(c, t1, t2, t3, t4, t5, t6, t7, t8));
+    }
+
     /**
      * instantiate object by parameters-ed constructor
      *
@@ -909,6 +1078,12 @@ public final class X<T> {
             ConstructorWithNineParams<R, T1, T2, T3, T4, T5, T6, T7, T8, T9> c, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5,
             T6 t6, T7 t7, T8 t8, T9 t9) {
         return c.construct(t1, t2, t3, t4, t5, t6, t7, t8, t9);
+    }
+
+    public static <R, T1, T2, T3, T4, T5, T6, T7, T8, T9> Pointer<R> of(
+            ConstructorWithNineParams<R, T1, T2, T3, T4, T5, T6, T7, T8, T9> c, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5,
+            T6 t6, T7 t7, T8 t8, T9 t9) {
+        return of(newInstance(c, t1, t2, t3, t4, t5, t6, t7, t8, t9));
     }
 
     /**
@@ -944,6 +1119,12 @@ public final class X<T> {
         return c.construct(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10);
     }
 
+    public static <R, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> Pointer<R> of(
+            ConstructorWithTenParams<R, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> c, T1 t1, T2 t2, T3 t3, T4 t4, T5 t5,
+            T6 t6, T7 t7, T8 t8, T9 t9, T10 t10) {
+        return of(newInstance(c, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10));
+    }
+
     // Now , T[] <=> T...t
 
     /**
@@ -958,6 +1139,11 @@ public final class X<T> {
     @SafeVarargs
     public static <R, T> R newInstance(ConstructorWithParams<R, T> c, T... t) {
         return c.construct(t);
+    }
+
+    @SafeVarargs
+    public static <R, T> Pointer<R> of(ConstructorWithParams<R, T> c, T... t) {
+        return of(newInstance(c, t));
     }
 
 
@@ -995,13 +1181,12 @@ public final class X<T> {
         return ret;
     }
 
-    // I/O
-    private static Scanner scanner = new Scanner(System.in);
+    private static final Scanner SCANNER = new Scanner(System.in);
 
-    // \n eof
     public static int readInt() {
-        return scanner.nextInt();
+        return SCANNER.nextInt();
     }
+
 
 }
 
@@ -1019,37 +1204,17 @@ class Time {
 
 
     public static boolean isLeap(long year) {
-//        能被4整除，但不能被100整除；
-//        能被400整除。
         return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
     }
 
-    /**
-     * The number of days in a 400 year cycle.
-     * 公式口诀:4年一闰，百年不闰，4百年又闰
-     * 400*365 + 100 - 4 + 1 = 146097
-     * 四百年的总天数
-     * <p>
-     * 400年的总天数 也是可以从3月1日开始！
-     */
+
     private static final int DAYS_PER_CYCLE = 146097;
-    /**
-     * The number of days from year zero to year 1970.
-     * There are five 400 year cycles from year zero to 2000.
-     * There are 7 leap years from 1970 to 2000.
-     * 从0000年到1970年的总天数：
-     * 2000年的总天数减去30年的总天数，就是0000~1970年01,01,00:00:00的总天数
-     */
+
     private static final long DAYS_0000_TO_1970 = (DAYS_PER_CYCLE * 5L) - (30L * 365L + 7L);
 
     public void calcTime(long milliSeconds) {
-        //从1970年1月1日0时0分0秒到现在的毫秒数
-//        long mSecTotal = System.currentTimeMillis();
-//        X.lg(mSecTotal);
 
-        //计算时分秒
 
-        //余下的毫秒数
         mSec = milliSeconds % 1000;
         //总秒数
         long secTotal = milliSeconds / 1000;
@@ -1084,12 +1249,13 @@ class Time {
          * zeroDay:是从0000年03月01日起到现在的总天数
          */
         // find the march-based year
-        zeroDay -= 60;  // adjust to 0000-03-01 so leap day is at end of four year cycle
-        /**
+        // adjust to 0000-03-01 so leap day is at end of four year cycle
+        zeroDay -= 60;
+        /*
          * ?
          */
         long adjust = 0;
-        /**
+        /*
          * 负的天数 公元前？
          */
         if (zeroDay < 0) {
@@ -1104,14 +1270,15 @@ class Time {
 
         long yearEst = (400 * zeroDay + 591) / DAYS_PER_CYCLE;
 
-        long doyEst = zeroDay - (365 * yearEst + yearEst / 4 /*4 闰年*/ - yearEst / 100/*100 不闰年*/ + yearEst / 400/*400 闰年*/);
+        long doyEst = zeroDay - (365 * yearEst + yearEst / 4 - yearEst / 100 + yearEst / 400);
 
         if (doyEst < 0) {
             // fix estimate
             yearEst--;
             doyEst = zeroDay - (365 * yearEst + yearEst / 4 - yearEst / 100 + yearEst / 400);
         }
-        yearEst += adjust;  // reset any negative year
+        // reset any negative year
+        yearEst += adjust;
         //剩余天数 注意总天数zeroDay 是从0000年3月1日开始的！
         //剩余天数也是从3月1日开始的?
         int marchDoy0 = (int) doyEst;

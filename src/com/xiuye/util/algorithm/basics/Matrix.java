@@ -1,6 +1,6 @@
 package com.xiuye.util.algorithm.basics;
 
-import com.xiuye.util.X;
+import com.xiuye.util.Pointer;
 
 import java.util.Random;
 
@@ -41,38 +41,38 @@ public class Matrix {
                 b[i][j] = random.nextInt(10);
             }
         }
-        X.lg("a=");
-        X.lg("[");
+        Pointer.lg("a=");
+        Pointer.lg("[");
         for (int i = 0; i < a.length; i++) {
-            X.print("\t\t");
+            Pointer.print("\t\t");
             for (int j = 0; j < a[i].length; j++) {
-                X.print(a[i][j], "");
+                Pointer.print(a[i][j], "");
             }
-            X.lg();
+            Pointer.lg();
         }
-        X.lg("]");
-        X.lg("b=");
-        X.lg("[");
+        Pointer.lg("]");
+        Pointer.lg("b=");
+        Pointer.lg("[");
         for (int i = 0; i < b.length; i++) {
-            X.print("\t\t");
+            Pointer.print("\t\t");
             for (int j = 0; j < b[i].length; j++) {
-                X.print(b[i][j], "");
+                Pointer.print(b[i][j], "");
             }
-            X.lg();
+            Pointer.lg();
         }
-        X.lg("]");
+        Pointer.lg("]");
 
         int[][] c = dot(a, b);
-        X.lg("c=");
-        X.lg("[");
+        Pointer.lg("c=");
+        Pointer.lg("[");
         for (int i = 0; i < c.length; i++) {
-            X.print("\t\t");
+            Pointer.print("\t\t");
             for (int j = 0; j < c[i].length; j++) {
-                X.print(c[i][j], "");
+                Pointer.print(c[i][j], "");
             }
-            X.lg();
+            Pointer.lg();
         }
-        X.lg("]");
+        Pointer.lg("]");
 
 
     }

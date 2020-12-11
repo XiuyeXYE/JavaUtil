@@ -1,13 +1,13 @@
 package com.xiuye.util.algorithm.basics;
 
-import com.xiuye.util.X;
+import com.xiuye.util.Pointer;
 
 public class BinarySearch {
 
     //firstly sorted a[]
     public static int rank(int key, int[] a) {
-        if (X.isEmpty(a)) {
-            X.throwREx("传入数组不能为空");
+        if (Pointer.isEmpty(a)) {
+            Pointer.throwREx("传入数组不能为空");
         }
         //双指针
         int lo = 0;
@@ -32,10 +32,10 @@ public class BinarySearch {
     }
 
     public static void main(String[] args) {
-        X.lg(rank(13, new int[]{3, 6, 8, 9, 11, 13, 32, 33, 55}));
-        X.lg(rank(13, new int[]{13}));
-        X.lg(rank(0, new int[]{1}));
-        X.lg(rank(7, new int[]{1, 5, 6, 7, 8, 9}, 0, 5));
+        Pointer.lg(rank(13, new int[]{3, 6, 8, 9, 11, 13, 32, 33, 55}));
+        Pointer.lg(rank(13, new int[]{13}));
+        Pointer.lg(rank(0, new int[]{1}));
+        Pointer.lg(rank(7, new int[]{1, 5, 6, 7, 8, 9}, 0, 5));
 
 //        int a = X.readInt();
 //        int b = 10;
