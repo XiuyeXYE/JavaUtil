@@ -1187,6 +1187,10 @@ public final class Pointer<T> {
         return SCANNER.nextInt();
     }
 
+    public static String readString() {
+        return SCANNER.next();
+    }
+
 
 }
 
@@ -1213,7 +1217,9 @@ class Time {
     private static final long DAYS_0000_TO_1970 = (DAYS_PER_CYCLE * 5L) - (30L * 365L + 7L);
 
     public void calcTime(long milliSeconds) {
-
+        //遇到负数 通过周期 来计算 f(60+x) = f(x)
+        //f(24+x) = f(x)
+        //
 
         mSec = milliSeconds % 1000;
         //总秒数
