@@ -5,7 +5,7 @@ import com.xiuye.util.Pointer;
 public class Average {
     public static double average(int[] arr) {
         if (Pointer.isEmpty(arr)) {
-            Pointer.throwREx("传入数组不能为空");
+            Pointer.throwEx("传入数组不能为空");
         }
         double value = 0.0;
         for (int i : arr) {

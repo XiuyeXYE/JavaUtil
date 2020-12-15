@@ -7,7 +7,7 @@ public class BinarySearch {
     //firstly sorted a[]
     public static int rank(int key, int[] a) {
         if (Pointer.isEmpty(a)) {
-            Pointer.throwREx("传入数组不能为空");
+            Pointer.throwEx("传入数组不能为空");
         }
         //双指针
         int lo = 0;

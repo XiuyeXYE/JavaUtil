@@ -6,7 +6,7 @@ public class Max {
 
     public static int max(int[] arr) {
         if (Pointer.isEmpty(arr)) {
-            Pointer.throwREx("传入数组不能为空");
+            Pointer.throwEx("传入数组不能为空");
         }
         int max = arr[0];
         for (int i = 1; i < arr.length; i++) {

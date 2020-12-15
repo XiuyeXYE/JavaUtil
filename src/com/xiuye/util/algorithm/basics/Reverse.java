@@ -6,7 +6,7 @@ public class Reverse {
 
     public static int[] reverse(int[] arr) {
         if (Pointer.isEmpty(arr)) {
-            Pointer.throwREx("传入数组不能为空");
+            Pointer.throwEx("传入数组不能为空");
         }
         int n = arr.length;
         for (int i = 0; i < n / 2; i++) {
