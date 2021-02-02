@@ -1197,6 +1197,9 @@ public final class Pointer<T> {
         return Arrays.stream(clazz.getDeclaredFields()).map(Field::getName).collect(Collectors.toList());
     }
 
+    public static String firstLetterUpperCase(String name) {
+        return Character.toUpperCase(name.charAt(0)) + name.substring(1);
+    }
 
     
 }
