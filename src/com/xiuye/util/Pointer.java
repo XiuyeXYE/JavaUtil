@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 
 import java.io.PrintStream;
 import java.io.Reader;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.time.DateTimeException;
 import java.util.*;
@@ -13,6 +14,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -1189,6 +1191,10 @@ public final class Pointer<T> {
 
     public static String readString() {
         return SCANNER.next();
+    }
+    
+    public static List<String> propertiesOfClass(Class<?> clazz) {
+        return Arrays.stream(clazz.getDeclaredFields()).map(Field::getName).collect(Collectors.toList());
     }
 
 
