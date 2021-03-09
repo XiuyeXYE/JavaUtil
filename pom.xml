@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.xiuyexye</groupId>
 	<artifactId>xyjava</artifactId>
-	<version>0.0.25</version>
+	<version>0.0.26</version>
 	<description>java lib for me</description>
 
 	<parent>
