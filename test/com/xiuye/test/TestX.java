@@ -169,12 +169,27 @@ public class TestX {
 //		});
 	}
 
+	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 
 		X.begin().MATCH(123).AS(99).AS(123).AS(87).THEN(d->{
 			XLog.ln("matched",d);
 			return d;
 		}).end().ln();
+		
+		A:
+		B:
+		X.lnS("123");
+		C:
+		for(int i = 10;i<99;i++) {
+			X.lgS(i);
+			if(i==60) {
+				break C;
+			}
+		}
+		D:
+			X.lgS("end");
+			
 		
 	}
 
